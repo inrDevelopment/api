@@ -2,9 +2,9 @@
 import { createHash } from "crypto"
 import { sign } from "jsonwebtoken"
 import application from "../../config/application"
+import { defaultResponse } from "../core/defaultResponse"
 import type UserRepository from "../repositories/User"
 import type { authenticationServiceProps } from "../schemas/login"
-import type { defaultResponse } from "../types"
 //#endregion Imports
 
 export default class UserService {

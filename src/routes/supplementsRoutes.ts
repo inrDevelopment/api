@@ -1,37 +1,25 @@
 import express from "express"
-import wrapper from "../lib/wrapper"
-import SupplementsService from "../cases/services/Supplements"
-import SupplementsController from "../cases/controllers/Supplements"
-import SupplementsRepository from "../cases/repositories/Supplements"
-import TemasRepository from "../cases/repositories/Temas"
+import { supplementsController } from "../cases/entry/supplements"
+import { siteProcess } from "../lib/protection"
 
 const supplementsRoutes = express.Router()
 
-const supplementsRepository = new SupplementsRepository()
-const temasRepository = new TemasRepository()
-const supplementsService = new SupplementsService(
-  supplementsRepository,
-  temasRepository
-)
-const supplementsController = new SupplementsController(supplementsService)
-
 supplementsRoutes.get(
   "/themes/list",
-  wrapper({
-    handle: async (req, res, next) => {
+  siteProcess({
+    handle: async (req, res) => {
       res.status(200).json(await supplementsController.getSupplementsThemes())
-      next()
     },
-    settings: {
-      level: "free"
+    configuracao: {
+      nivel: 0
     }
   })
 )
 
 supplementsRoutes.get(
   "/",
-  wrapper({
-    handle: async (req, res, next) => {
+  siteProcess({
+    handle: async (req, res) => {
       res.status(200).json(
         await supplementsController.supplementsContent({
           themeId: req.query.theme ? +req.query.theme : 1,
@@ -39,28 +27,26 @@ supplementsRoutes.get(
           page: req.query.page ? +req.query.page : 0
         })
       )
-      next()
     },
-    settings: {
-      level: "free"
+    configuracao: {
+      nivel: 0
     }
   })
 )
 
 supplementsRoutes.get(
   "/:id",
-  wrapper({
-    handle: async (req, res, next) => {
+  siteProcess({
+    handle: async (req, res) => {
       res.status(200).json(
         await supplementsController.supplementsById({
           id: +req.params.id,
-          client: req.user ? req.user.idcliente : null
+          client: req.credenciais ? req.credenciais.idcliente : null
         })
       )
-      next()
     },
-    settings: {
-      level: "controlled"
+    configuracao: {
+      nivel: 0
     }
   })
 )

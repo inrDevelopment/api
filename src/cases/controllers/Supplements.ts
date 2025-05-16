@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   supplementsByIdControllerProps,
   supplementsByIdValidation
@@ -7,7 +8,6 @@ import {
   supplementsHomeValidation
 } from "../schemas/supplementsByTheme"
 import SupplementsService from "../services/Supplements"
-import { defaultResponse } from "../types"
 
 export default class SupplementsController {
   constructor(private supplementsService: SupplementsService) {}

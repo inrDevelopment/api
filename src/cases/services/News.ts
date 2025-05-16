@@ -1,7 +1,7 @@
+import { defaultResponse } from "../core/defaultResponse"
 import NewsRepository from "../repositories/News"
 import { getNewsByIdServiceProps } from "../schemas/getNewsById"
 import { newsHomeServiceProps } from "../schemas/newsHome"
-import { defaultResponse } from "../types"
 
 export default class NewsService {
   constructor(private newsRepository: NewsRepository) {}

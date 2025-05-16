@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   getJurisprudenceByIdControllerProps,
   getJurisprudenceByIdValidation
@@ -7,7 +8,6 @@ import {
   jurisprudenceHomeValidation
 } from "../schemas/jurisprudenceHome"
 import JurisprudenceService from "../services/Jurisprudence"
-import { defaultResponse } from "../types"
 
 export default class JurisprudenceController {
   constructor(private jurisprudenceService: JurisprudenceService) {}

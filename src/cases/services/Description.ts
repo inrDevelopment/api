@@ -1,5 +1,5 @@
+import { defaultResponse } from "../core/defaultResponse"
 import DescriptionRepository from "../repositories/Description"
-import { defaultResponse } from "../types"
 import { descriptionByIdServiceProps } from "../schemas/descriptionById"
 
 export default class DescriptionService {

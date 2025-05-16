@@ -1,25 +1,25 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
-  getClassifiersIndexByIdControllerProps,
-  getClassifiersIndexByIdValidation
-} from "../schemas/getClassifiersIndexById"
+  getBarPreviousActsByActIdControllerProps,
+  getBarPreviousActsByActIdValidation
+} from "../schemas/getBarPreviousActsByActId"
 import {
   getClassifiersByStateIdControllerProps,
   getClassifiersByStateIdValidation
 } from "../schemas/getClassifiersByStateId"
 import {
-  stateByTitleControllerProps,
-  stateByTitleValidation
-} from "../schemas/stateByTitle"
-import ClassifiersService from "../services/Classifiers"
-import { defaultResponse } from "../types"
-import {
   getClassifiersContentByIdControllerProps,
   getClassifiersContentByIdValidation
 } from "../schemas/getClassifiersContentById"
 import {
-  getBarPreviousActsByActIdControllerProps,
-  getBarPreviousActsByActIdValidation
-} from "../schemas/getBarPreviousActsByActId"
+  getClassifiersIndexByIdControllerProps,
+  getClassifiersIndexByIdValidation
+} from "../schemas/getClassifiersIndexById"
+import {
+  stateByTitleControllerProps,
+  stateByTitleValidation
+} from "../schemas/stateByTitle"
+import ClassifiersService from "../services/Classifiers"
 
 export default class ClassifiersController {
   constructor(private classifiersService: ClassifiersService) {}

@@ -1,49 +1,38 @@
 import express from "express"
-import MessagesEditorsService from "../cases/services/MessagesEditors"
-import MessagesEditorsController from "../cases/controllers/MessagesEditors"
-import wrapper from "../lib/wrapper"
-import MessagesEditorRepository from "../cases/repositories/MessagesEditor"
+import { messagesEditorsController } from "../cases/entry/messagesEditor"
+import { siteProcess } from "../lib/protection"
 const messagesEditorsRoute = express.Router()
-const messagesEditorRepository = new MessagesEditorRepository()
-const messagesEditorsService = new MessagesEditorsService(
-  messagesEditorRepository
-)
-const messagesEditorsController = new MessagesEditorsController(
-  messagesEditorsService
-)
 
 messagesEditorsRoute.get(
   "/",
-  wrapper({
-    handle: async (req, res, next) => {
+  siteProcess({
+    handle: async (req, res) => {
       res.status(200).json(
         await messagesEditorsController.messagesEditorsContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
       )
-      next()
     },
-    settings: {
-      level: "free"
+    configuracao: {
+      nivel: 0
     }
   })
 )
 
 messagesEditorsRoute.get(
   "/:id",
-  wrapper({
-    handle: async (req, res, next) => {
+  siteProcess({
+    handle: async (req, res) => {
       res.status(200).json(
         await messagesEditorsController.getMessagesEditorsById({
           id: +req.params.id,
-          client: req.user ? req.user.idcliente : null
+          client: req.credenciais ? req.credenciais.idcliente : null
         })
       )
-      next()
     },
-    settings: {
-      level: "controlled"
+    configuracao: {
+      nivel: 0
     }
   })
 )

@@ -1,9 +1,9 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   authenticationValidation,
   type authenticationControllerProps
 } from "../schemas/login"
 import type UserService from "../services/User"
-import type { defaultResponse } from "../types"
 
 export default class UserController {
   constructor(private userService: UserService) {}

@@ -1,8 +1,8 @@
+import { defaultResponse } from "../core/defaultResponse"
 import AdvertisingRepository from "../repositories/advertising"
 import type BannerRepository from "../repositories/Banner"
 import type HomeRepository from "../repositories/Home"
 import type LinkRepository from "../repositories/Link"
-import type { defaultResponse } from "../types"
 
 export default class HomeService {
   constructor(

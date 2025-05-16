@@ -1,11 +1,5 @@
 import type { RowDataPacket } from "mysql2"
-import databaseClient from "../lib/dbClient/databaseClient"
-
-export type defaultResponse = {
-  success: boolean
-  data?: any
-  message?: string
-}
+import conexao from "../../lib/database"
 
 export class Repository {
   protected async procedure<T>(
@@ -13,7 +7,7 @@ export class Repository {
     ...values: any[]
   ): Promise<T | null> {
     try {
-      const [QueryResult] = await databaseClient.execute<RowDataPacket[]>(
+      const [QueryResult] = await conexao.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
 
@@ -27,7 +21,7 @@ export class Repository {
 
   protected async many<T>(name: string, ...values: any[]): Promise<T[]> {
     try {
-      const [QueryResult] = await databaseClient.execute<RowDataPacket[]>(
+      const [QueryResult] = await conexao.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
 
@@ -39,5 +33,3 @@ export class Repository {
     }
   }
 }
-
-export class Provider {}

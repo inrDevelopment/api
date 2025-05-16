@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class QuestionsAnswersRepository extends Repository {
   async questionsAnswersHome(params: { limit: number; page: number }): Promise<

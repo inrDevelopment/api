@@ -1,9 +1,8 @@
-// import ClientProductRepository from "../repositories/ClientProduct"
+import { defaultResponse } from "../core/defaultResponse"
 import SupplementsRepository from "../repositories/Supplements"
 import TemasRepository from "../repositories/Temas"
 import { supplementsByIdServiceProps } from "../schemas/supplementsById"
 import { supplementsHomeServiceProps } from "../schemas/supplementsByTheme"
-import { defaultResponse } from "../types"
 
 export default class SupplementsService {
   constructor(

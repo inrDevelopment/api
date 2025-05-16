@@ -1,9 +1,9 @@
+import { defaultResponse } from "../core/defaultResponse"
 import AuthorsRepository from "../repositories/Authors"
 import ClientProductRepository from "../repositories/ClientProduct"
 import OpinionRepository from "../repositories/Opnion"
 import { opnionByIdServiceProps } from "../schemas/opnionById"
 import { opnionHomeServiceProps } from "../schemas/opnionHome"
-import { defaultResponse } from "../types"
 
 export default class OpinionService {
   constructor(

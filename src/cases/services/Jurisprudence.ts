@@ -1,16 +1,14 @@
+import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import JurisprudenceRepository from "../repositories/Jurisprudence"
-import {
-  getJurisprudenceByIdServiceProps
-} from "../schemas/getJurisprudenceById"
+import { getJurisprudenceByIdServiceProps } from "../schemas/getJurisprudenceById"
 import { jurisprudenceHomeServiceProps } from "../schemas/jurisprudenceHome"
-import { defaultResponse } from "../types"
 
 export default class JurisprudenceService {
   constructor(
     private jurisprudenceRepository: JurisprudenceRepository,
     private clientProductRepository: ClientProductRepository
-  ) { }
+  ) {}
 
   async jurisprudenceContent(
     params: jurisprudenceHomeServiceProps

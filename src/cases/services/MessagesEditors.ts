@@ -1,8 +1,7 @@
-import ClientProductRepository from "../repositories/ClientProduct"
+import { defaultResponse } from "../core/defaultResponse"
 import MessagesEditorRepository from "../repositories/MessagesEditor"
-import { messagesEditorsByIdServiceProps } from "../schemas/messagesEditorsById"
-import { messagesEditorsHomeServiceProps } from "../schemas/messagesEditorsHome"
-import { defaultResponse } from "../types"
+import { messagesEditorsByIdServiceProps } from "../schemas/MessagesEditorsById"
+import { messagesEditorsHomeServiceProps } from "../schemas/MessagesEditorsHome"
 
 export default class MessagesEditorsService {
   constructor(private messagesEditorRepository: MessagesEditorRepository) {}

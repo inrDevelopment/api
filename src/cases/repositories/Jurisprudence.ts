@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class JurisprudenceRepository extends Repository {
   async jurisprudenceHome(params: { limit: number; page: number }): Promise<

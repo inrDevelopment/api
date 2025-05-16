@@ -1,5 +1,5 @@
+import { defaultResponse } from "../core/defaultResponse"
 import type HomeService from "../services/Home"
-import type { defaultResponse } from "../types"
 
 export default class HomeController {
   constructor(private homeService: HomeService) {}

@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class ConfiguracoesRepository extends Repository {
   async numeroBoletim(): Promise<{ valor: number } | null> {

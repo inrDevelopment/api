@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   questionsAnswersByIdControllerProps,
   questionsAnswersByIdValidation
@@ -7,7 +8,6 @@ import {
   questionsAnswersHomeValidation
 } from "../schemas/questionsAnswersHome"
 import QuestionsAnswersService from "../services/QuestionsAnswers"
-import { defaultResponse } from "../types"
 
 export default class QuestionsAnswersController {
   constructor(private questionsAnswersService: QuestionsAnswersService) {}

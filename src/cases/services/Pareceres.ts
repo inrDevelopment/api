@@ -1,8 +1,8 @@
+import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import PareceresRepository from "../repositories/Pareceres"
 import { pareceresByIdServiceProps } from "../schemas/pareceresById"
 import { pareceresHomeServiceProps } from "../schemas/pareceresHome"
-import { defaultResponse } from "../types"
 
 export default class PareceresService {
   constructor(

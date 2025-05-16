@@ -1,8 +1,8 @@
+import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import LegislationRepository from "../repositories/Legislation"
 import { legislationByIdServiceProps } from "../schemas/legislationById"
 import { legislationHomeServiceProps } from "../schemas/legislationHome"
-import { defaultResponse } from "../types"
 
 export default class LegislationService {
   constructor(

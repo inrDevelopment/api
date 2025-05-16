@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class DepartamentRepository extends Repository {
   async getDepartamentByOrgansId(params: { organs: number[] }): Promise<
