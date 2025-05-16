@@ -4,6 +4,17 @@ import { siteProcess } from "../lib/protection"
 
 const classifiersRoute = express.Router()
 
+/**
+ * @swagger
+ * /classifiers/state:
+ *   get:
+ *     summary: Seleciona Classificadores por estado
+ *     tags:
+ *       - classifiers
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 classifiersRoute.get(
   "/state",
   siteProcess({
@@ -20,6 +31,17 @@ classifiersRoute.get(
   })
 )
 
+/**
+ * @swagger
+ * /classifiers/:
+ *  get:
+ *    summary: lista classificadores por id do estado
+ *    tags:
+ *      - classifiers
+ *    responses:
+ *      200:
+ *        description: Sucesso
+ */
 classifiersRoute.get(
   "/",
   siteProcess({
@@ -38,6 +60,17 @@ classifiersRoute.get(
   })
 )
 
+/**
+ * @swagger
+ * /classifiers/id:
+ *  get:
+ *    summary: lista classificadores por id do estado
+ *    tags:
+ *      - classifiers
+ *    responses:
+ *      200:
+ *        description: Sucesso
+ */
 classifiersRoute.get(
   "/:id(\\d+)",
   siteProcess({

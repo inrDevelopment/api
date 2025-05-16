@@ -2,12 +2,13 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import "dotenv/config"
 import express from "express"
-import http from "http"
+import swaggerUi from "swagger-ui-express"
+import swaggerDocs from "../swagger"
 import application from "./config/application"
 import router from "./router"
 const app = express()
-const httpServer = http.createServer(app)
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -20,14 +21,13 @@ app.use((req, _, next) => {
 
   next()
 })
-
 app.use("/", router)
 
-httpServer.listen(application.port, async () => {
+app.listen(application.port, async () => {
   let finalHost =
     application.env === "dev"
       ? `${application.host}:${application.port}`
       : `${application.host}`
 
-  console.log(`Api ${application.name} running on: ${finalHost}`)
+  console.log(`Api ouvindo no endereço: http://${finalHost}`)
 })

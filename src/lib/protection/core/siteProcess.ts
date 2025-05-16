@@ -30,7 +30,7 @@ export function analize(params: analizeParams): (
         console.log(
           `url: ${req.path.toLowerCase()} | method: ${req.method.toLowerCase()} | time: ${
             req.meta.finish - req.meta.start
-          }`
+          }ms`
         )
       })
 
