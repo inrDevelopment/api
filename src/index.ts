@@ -6,6 +6,7 @@ import swaggerUi from "swagger-ui-express"
 import swaggerDocs from "../swagger"
 import application from "./config/application"
 import router from "./router"
+
 const app = express()
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
@@ -22,7 +23,6 @@ app.use((req, _, next) => {
   next()
 })
 app.use("/", router)
-
 app.listen(application.port, async () => {
   let finalHost =
     application.env === "dev"

@@ -6,11 +6,11 @@ const classifiersRoute = express.Router()
 
 /**
  * @swagger
- * /classifiers/state:
+ * /classificadores/state:
  *   get:
  *     summary: Seleciona Classificadores por estado
  *     tags:
- *       - classifiers
+ *       - /classificadores
  *     responses:
  *       200:
  *         description: Success
@@ -33,11 +33,11 @@ classifiersRoute.get(
 
 /**
  * @swagger
- * /classifiers/:
+ * /classificadores:
  *  get:
  *    summary: lista classificadores por id do estado
  *    tags:
- *      - classifiers
+ *      - /classificadores
  *    responses:
  *      200:
  *        description: Sucesso
@@ -62,11 +62,11 @@ classifiersRoute.get(
 
 /**
  * @swagger
- * /classifiers/id:
+ * /classificadores/{id}:
  *  get:
  *    summary: lista classificadores por id do estado
  *    tags:
- *      - classifiers
+ *      - /classificadores
  *    responses:
  *      200:
  *        description: Sucesso

@@ -1,5 +1,5 @@
 import type { RowDataPacket } from "mysql2"
-import conexao from "../../lib/database"
+import database from "../../lib/database"
 
 export class Repository {
   protected async procedure<T>(
@@ -7,7 +7,7 @@ export class Repository {
     ...values: any[]
   ): Promise<T | null> {
     try {
-      const [QueryResult] = await conexao.execute<RowDataPacket[]>(
+      const [QueryResult] = await database.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
 
@@ -21,7 +21,7 @@ export class Repository {
 
   protected async many<T>(name: string, ...values: any[]): Promise<T[]> {
     try {
-      const [QueryResult] = await conexao.execute<RowDataPacket[]>(
+      const [QueryResult] = await database.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
 

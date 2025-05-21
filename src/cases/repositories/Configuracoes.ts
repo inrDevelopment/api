@@ -1,6 +1,27 @@
 import { Repository } from "../core/Repository"
 
 export default class ConfiguracoesRepository extends Repository {
+  async hasBoletimblock(): Promise<{ valor: string } | null> {
+    try {
+      return await this.procedure<{ valor: string }>("has_be_block")
+    } catch (error: any) {
+      throw new Error(`configuracoes -:${error.message}`)
+    }
+  }
+
+  async updateBlock(params: {
+    value: "S" | "N"
+  }): Promise<{ updated: number } | null> {
+    try {
+      return await this.procedure<{ updated: number }>(
+        "editar_be_block",
+        params.value
+      )
+    } catch (error: any) {
+      throw new Error(`configuracoes -:${error.message}`)
+    }
+  }
+
   async numeroBoletim(): Promise<{ valor: number } | null> {
     try {
       return await this.procedure<{ valor: number }>("get_be_numero")

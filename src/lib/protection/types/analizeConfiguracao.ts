@@ -1,5 +1,5 @@
 export type analizeConfiguracao = {
-  acao?: string
+  acao?: "ler" | "criar" | "editar" | "excluir" | "aprovar" | "publicar"
   recurso?: string
   nivel: 0 | 1 | 2
 }

@@ -1,4 +1,5 @@
 import express from "express"
+import boletimRoutes from "./routes/boletimRoute"
 import classifirsRoutes from "./routes/classifiersRoutes"
 import descriptionRoute from "./routes/descriptionRoutes"
 import homeRoutes from "./routes/homeRoutes"
@@ -23,8 +24,9 @@ router.use("/opinion", opinionRoutes)
 router.use("/questions-answers", questionsAnswersRoutes)
 router.use("/messages-editors", messagesEditorsRoutes)
 router.use("/pareceres", pareceresRoutes)
-router.use("/classifiers", classifirsRoutes)
+router.use("/classificadores", classifirsRoutes)
 router.use("/description", descriptionRoute)
 router.use("/supplements", supplementsRoutes)
+router.use("/boletim", boletimRoutes)
 
 export default router
