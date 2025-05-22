@@ -26,3 +26,12 @@ userRoute.post(
 )
 
 export default userRoute
+
+/**
+ * C - Criar
+ * L - Ler
+ * E - Editar
+ * E - Excluir
+ * A - Aprovar
+ * P - Publicar
+ */
