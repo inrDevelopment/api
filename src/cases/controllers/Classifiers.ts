@@ -1,3 +1,4 @@
+//#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
   getBarPreviousActsByActIdControllerProps,
@@ -20,6 +21,7 @@ import {
   stateByTitleValidation
 } from "../schemas/stateByTitle"
 import ClassifiersService from "../services/Classifiers"
+//#endregion Imports
 
 export default class ClassifiersController {
   constructor(private classifiersService: ClassifiersService) {}

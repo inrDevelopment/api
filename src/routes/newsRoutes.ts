@@ -1,5 +1,5 @@
 import express from "express"
-import { newsController } from "../cases/entry/user"
+import newsController from "../cases/entry/news"
 import { siteProcess } from "../lib/protection"
 const newsRoute = express.Router()
 

@@ -4,10 +4,6 @@ import {
   boletimNovoControllerProps,
   boletimNovoValidation
 } from "../schemas/boletimNovo"
-import {
-  listarBoletimControllerProps,
-  listarBoletimValidation
-} from "../schemas/listarBoletim"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
@@ -32,77 +28,7 @@ export default class BoletimController {
     }
   }
 
-  async listarBoletins(
-    params: listarBoletimControllerProps
-  ): Promise<defaultResponse> {
-    try {
-      const validation = await listarBoletimValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.boletimService.listarBoletins(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
   async listForPanel(params: {}): Promise<defaultResponse> {
-    try {
-      return {
-        success: false
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async markAsReaded(params: {}): Promise<defaultResponse> {
-    try {
-      return {
-        success: false
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async markAsUnReaded(params: {}): Promise<defaultResponse> {
-    try {
-      return {
-        success: false
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async favoriteThis(params: {}): Promise<defaultResponse> {
-    try {
-      return {
-        success: false
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async unfavoriteThis(params: {}): Promise<defaultResponse> {
     try {
       return {
         success: false

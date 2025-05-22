@@ -2,7 +2,6 @@ import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
 import ConfiguracoesRepository from "../repositories/Configuracoes"
 import { boletimNovoServiceProps } from "../schemas/boletimNovo"
-import { listarBoletimServiceProps } from "../schemas/listarBoletim"
 
 export default class BoletimService {
   constructor(
@@ -103,41 +102,6 @@ export default class BoletimService {
         success: true,
         data: { idboletim: be.boletim_id },
         message: `Boletim Nº ${numero.valor} criado com sucesso.`
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async listarBoletins(
-    params: listarBoletimServiceProps
-  ): Promise<defaultResponse> {
-    try {
-      const list = await this.boletimRepository.listarBoletim({
-        searchText: params.titulo,
-        tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data,
-        limite: params.limite,
-        pagina: params.pagina * params.limite
-      })
-
-      const res = await this.boletimRepository.listarBoletimCount({
-        searchText: params.titulo,
-        tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data
-      })
-
-      if (!res) throw new Error("Erro ao listar os boletins.")
-
-      return {
-        success: false,
-        data: {
-          list,
-          count: res.count
-        }
       }
     } catch (error: any) {
       return {

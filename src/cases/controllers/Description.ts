@@ -1,9 +1,11 @@
+//#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
   descriptionByIdControllerProps,
   descriptionByIdValidation
 } from "../schemas/descriptionById"
 import DescriptionService from "../services/Description"
+//#endregion Imports
 
 export default class DescriptionController {
   constructor(private descriptionService: DescriptionService) {}

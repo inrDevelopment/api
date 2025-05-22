@@ -5,6 +5,7 @@ import descriptionRoute from "./routes/descriptionRoutes"
 import homeRoutes from "./routes/homeRoutes"
 import jurisprudenceRoutes from "./routes/jurisprudenceRoutes"
 import legislationRoutes from "./routes/legislationRoutes"
+import leitorRoute from "./routes/leitorRoute"
 import messagesEditorsRoutes from "./routes/messagesEditorsRoutes"
 import newsRoutes from "./routes/newsRoutes"
 import opinionRoutes from "./routes/opinionRoutes"
@@ -28,5 +29,6 @@ router.use("/classificadores", classifirsRoutes)
 router.use("/description", descriptionRoute)
 router.use("/supplements", supplementsRoutes)
 router.use("/boletim", boletimRoutes)
+router.use("/leitor", leitorRoute)
 
 export default router

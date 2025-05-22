@@ -79,4 +79,34 @@ export default class BoletimRepository extends Repository {
       throw new Error(error.message)
     }
   }
+
+  async markAsReaded(params: {
+    idboletim: number
+    idusuario: number
+  }): Promise<{ id: number } | null> {
+    try {
+      return await this.procedure<{ id: number }>(
+        "marca_leitura",
+        params.idboletim,
+        params.idusuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async markAsUnreaded(params: {
+    idboletim: number
+    idusuario: number
+  }): Promise<{ id: number } | null> {
+    try {
+      return await this.procedure<{ id: number }>(
+        "remove_leitura",
+        params.idboletim,
+        params.idusuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
 }

@@ -1,11 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const listarBoletins: swaggerJSDoc.PathItem = {
+const listarFavoritos: swaggerJSDoc.PathItem = {
   post: {
-    description:
-      "Lista os boletins criados que já foram aprovados e publicados.",
+    description: "Lista os boletins inserido como favorito.",
     tags: ["/leitor"],
-    summary: "Listar boletim.",
+    summary: "Listar favoritos.",
     requestBody: {
       required: true,
       content: {
@@ -60,8 +59,7 @@ const listarBoletins: swaggerJSDoc.PathItem = {
                             format: "date"
                           },
                           numero: { type: "string" },
-                          lido: { type: "string" },
-                          favorito: { type: "string" }
+                          lido: { type: "boolean" }
                         }
                       }
                     },
@@ -80,4 +78,4 @@ const listarBoletins: swaggerJSDoc.PathItem = {
   }
 }
 
-export default listarBoletins
+export default listarFavoritos

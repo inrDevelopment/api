@@ -1,3 +1,4 @@
+//#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
   getJurisprudenceByIdControllerProps,
@@ -8,6 +9,7 @@ import {
   jurisprudenceHomeValidation
 } from "../schemas/jurisprudenceHome"
 import JurisprudenceService from "../services/Jurisprudence"
+//#endregion Imports
 
 export default class JurisprudenceController {
   constructor(private jurisprudenceService: JurisprudenceService) {}
