@@ -74,7 +74,7 @@ export default class LeitorController {
     }
   }
 
-  async markAsUnReaded(
+  async markAsUnreaded(
     params: markAsUnreadedControllerProps
   ): Promise<defaultResponse> {
     try {

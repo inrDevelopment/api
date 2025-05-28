@@ -3,19 +3,55 @@ import { Repository } from "../core/Repository"
 export default class BoletimRepository extends Repository {
   async novo(params: {
     titulo: string
-    numero: number
+    numero?: number
     tipo: number
     data: Date
     criado_id: number
   }): Promise<{ boletim_id: number } | null> {
     try {
       return this.procedure<{ boletim_id: number }>(
-        "criar_boletim",
-        params.titulo,
-        params.numero,
+        "novo_boletim",
+        `'${params.titulo}'`,
+        params.numero ?? "NULL",
         params.tipo,
-        params.data,
+        `'${this.formatDate(params.data)}'`,
         params.criado_id
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async dataUpdate(params: {
+    idboletim: number
+    dataBoletim: Date
+    idusuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "update_data_be",
+        params.idboletim,
+        this.formatDate(params.dataBoletim),
+        params.idusuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async dataAndTitleUpdate(params: {
+    title: string
+    idboletim: number
+    dataBoletim: Date
+    idusuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "update_data_title_be",
+        params.idboletim,
+        params.title,
+        this.formatDate(params.dataBoletim),
+        params.idusuario
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -104,6 +140,19 @@ export default class BoletimRepository extends Repository {
         "remove_leitura",
         params.idboletim,
         params.idusuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async canUpdate(params: {
+    idboletim: number
+  }): Promise<{ id: number; boletim_tipo_id: number } | null> {
+    try {
+      return await this.procedure<{ id: number; boletim_tipo_id: number }>(
+        "can_update_be",
+        params.idboletim
       )
     } catch (error: any) {
       throw new Error(error.message)

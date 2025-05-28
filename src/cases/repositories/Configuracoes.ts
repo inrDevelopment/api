@@ -9,14 +9,9 @@ export default class ConfiguracoesRepository extends Repository {
     }
   }
 
-  async updateBlock(params: {
-    value: "S" | "N"
-  }): Promise<{ updated: number } | null> {
+  async updateBlock(params: { value: "S" | "N" }): Promise<void> {
     try {
-      return await this.procedure<{ updated: number }>(
-        "editar_be_block",
-        params.value
-      )
+      await this.silentprocedure("editar_be_block", `'${params.value}'`)
     } catch (error: any) {
       throw new Error(`configuracoes -:${error.message}`)
     }

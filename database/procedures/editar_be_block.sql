@@ -2,13 +2,10 @@
 DROP PROCEDURE IF EXISTS editar_be_block;
 
 CREATE PROCEDURE editar_be_block (
-    IN val CHAR(1),
-    OUT updated INT
+    IN val CHAR(1)
 )
 BEGIN
     UPDATE config SET
      valor = val
-    WHERE idconfig = 17;
-
-    SET updated = ROW_COUNT();
+    WHERE idconfig = 17;    
 END;

@@ -1,13 +1,12 @@
 -- Active: 1744652968446@@inrpublicacoes.mysql.dbaas.com.br@3306@inrpublicacoes
-DROP PROCEDURE IF EXISTS criar_boletim;
+DROP PROCEDURE IF EXISTS novo_boletim;
 
-CREATE PROCEDURE criar_boletim (
+CREATE PROCEDURE novo_boletim (
     IN boletimtitulo VARCHAR(200),
     IN boletimnumero VARCHAR(10),
     IN boletimtipo INT,
     IN boletimdata char(10),
-    IN criado_id INT,
-    OUT boletim_id INT
+    IN boletimcriado_id INT
 )
 BEGIN
     INSERT INTO boletim (
@@ -33,10 +32,10 @@ BEGIN
         0,
         0,
         TRUE,
-        criado_id,
+        boletimcriado_id,
         NOW(),
         'N'
     );
 
-    SET boletim_id = LAST_INSERT_ID();
+    SELECT LAST_INSERT_ID() AS boletim_id;
 END;

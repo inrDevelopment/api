@@ -25,4 +25,25 @@ boletimRoute.post(
   })
 )
 
+boletimRoute.post(
+  "/:id/editar",
+  painelProcess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.editarBoletim({
+          id: +req.params.id,
+          titulo: req.body.titulo,
+          data: req.body.data,
+          idusuario: 37 /* req.credenciais.idusuario */
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "boletim",
+      acao: "editar"
+    }
+  })
+)
+
 export default boletimRoute

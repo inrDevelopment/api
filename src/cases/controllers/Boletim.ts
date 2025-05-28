@@ -4,6 +4,10 @@ import {
   boletimNovoControllerProps,
   boletimNovoValidation
 } from "../schemas/boletimNovo"
+import {
+  editarBoletimControllerProps,
+  editarBoletimValidation
+} from "../schemas/editarBoletim"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
@@ -28,7 +32,61 @@ export default class BoletimController {
     }
   }
 
-  async listForPanel(params: {}): Promise<defaultResponse> {
+  async editarBoletim(
+    params: editarBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await editarBoletimValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.editarBoletim(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async selecionarBoletim(
+    params: boletimNovoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await boletimNovoValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.novoBoletim(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async excluirBoletim(
+    params: boletimNovoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await boletimNovoValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.novoBoletim(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listaBoletim(params: {}): Promise<defaultResponse> {
     try {
       return {
         success: false
@@ -41,7 +99,7 @@ export default class BoletimController {
     }
   }
 
-  async approveThis(params: {}): Promise<defaultResponse> {
+  async aprovarBoletim(params: {}): Promise<defaultResponse> {
     try {
       return {
         success: false
@@ -54,7 +112,7 @@ export default class BoletimController {
     }
   }
 
-  async publishThis(params: {}): Promise<defaultResponse> {
+  async publicarBoletim(params: {}): Promise<defaultResponse> {
     try {
       return {
         success: false

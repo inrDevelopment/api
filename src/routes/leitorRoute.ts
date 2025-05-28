@@ -49,7 +49,7 @@ leitorRoute.delete(
   siteProcess({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.markAsUnReaded({
+        await leitorController.markAsUnreaded({
           idboletim: +req.params.id,
           idusuario: 37 /* req.credenciais.idusuario */
         })
