@@ -12,7 +12,10 @@ BEGIN
     SET
         `data` = dataBoletim,
         alterado_em = NOW(),
-        alterado_id = alteradoId
+        alterado_id = alteradoId,
+        aprovado = "N",
+        aprovado_em = NULL,
+        aprovado_id = NULL
     WHERE
         id = idboletim;
 END;

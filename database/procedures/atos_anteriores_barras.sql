@@ -1,4 +1,4 @@
--- Active: 1728923473005@@inrpublicacoes.mysql.dbaas.com.br@3306@inrpublicacoes
+-- Active: 1744652968446@@inrpublicacoes.mysql.dbaas.com.br@3306@inrpublicacoes
 DROP PROCEDURE IF EXISTS atos_anteriores_barras;
 
 CREATE PROCEDURE atos_anteriores_barras (idAto INT)

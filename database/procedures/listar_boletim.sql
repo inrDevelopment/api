@@ -3,6 +3,7 @@
 DROP PROCEDURE IF EXISTS listar_boletim;
 
 CREATE PROCEDURE listar_boletim (
+	idUsuario INT,
     searchText VARCHAR(200),    
     tipo_id INT,
 	data_boletim DATETIME,
@@ -40,7 +41,12 @@ BEGIN
 		be.excluido_em IS NULL
 	AND 
 		be.excluido_em IS NULL
+	AND 
+		bf.usuario_id = idUsuario
+	AND 
+		bl.usuario_id = idUsuario
 	ORDER BY 
+		be.numero DESC, 
 		be.`data` DESC
 	LIMIT 
 		limite

@@ -83,7 +83,7 @@ export default class BoletimRepository extends Repository {
         lido: string
         favorito: string
       }>(
-        "listar_boletim",
+        "listar_boletim_painel",
         params.searchText,
         params.tipo_id,
         params.data_boletim,
@@ -106,7 +106,7 @@ export default class BoletimRepository extends Repository {
       return await this.procedure<{
         count: number
       }>(
-        "listar_boletim_count",
+        "listar_boletim_painel_count",
         params.searchText,
         params.tipo_id,
         params.data_boletim
@@ -153,6 +153,125 @@ export default class BoletimRepository extends Repository {
       return await this.procedure<{ id: number; boletim_tipo_id: number }>(
         "can_update_be",
         params.idboletim
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async deleteBoletim(params: {
+    id: number
+    idusuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure("delete_boletim", params.id, params.idusuario)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async selecionarBoletim(params: { idBoletim: number }): Promise<{
+    id: number
+    titulo: string
+    numero: string
+    data: string
+    ativo: boolean
+    favorito: number
+    vizualizacao: number
+    criado_em: string
+    criado_id: number
+    nome_criado: string
+    alterado_em: string
+    alterado_id: number
+    nome_alterado: string
+    aprovado: string
+    aprovado_em: string
+    aprovado_id: number
+    nome_aprovado: string
+    publicado: string
+    publicado_em: string
+    publicado_id: number
+    nome_publicado: string
+  } | null> {
+    try {
+      return this.procedure<{
+        id: number
+        titulo: string
+        numero: string
+        data: string
+        ativo: boolean
+        favorito: number
+        vizualizacao: number
+        criado_em: string
+        criado_id: number
+        nome_criado: string
+        alterado_em: string
+        alterado_id: number
+        nome_alterado: string
+        aprovado: string
+        aprovado_em: string
+        aprovado_id: number
+        nome_aprovado: string
+        publicado: string
+        publicado_em: string
+        publicado_id: number
+        nome_publicado: string
+      }>("select_boletim", params.idBoletim)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async selecionarBoletimitems(params: { idBoletim: number }): Promise<
+    {
+      id: number
+      conteudo_tipo_id: number
+      conteudo_tipo: string
+      titulo: string
+      url: string
+      conteudo: string
+      ordem: number
+    }[]
+  > {
+    try {
+      return this.many<{
+        id: number
+        conteudo_tipo_id: number
+        conteudo_tipo: string
+        titulo: string
+        url: string
+        conteudo: string
+        ordem: number
+      }>("get_boletim_conteudo", params.idBoletim)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async aprovarBoletim(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "aprovar_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async publicarBoletim(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "publicar_boletim",
+        params.idBoletim,
+        params.idUsuario
       )
     } catch (error: any) {
       throw new Error(error.message)

@@ -1,13 +1,33 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
+  boletimAprovarControllerProps,
+  boletimAprovarValidation
+} from "../schemas/boletimAprovar"
+import {
+  boletimExcluirControllerProps,
+  boletimExcluirValidation
+} from "../schemas/boletimExcluir"
+import {
   boletimNovoControllerProps,
   boletimNovoValidation
 } from "../schemas/boletimNovo"
 import {
+  boletimPublicarControllerProps,
+  boletimPublicarValidation
+} from "../schemas/boletimPublicar"
+import {
+  boletimSelecionarControllerProps,
+  boletimSelecionarValidation
+} from "../schemas/boletimSelecionar"
+import {
   editarBoletimControllerProps,
   editarBoletimValidation
 } from "../schemas/editarBoletim"
+import {
+  listarBoletimControllerProps,
+  listarBoletimValidation
+} from "../schemas/listarBoletim"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
@@ -51,15 +71,17 @@ export default class BoletimController {
   }
 
   async selecionarBoletim(
-    params: boletimNovoControllerProps
+    params: boletimSelecionarControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await boletimNovoValidation.safeParseAsync(params)
+      const validation = await boletimSelecionarValidation.safeParseAsync(
+        params
+      )
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.novoBoletim(validation.data)
+      return await this.boletimService.selecionarBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -69,15 +91,15 @@ export default class BoletimController {
   }
 
   async excluirBoletim(
-    params: boletimNovoControllerProps
+    params: boletimExcluirControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await boletimNovoValidation.safeParseAsync(params)
+      const validation = await boletimExcluirValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.novoBoletim(validation.data)
+      return await this.boletimService.excluirBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -86,11 +108,16 @@ export default class BoletimController {
     }
   }
 
-  async listaBoletim(params: {}): Promise<defaultResponse> {
+  async listaBoletim(
+    params: listarBoletimControllerProps
+  ): Promise<defaultResponse> {
     try {
-      return {
-        success: false
-      }
+      const validation = await listarBoletimValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.listaBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -99,11 +126,16 @@ export default class BoletimController {
     }
   }
 
-  async aprovarBoletim(params: {}): Promise<defaultResponse> {
+  async aprovarBoletim(
+    params: boletimAprovarControllerProps
+  ): Promise<defaultResponse> {
     try {
-      return {
-        success: false
-      }
+      const validation = await boletimAprovarValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.aprovarBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -112,11 +144,16 @@ export default class BoletimController {
     }
   }
 
-  async publicarBoletim(params: {}): Promise<defaultResponse> {
+  async publicarBoletim(
+    params: boletimPublicarControllerProps
+  ): Promise<defaultResponse> {
     try {
-      return {
-        success: false
-      }
+      const validation = await boletimPublicarValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.publicarBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
