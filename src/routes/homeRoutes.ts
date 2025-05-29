@@ -1,29 +1,33 @@
 import express from "express"
 import { homeController } from "../cases/entry/home"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 
 const homeRoute = express.Router()
 
 homeRoute.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(await homeController.homeContent())
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      recurso: "home",
+      acao: "ler"
     }
   })
 )
 
 homeRoute.get(
   "/curriculum",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(await homeController.curriculumContent())
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      recurso: "home",
+      acao: "ler"
     }
   })
 )

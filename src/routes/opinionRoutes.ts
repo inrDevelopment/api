@@ -1,11 +1,11 @@
 import express from "express"
 import { opinionController } from "../cases/entry/opnion"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 const opinionRoute = express.Router()
 
 opinionRoute.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await opinionController.opinionContent({
@@ -15,14 +15,16 @@ opinionRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "opniao"
     }
   })
 )
 
 opinionRoute.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await opinionController.getOpinionById({
@@ -32,7 +34,9 @@ opinionRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "opniao"
     }
   })
 )

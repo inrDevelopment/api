@@ -1,16 +1,11 @@
 import express from "express"
-import UserController from "../cases/controllers/User"
-import UserRepository from "../cases/repositories/User"
-import UserService from "../cases/services/User"
-import { siteProcess } from "../lib/protection"
+import { userController } from "../cases/entry/user"
+import { siteProccess } from "../lib/protection"
 const userRoute = express.Router()
-const userRepository = new UserRepository()
-const userService = new UserService(userRepository)
-const userController = new UserController(userService)
 
 userRoute.post(
   "/authentication",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.authentication({
@@ -20,18 +15,11 @@ userRoute.post(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "usuario"
     }
   })
 )
 
 export default userRoute
-
-/**
- * C - Criar
- * L - Ler
- * E - Editar
- * E - Excluir
- * A - Aprovar
- * P - Publicar
- */

@@ -1,11 +1,11 @@
 import express from "express"
 import newsController from "../cases/entry/news"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 const newsRoute = express.Router()
 
 newsRoute.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await newsController.newsHome({
@@ -15,14 +15,16 @@ newsRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "noticias"
     }
   })
 )
 
 newsRoute.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await newsController.getNewsById({
@@ -31,7 +33,9 @@ newsRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "noticias"
     }
   })
 )

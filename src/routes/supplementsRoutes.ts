@@ -1,24 +1,26 @@
 import express from "express"
 import { supplementsController } from "../cases/entry/supplements"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 
 const supplementsRoutes = express.Router()
 
 supplementsRoutes.get(
   "/themes/list",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(await supplementsController.getSupplementsThemes())
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "themes"
     }
   })
 )
 
 supplementsRoutes.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await supplementsController.supplementsContent({
@@ -29,14 +31,16 @@ supplementsRoutes.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "themes"
     }
   })
 )
 
 supplementsRoutes.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await supplementsController.supplementsById({
@@ -46,7 +50,9 @@ supplementsRoutes.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "themes"
     }
   })
 )

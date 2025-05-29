@@ -1,5 +1,10 @@
+//#region imports
+import { createHash } from "crypto"
+import { sign } from "jsonwebtoken"
+import application from "../../config/application"
 import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
+import UserRepository from "../repositories/User"
 import { favoriteThisServiceProps } from "../schemas/favoriteThis"
 import { listarBoletimServiceProps } from "../schemas/listarBoletim"
 import { listarFavoritoServiceProps } from "../schemas/listarFavorito"
@@ -8,15 +13,20 @@ import { markAsReadedServiceProps } from "../schemas/markAsReaded"
 import { markAsUnreadedServiceProps } from "../schemas/markAsUnreaded"
 import { registerServiceProps } from "../schemas/register"
 import { unfavoriteThisServiceProps } from "../schemas/unfavoriteThis"
+//#endregion imports
 
 export default class LeitorService {
-  constructor(private boletimRepository: BoletimRepository) {}
+  constructor(
+    private boletimRepository: BoletimRepository,
+    private userRepository: UserRepository
+  ) {}
 
   async listarBoletins(
     params: listarBoletimServiceProps
   ): Promise<defaultResponse> {
     try {
       const list = await this.boletimRepository.listarBoletim({
+        idUsuario: params.idusuario,
         searchText: params.titulo,
         tipo_id: params.boletim_tipo_id,
         data_boletim: params.data,
@@ -91,8 +101,16 @@ export default class LeitorService {
     params: favoriteThisServiceProps
   ): Promise<defaultResponse> {
     try {
+      const res = await this.boletimRepository.favoriteThis({
+        idBoletim: params.idboletim,
+        idUsuario: params.idusuario
+      })
+
+      if (res) throw new Error("Erro ao marcar boletim como favorito.")
+
       return {
-        success: false
+        success: true,
+        message: "Boletim marcado como favorito."
       }
     } catch (error: any) {
       return {
@@ -106,8 +124,16 @@ export default class LeitorService {
     params: unfavoriteThisServiceProps
   ): Promise<defaultResponse> {
     try {
+      const res = await this.boletimRepository.unfavoriteThis({
+        idBoletim: params.idboletim,
+        idUsuario: params.idusuario
+      })
+
+      if (res) throw new Error("Erro ao remover o boletim dos favorito.")
+
       return {
-        success: false
+        success: true,
+        message: "Boletim removido como favorito."
       }
     } catch (error: any) {
       return {
@@ -132,7 +158,15 @@ export default class LeitorService {
 
   async register(params: registerServiceProps): Promise<defaultResponse> {
     try {
-      return { success: true }
+      const response = await this.boletimRepository.registerMobile({
+        userToken: params.token,
+        uuid: params.uuid
+      })
+
+      if (response.affectedRows <= 0)
+        throw new Error("Erro ao registrar o aparelho.")
+
+      return { success: true, message: "aparelho registrado com sucesso." }
     } catch (error: any) {
       return {
         success: false,
@@ -143,7 +177,59 @@ export default class LeitorService {
 
   async login(params: loginLeitorServiceProps): Promise<defaultResponse> {
     try {
-      return { success: true }
+      const salt = await this.userRepository.getSalt({
+        login: params.login
+      })
+
+      if (!salt)
+        throw new Error("Não existe nenhum usuário cadastrado com esses dados.")
+
+      if (salt.idstatus_cliente > 2)
+        throw new Error(
+          "Seu acesso encontra-se desativado. Entre em contato conosco para reativar."
+        )
+
+      const hash = createHash("sha1")
+      const fullHash = createHash("sha1")
+
+      hash.update(params.senha)
+      fullHash.update(`${hash.digest("hex")}${salt.idusuario}`)
+
+      const contentToSearch = fullHash.digest("hex")
+      let userConfirmed = null
+
+      userConfirmed = await this.userRepository.getConfirmation({
+        email: params.login,
+        senha: contentToSearch
+      })
+
+      if (!userConfirmed) {
+        userConfirmed = await this.userRepository.getOldConfirmation({
+          email: params.login,
+          senha: contentToSearch
+        })
+      }
+
+      if (!userConfirmed) throw new Error("A senha informada está incorreta.")
+
+      const token = sign(
+        JSON.stringify({
+          idcliente: userConfirmed.idcliente,
+          idusuario: userConfirmed.idusuario,
+          idgrupo_site: userConfirmed.idgrupo_site,
+          admin: userConfirmed.admin,
+          autorizacao_trabalhista: userConfirmed.autorizacao_trabalhista
+        }),
+        application.key
+      )
+
+      return {
+        success: true,
+        data: {
+          nome: userConfirmed.nome,
+          credential: token
+        }
+      }
     } catch (error: any) {
       return {
         success: false,

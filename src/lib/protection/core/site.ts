@@ -1,24 +1,15 @@
 import { Request, Response } from "express"
 import { verify } from "jsonwebtoken"
+import { IUsuarioSite, params, UsuarioSite } from ".."
+import { defaultResponse } from "../../../cases/core/defaultResponse"
 import application from "../../../config/application"
-import { analizeParams } from "../types/analizeParams"
-import { IUsuarioSite, UsuarioSite } from "../types/usuarioSite"
 
-export function analize(params: analizeParams): (
-  req: Request,
-  res: Response<{
-    success: boolean
-    data?: any
-    message?: string
-  }>
-) => Promise<void> {
+export function process(
+  params: params
+): (req: Request, res: Response<defaultResponse>) => Promise<void> {
   return async (
     req: Request,
-    res: Response<{
-      success: boolean
-      data?: any
-      message?: string
-    }>
+    res: Response<defaultResponse>
   ): Promise<void> => {
     try {
       req.meta.date = new Date()
@@ -27,6 +18,7 @@ export function analize(params: analizeParams): (
 
       res.on("finish", () => {
         req.meta.finish = new Date().getTime()
+
         console.log(
           `url: ${req.path.toLowerCase()} | method: ${req.method.toLowerCase()} | time: ${
             req.meta.finish - req.meta.start
@@ -38,16 +30,6 @@ export function analize(params: analizeParams): (
         case 0:
           return await params.handle(req, res)
         case 1:
-          if (!req.headers["authorization"]) throw new Error("Não autorizado")
-
-          req.credenciais = new UsuarioSite(
-            verify(
-              req.headers["authorization"],
-              application.key
-            ) as IUsuarioSite
-          )
-
-          return await params.handle(req, res)
         case 2:
           if (!req.headers["authorization"]) throw new Error("Não autorizado")
 
@@ -57,14 +39,6 @@ export function analize(params: analizeParams): (
               application.key
             ) as IUsuarioSite
           )
-
-          if (
-            !req.credenciais.autorizado(
-              params.configuracao.recurso,
-              params.configuracao.acao
-            )
-          )
-            throw new Error("Não autorizado.")
 
           return await params.handle(req, res)
       }

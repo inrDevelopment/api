@@ -1,12 +1,12 @@
 import express from "express"
 import { boletimController } from "../cases/entry/boletim"
-import { painelProcess } from "../lib/protection"
+import { painelProccess } from "../lib/protection"
 
 const boletimRoute = express.Router()
 
 boletimRoute.post(
   "/novo",
-  painelProcess({
+  painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.novoBoletim({
@@ -27,7 +27,7 @@ boletimRoute.post(
 
 boletimRoute.post(
   "/:id/editar",
-  painelProcess({
+  painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.editarBoletim({

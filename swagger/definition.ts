@@ -6,7 +6,7 @@ const definition: swaggerJSDoc.OAS3Definition = {
   openapi: "3.0.0",
   info: {
     title: "API INR",
-    version: "0.1.0",
+    version: "1.0.0",
     description: "Documentação da API INR"
   },
   servers: [

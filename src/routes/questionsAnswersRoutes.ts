@@ -1,12 +1,12 @@
 import express from "express"
 import { questionsAnswersController } from "../cases/entry/questionAnswers"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 
 const questionsAnswersRoute = express.Router()
 
 questionsAnswersRoute.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await questionsAnswersController.questionsAnswersContent({
@@ -16,14 +16,16 @@ questionsAnswersRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "question"
     }
   })
 )
 
 questionsAnswersRoute.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await questionsAnswersController.getQuestionsAnswersById({
@@ -33,7 +35,9 @@ questionsAnswersRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "question"
     }
   })
 )

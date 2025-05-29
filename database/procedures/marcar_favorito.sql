@@ -1,7 +1,7 @@
 -- Active: 1744652968446@@inrpublicacoes.mysql.dbaas.com.br@3306@inrpublicacoes
-DROP PROCEDURE IF EXISTS marca_leitura;
+DROP PROCEDURE IF EXISTS marcar_favorito;
 
-CREATE PROCEDURE marca_leitura (
+CREATE PROCEDURE marcar_favorito (
     idBoletim INT,
     idUsuario INT
 )

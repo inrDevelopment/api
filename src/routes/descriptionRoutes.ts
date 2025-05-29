@@ -1,12 +1,12 @@
 import express from "express"
 import { descriptionController } from "../cases/entry/description"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 
 const descriptionRoute = express.Router()
 
 descriptionRoute.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await descriptionController.get({
@@ -15,7 +15,9 @@ descriptionRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "descricao"
     }
   })
 )

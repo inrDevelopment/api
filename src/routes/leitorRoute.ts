@@ -1,17 +1,18 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 const leitorRoute = express.Router()
 
 leitorRoute.post(
   "/boletims",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarBoletins({
           titulo: req.body.titulo,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
+          idusuario: req.credenciais.id,
           limite: req.body.limite,
           pagina: req.body.pagina
         })
@@ -27,7 +28,7 @@ leitorRoute.post(
 
 leitorRoute.get(
   "/leitura/:id(\\d+)/adicionar",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsReaded({
@@ -46,7 +47,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/leitura/:id(\\d+)/remover",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsUnreaded({
@@ -65,7 +66,7 @@ leitorRoute.delete(
 
 leitorRoute.get(
   "/favorito/:id(\\d+)/adicionar",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.favoriteThis({
@@ -84,7 +85,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/favorito/:id(\\d+)/remover",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.unfavoriteThis({
@@ -103,7 +104,7 @@ leitorRoute.delete(
 
 leitorRoute.post(
   "/favorito",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarFavoritos({
@@ -124,8 +125,8 @@ leitorRoute.post(
 )
 
 leitorRoute.post(
-  "/register",
-  siteProcess({
+  "/registrar",
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.register({
@@ -143,8 +144,8 @@ leitorRoute.post(
 )
 
 leitorRoute.post(
-  "/authentication",
-  siteProcess({
+  "/autenticacao",
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.login({

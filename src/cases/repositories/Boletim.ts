@@ -59,6 +59,7 @@ export default class BoletimRepository extends Repository {
   }
 
   async listarBoletim(params: {
+    idUsuario: number
     searchText: string
     tipo_id: number
     data_boletim: Date
@@ -84,6 +85,7 @@ export default class BoletimRepository extends Repository {
         favorito: string
       }>(
         "listar_boletim_painel",
+        params.idUsuario,
         params.searchText,
         params.tipo_id,
         params.data_boletim,
@@ -119,9 +121,9 @@ export default class BoletimRepository extends Repository {
   async markAsReaded(params: {
     idboletim: number
     idusuario: number
-  }): Promise<{ id: number } | null> {
+  }): Promise<{ affectedRows: number }> {
     try {
-      return await this.procedure<{ id: number }>(
+      return await this.updateprocedure(
         "marca_leitura",
         params.idboletim,
         params.idusuario
@@ -134,9 +136,9 @@ export default class BoletimRepository extends Repository {
   async markAsUnreaded(params: {
     idboletim: number
     idusuario: number
-  }): Promise<{ id: number } | null> {
+  }): Promise<{ affectedRows: number }> {
     try {
-      return await this.procedure<{ id: number }>(
+      return await this.updateprocedure(
         "remove_leitura",
         params.idboletim,
         params.idusuario
@@ -272,6 +274,51 @@ export default class BoletimRepository extends Repository {
         "publicar_boletim",
         params.idBoletim,
         params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async favoriteThis(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "marcar_favorito",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async unfavoriteThis(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "remover_favorito",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async registerMobile(params: {
+    uuid: string
+    userToken: string
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "subscribe_mobile_chanell",
+        params.uuid,
+        params.userToken
       )
     } catch (error: any) {
       throw new Error(error.message)

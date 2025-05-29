@@ -1,24 +1,15 @@
 import { Request, Response } from "express"
 import { verify } from "jsonwebtoken"
+import { IUsuarioPainel, params, UsuarioPainel } from ".."
+import { defaultResponse } from "../../../cases/core/defaultResponse"
 import application from "../../../config/application"
-import { analizeParams } from "../types/analizeParams"
-import { IUsuarioPainel, UsuarioPainel } from "../types/usuarioPainel"
 
-export function analize(params: analizeParams): (
-  req: Request,
-  res: Response<{
-    success: boolean
-    data?: any
-    message?: string
-  }>
-) => Promise<void> {
+export function process(
+  params: params
+): (req: Request, res: Response<defaultResponse>) => Promise<void> {
   return async (
     req: Request,
-    res: Response<{
-      success: boolean
-      data?: any
-      message?: string
-    }>
+    res: Response<defaultResponse>
   ): Promise<void> => {
     try {
       req.meta.date = new Date()
@@ -27,10 +18,11 @@ export function analize(params: analizeParams): (
 
       res.on("finish", () => {
         req.meta.finish = new Date().getTime()
+
         console.log(
           `url: ${req.path.toLowerCase()} | method: ${req.method.toLowerCase()} | time: ${
             req.meta.finish - req.meta.start
-          }`
+          }ms`
         )
       })
 

@@ -1,11 +1,11 @@
 import express from "express"
 import { legislationController } from "../cases/entry/legislation"
-import { siteProcess } from "../lib/protection"
+import { siteProccess } from "../lib/protection"
 const legislationRoute = express.Router()
 
 legislationRoute.get(
   "/",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await legislationController.legislationContent({
@@ -15,14 +15,16 @@ legislationRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "legislacao"
     }
   })
 )
 
 legislationRoute.get(
   "/:id",
-  siteProcess({
+  siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await legislationController.getLegislationById({
@@ -32,7 +34,9 @@ legislationRoute.get(
       )
     },
     configuracao: {
-      nivel: 0
+      nivel: 0,
+      acao: "ler",
+      recurso: "legislacao"
     }
   })
 )

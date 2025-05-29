@@ -1,6 +1,8 @@
+//#region imports
 import { defaultResponse } from "../../core/defaultResponse"
 import BoletimRepository from "../../repositories/Boletim"
 import ConfiguracoesRepository from "../../repositories/Configuracoes"
+import { adicionarItemBoletimServiceProps } from "../../schemas/adicionarItemBoletim"
 import { boletimAprovarServiceProps } from "../../schemas/boletimAprovar"
 import { boletimExcluirServiceProps } from "../../schemas/boletimExcluir"
 import { boletimNovoServiceProps } from "../../schemas/boletimNovo"
@@ -9,6 +11,7 @@ import { boletimSelecionarServiceProps } from "../../schemas/boletimSelecionar"
 import { editarBoletimServiceProps } from "../../schemas/editarBoletim"
 import { listarBoletimServiceProps } from "../../schemas/listarBoletim"
 import Core from "./Core"
+//#endregion imports
 
 export default class BoletimService {
   private core: Core
@@ -160,6 +163,7 @@ export default class BoletimService {
   ): Promise<defaultResponse> {
     try {
       const list = await this.boletimRepository.listarBoletim({
+        idUsuario: 37,
         searchText: params.titulo,
         tipo_id: params.boletim_tipo_id,
         data_boletim: params.data,
@@ -227,6 +231,21 @@ export default class BoletimService {
       return {
         success: true,
         message: "Processo de publicação iniciado com sucesso."
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async adicionarItemBoletim(
+    params: adicionarItemBoletimServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
       }
     } catch (error: any) {
       return {

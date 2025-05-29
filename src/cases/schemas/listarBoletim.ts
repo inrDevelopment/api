@@ -4,6 +4,7 @@ export const listarBoletimValidation = z.object({
   titulo: z.string(),
   boletim_tipo_id: z.number({ message: "Tipo do boletim é necessário." }),
   data: z.date({ message: "Data do Boletim é obrigatório." }),
+  idusuario: z.number(),
   limite: z.number(),
   pagina: z.number()
 })
