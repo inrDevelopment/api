@@ -53,7 +53,7 @@ boletimRoute.post(
       res.status(200).json(
         await boletimController.adicionarItemBoletim({
           id: req.body.id,
-          idBoletim: +req.body.id,
+          idBoletim: +req.body.idBoletim,
           boletimConteudoTipoId: req.body.boletimConteudoTipoId,
           ordem: req.body.ordem
         })
