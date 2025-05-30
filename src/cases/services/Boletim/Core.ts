@@ -1,3 +1,5 @@
+import { decode } from "html-entities"
+import { execute } from "../../../lib/database"
 import BoletimRepository from "../../repositories/Boletim"
 import ConfiguracoesRepository from "../../repositories/Configuracoes"
 
@@ -6,6 +8,17 @@ export default class Core {
     private boletimRepository: BoletimRepository,
     private configuracoesRepository: ConfiguracoesRepository
   ) {}
+
+  private fixText(html: string): string {
+    // Remove tags HTML com regex básico
+    const semTags = html.replace(/<[^>]+>/g, "")
+
+    // Decodifica entidades HTML como &aacute; -> á
+    const textoLimpo = decode(semTags)
+
+    // Remove espaços extras, se necessário
+    return textoLimpo.trim()
+  }
 
   async processoBloqueio(): Promise<void> {
     try {
@@ -125,5 +138,282 @@ export default class Core {
     } catch (error: any) {
       throw new Error(error.message)
     }
+  }
+
+  async processBoletimItem(params: {
+    id: number
+    boletim_conteudo_tipo_id: number
+    content: boolean
+    data?: string
+  }): Promise<{ titulo: string; text?: string }> {
+    let response: { titulo: string; text?: string } | null = null
+
+    switch (params.boletim_conteudo_tipo_id) {
+      // noticia
+      case 1:
+      case 21:
+      case 31:
+        const tempNo = await execute<{ titulo: string; text: string }>(`
+          SELECT titulo, texto FROM noticia WHERE idnoticia = ${params.id};
+        `)
+
+        if (!tempNo) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempNo.titulo),
+            text: tempNo.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempNo.titulo)
+          }
+        }
+
+        break
+      // jurisprudencia
+      case 2:
+      case 22:
+      case 32:
+        const tempJus = await execute<{ titulo: string; text: string }>(`
+          SELECT titulo, ato as "texto" FROM jurisprudencia WHERE idjurisprudencia = ${params.id};
+        `)
+
+        if (!tempJus) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempJus.titulo),
+            text: tempJus.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempJus.titulo)
+          }
+        }
+        break
+      // legislacao
+      case 3:
+      case 23:
+      case 33:
+        const tempLeg = await execute<{ titulo: string; text: string }>(`
+          SELECT titulo, texto FROM legislacao WHERE idlegislacao = ${params.id};
+        `)
+
+        if (!tempLeg) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempLeg.titulo),
+            text: tempLeg.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempLeg.titulo)
+          }
+        }
+        break
+      // opniao
+      case 4:
+      case 24:
+      case 34:
+        const tempOpi = await execute<{ titulo: string; text: string }>(`
+          SELECT titulo, texto FROM opniao WHERE idopiniao = ${params.id};
+        `)
+
+        if (!tempOpi) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempOpi.titulo),
+            text: tempOpi.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempOpi.titulo)
+          }
+        }
+        break
+      // pergunta
+      case 5:
+      case 25:
+      case 35:
+        const tempPer = await execute<{ titulo: string; text: string }>(`
+          SELECT titulo, texto FROM pergunta WHERE idpergunta = ${params.id};
+        `)
+
+        if (!tempPer) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempPer.titulo),
+            text: tempPer.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempPer.titulo)
+          }
+        }
+        break
+      // msgeditor
+      case 6:
+      case 26:
+      case 36:
+        const tempMsg = await execute<{ titulo: string; text: string }>(`
+           SELECT titulo, texto FROM msgeditor WHERE idmsgeditor = ${params.id};
+        `)
+
+        if (!tempMsg) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempMsg.titulo),
+            text: tempMsg.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempMsg.titulo)
+          }
+        }
+        break
+      // pareceres
+      case 7:
+      case 27:
+      case 37:
+        const tempPar = await execute<{ titulo: string; text: string }>(`
+           SELECT ementa as "titulo", texto FROM pareceres WHERE idpareceres = ${params.id};
+        `)
+
+        if (!tempPar) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempPar.titulo),
+            text: tempPar.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempPar.titulo)
+          }
+        }
+        break
+      // suplementos
+      case 8:
+      case 28:
+      case 38:
+        const tempSup = await execute<{ titulo: string; text: string }>(`
+           SELECT titulo, texto FROM suplemento WHERE idsuplemento = ${params.id};
+        `)
+
+        if (!tempSup) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempSup.titulo),
+            text: tempSup.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempSup.titulo)
+          }
+        }
+        break
+      // historia
+      case 9:
+      case 29:
+      case 39:
+        const tempHis = await execute<{ titulo: string; text: string }>(`
+           SELECT titulo, texto FROM historia WHERE idhistoria = ${params.id};
+        `)
+
+        if (!tempHis) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempHis.titulo),
+            text: tempHis.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempHis.titulo)
+          }
+        }
+        break
+      // curso
+      case 10:
+      case 30:
+      case 40:
+        const tempCur = await execute<{ titulo: string; text: string }>(`
+           SELECT titulo, texto FROM curso WHERE idcurso = ${params.id};
+        `)
+
+        if (!tempCur) throw new Error("Erro ao Processar Boletim")
+
+        if (params.content) {
+          response = {
+            titulo: this.fixText(tempCur.titulo),
+            text: tempCur.text
+          }
+        } else {
+          response = {
+            titulo: this.fixText(tempCur.titulo)
+          }
+        }
+        break
+      // acumulado
+      case 11:
+        response = {
+          titulo: `Clique aqui e acesse o conteúdo acumulado até o dia ${params.data}`
+        }
+        break
+      // classificador sp/pr/rs
+      case 12:
+      case 15:
+      case 18:
+        response = {
+          titulo: `${params.data} – Clique aqui e acesse o conteúdo desta edição.`
+        }
+        break
+      // Não houve publicação SP
+      case 13:
+        response = {
+          titulo: `${params.data} – Não houve publicação do Diário da Justiça Eletrônico do Tribunal de Justiça do Estado de São Paulo na data de hoje.`
+        }
+        break
+      // Não há atos de interesse SP
+      case 14:
+        response = {
+          titulo: `${params.data} – Não há atos de interesse no Diário da Justiça Eletrônico do Tribunal de Justiça do Estado do São Paulo.`
+        }
+        break
+      // Não houve publicação PR
+      case 16:
+        response = {
+          titulo: `${params.data} – Não houve publicação do Diário da Justiça Eletrônico do Tribunal de Justiça do Estado do Paraná na data de hoje.`
+        }
+        break
+      // Não há atos de interesse PR
+      case 17:
+        response = {
+          titulo: `${params.data} – Não há atos de interesse no Diário da Justiça Eletrônico do Tribunal de Justiça do Estado do Paraná.`
+        }
+        break
+      // Não houve publicação RS
+      case 19:
+        response = {
+          titulo: `${params.data} –  Não houve publicação do Diário da Justiça Eletrônico do Tribunal de Justiça do Estado do Rio Grande do Sul na data de hoje.`
+        }
+        break
+      // Não há atos de interesse RS
+      case 20:
+        response = {
+          titulo: `${params.data} –  Não há atos de interesse no Diário da Justiça Eletrônico do Tribunal de Justiça do Estado do Rio Grande do Sul.`
+        }
+        break
+    }
+
+    if (!response) throw new Error("Erro ao processar boletim.")
+
+    return response
   }
 }

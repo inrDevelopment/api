@@ -324,4 +324,27 @@ export default class BoletimRepository extends Repository {
       throw new Error(error.message)
     }
   }
+
+  async novoItemBoletim(params: {
+    conteudoTipoId: number
+    boletimId: number
+    titulo: string
+    conteudo: string
+    url: string
+    ordem: number
+  }): Promise<{ id: number } | null> {
+    try {
+      return this.procedure<{ id: number }>(
+        "novo_item_boletim",
+        params.conteudoTipoId,
+        params.boletimId,
+        params.titulo,
+        params.conteudo,
+        params.url,
+        params.ordem
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
 }

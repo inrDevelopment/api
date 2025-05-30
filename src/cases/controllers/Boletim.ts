@@ -1,6 +1,10 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
+  adicionarItemBoletimControllerProps,
+  adicionarItemBoletimValidation
+} from "../schemas/adicionarItemBoletim"
+import {
   boletimAprovarControllerProps,
   boletimAprovarValidation
 } from "../schemas/boletimAprovar"
@@ -154,6 +158,26 @@ export default class BoletimController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.boletimService.publicarBoletim(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async adicionarItemBoletim(
+    params: adicionarItemBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await adicionarItemBoletimValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.adicionarItemBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,

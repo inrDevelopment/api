@@ -25,7 +25,7 @@ boletimRoute.post(
   })
 )
 
-boletimRoute.post(
+boletimRoute.put(
   "/:id/editar",
   painelProccess({
     handle: async (req, res) => {
@@ -42,6 +42,27 @@ boletimRoute.post(
       nivel: 0,
       recurso: "boletim",
       acao: "editar"
+    }
+  })
+)
+
+boletimRoute.post(
+  "/item",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.adicionarItemBoletim({
+          id: req.body.id,
+          idBoletim: +req.body.id,
+          boletimConteudoTipoId: req.body.boletimConteudoTipoId,
+          ordem: req.body.ordem
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "boletim",
+      acao: "criar"
     }
   })
 )

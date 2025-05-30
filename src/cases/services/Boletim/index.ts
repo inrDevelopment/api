@@ -1,4 +1,5 @@
 //#region imports
+import sanitize from "../../../lib/sanitize"
 import { defaultResponse } from "../../core/defaultResponse"
 import BoletimRepository from "../../repositories/Boletim"
 import ConfiguracoesRepository from "../../repositories/Configuracoes"
@@ -12,6 +13,49 @@ import { editarBoletimServiceProps } from "../../schemas/editarBoletim"
 import { listarBoletimServiceProps } from "../../schemas/listarBoletim"
 import Core from "./Core"
 //#endregion imports
+
+const tag = {
+  "1": "boletim/noticia",
+  "2": "boletim/jurisprudencia",
+  "3": "boletim/legislacao",
+  "4": "boletim/opiniao",
+  "5": "boletim/pergunta-e-resposta",
+  "6": "boletim/mensagem-editores",
+  "7": "boletim/pareceresCGJ",
+  "8": "boletim/suplemento",
+  "9": "boletim/historia",
+  "10": "servicos/INRcursos",
+  "11": "boletim/ato-anterior/37/2025",
+  "12": "boletim/classificadorINR-SP",
+  "13": "",
+  "14": "",
+  "15": "boletim/classificadorINR-PR",
+  "16": "",
+  "17": "",
+  "18": "boletim/classificadoresINR-RS",
+  "19": "",
+  "20": "",
+  "21": "boletim/noticia",
+  "22": "boletim/jurisprudencia",
+  "23": "boletim/legislacao",
+  "24": "boletim/opiniao",
+  "25": "boletim/pergunta-e-resposta",
+  "26": "boletim/mensagem-editores",
+  "27": "boletim/pareceresCGJ",
+  "28": "boletim/suplemento",
+  "29": "boletim/historia",
+  "30": "servicos/INRcursos",
+  "31": "boletim/noticia",
+  "32": "boletim/jurisprudencia",
+  "33": "boletim/legislacao",
+  "34": "boletim/opiniao",
+  "35": "boletim/pergunta-e-resposta",
+  "36": "boletim/mensagem-editores",
+  "37": "boletim/pareceresCGJ",
+  "38": "boletim/suplemento",
+  "39": "boletim/historia",
+  "40": "servicos/INRcursos"
+}
 
 export default class BoletimService {
   private core: Core
@@ -244,8 +288,54 @@ export default class BoletimService {
     params: adicionarItemBoletimServiceProps
   ): Promise<defaultResponse> {
     try {
+      const be = await this.boletimRepository.selecionarBoletim({
+        idBoletim: params.idBoletim
+      })
+
+      if (!be) throw new Error("Erro ao processar o boletim.")
+
+      const needContent =
+        params.boletimConteudoTipoId >= 31 || params.boletimConteudoTipoId <= 40
+          ? true
+          : false
+
+      const res = await this.core.processBoletimItem({
+        id: params.id,
+        boletim_conteudo_tipo_id: params.boletimConteudoTipoId,
+        content: needContent,
+        data: be.data
+      })
+
+      let url = `https://inrpublicacoes.com.br/site/${
+        tag[`${params.boletimConteudoTipoId}` as keyof typeof tag]
+      }/${params.id}`
+
+      if (
+        params.boletimConteudoTipoId === 12 ||
+        params.boletimConteudoTipoId === 15 ||
+        params.boletimConteudoTipoId === 18
+      ) {
+        url = url + "/ler"
+      } else {
+        url = url + `/${sanitize(res.titulo)}`
+      }
+
+      const item = await this.boletimRepository.novoItemBoletim({
+        boletimId: params.idBoletim,
+        conteudo: needContent && res.text ? res.text : "",
+        conteudoTipoId: params.boletimConteudoTipoId,
+        ordem: params.ordem,
+        titulo: res.titulo,
+        url
+      })
+
+      if (!item) throw new Error("Erro ao processar o boletim.")
+
       return {
-        success: true
+        success: true,
+        data: {
+          id: item.id
+        }
       }
     } catch (error: any) {
       return {
