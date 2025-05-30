@@ -1,7 +1,9 @@
+//#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import NewsRepository from "../repositories/News"
 import { getNewsByIdServiceProps } from "../schemas/getNewsById"
 import { newsHomeServiceProps } from "../schemas/newsHome"
+//#endregion imports
 
 export default class NewsService {
   constructor(private newsRepository: NewsRepository) {}

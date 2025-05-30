@@ -1,8 +1,10 @@
+//#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import SupplementsRepository from "../repositories/Supplements"
 import TemasRepository from "../repositories/Temas"
 import { supplementsByIdServiceProps } from "../schemas/supplementsById"
 import { supplementsHomeServiceProps } from "../schemas/supplementsByTheme"
+//#endregion imports
 
 export default class SupplementsService {
   constructor(

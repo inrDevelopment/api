@@ -1,8 +1,10 @@
+//#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import JurisprudenceRepository from "../repositories/Jurisprudence"
 import { getJurisprudenceByIdServiceProps } from "../schemas/getJurisprudenceById"
 import { jurisprudenceHomeServiceProps } from "../schemas/jurisprudenceHome"
+//#endregion imports
 
 export default class JurisprudenceService {
   constructor(

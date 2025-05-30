@@ -1,4 +1,6 @@
+//#region imports
 import { defaultResponse } from "../core/defaultResponse"
+//#endregion imports
 
 export default class GrupoService {
   async salvarGrupo(): Promise<defaultResponse> {

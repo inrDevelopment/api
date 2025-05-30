@@ -1,6 +1,8 @@
+//#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import DescriptionRepository from "../repositories/Description"
 import { descriptionByIdServiceProps } from "../schemas/descriptionById"
+//#endregion imports
 
 export default class DescriptionService {
   constructor(private descriptionRepository: DescriptionRepository) {}
