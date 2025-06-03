@@ -3,24 +3,32 @@
 DROP PROCEDURE IF EXISTS listar_boletim_count;
 
 CREATE PROCEDURE listar_boletim_count (
-    searchText VARCHAR(200),    
+    numero_boletim VARCHAR(10),    
     tipo_id INT,
-    data_boletim DATETIME
+	data_boletim_inicio DATETIME,
+	data_boletim_fim DATETIME
 )
 BEGIN
-    SELECT
-        COUNT(be.id) AS 'count'
-	FROM boletim as be
+	SELECT
+		COUNT(be.id) as 'count'
+	FROM
+		boletim as be
 	WHERE 
-		be.titulo LIKE CONCAT(searchText, '%')
-	AND 
 		be.boletim_tipo_id = tipo_id
 	AND 
-		be.`data` = data_boletim
-	AND
+		(be.numero = numero_boletim OR numero_boletim IS NULL)
+	AND 
+		(be.`data` >= data_boletim_inicio OR data_boletim_inicio IS NULL)
+	AND 
+		(be.`data` <= data_boletim_fim OR data_boletim_inicio IS NULL)
+	AND 
+		be.publicado = "S"
+	AND 
 		be.exc = "N"
 	AND 
 		be.excluido_em IS NULL
 	AND 
-		be.excluido_id IS NULL;
+		be.excluido_id   IS NULL
+	AND 
+		be.ativo = true;
 END;

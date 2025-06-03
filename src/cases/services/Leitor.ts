@@ -27,17 +27,17 @@ export default class LeitorService {
     try {
       const list = await this.boletimRepository.listarBoletim({
         idUsuario: params.idusuario,
-        searchText: params.titulo,
+        numero: params.numero ?? "NULL",
         tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data,
+        data_boletim: params.data ?? "NULL",
         limite: params.limite,
         pagina: params.pagina * params.limite
       })
 
       const res = await this.boletimRepository.listarBoletimCount({
-        searchText: params.titulo,
+        numero: params.numero ?? "NULL",
         tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data
+        data_boletim: params.data ?? "NULL"
       })
 
       if (!res) throw new Error("Erro ao listar os boletins.")
@@ -61,9 +61,20 @@ export default class LeitorService {
     params: markAsReadedServiceProps
   ): Promise<defaultResponse> {
     try {
+      const verifica = await this.boletimRepository.verificaMarcacaoLeitura({
+        idBoletim: params.idboletim,
+        idUsuario: params.idusuario
+      })
+
+      if (!verifica) throw new Error("Erro ao verificar o boletim.")
+
+      if (verifica.count >= 1)
+        throw new Error("Este boletim ja foi adicionado em seus favoritos.")
+
       const res = await this.boletimRepository.markAsReaded(params)
 
-      if (res) throw new Error("Erro ao marcar boletim como lido.")
+      if (res.affectedRows <= 0)
+        throw new Error("Erro ao marcar boletim como lido.")
 
       return {
         success: true,
@@ -83,7 +94,7 @@ export default class LeitorService {
     try {
       const res = await this.boletimRepository.markAsUnreaded(params)
 
-      if (res) throw new Error("Erro ao marcar boletim como não lido.")
+      if (!res) throw new Error("Erro ao marcar boletim como não lido.")
 
       return {
         success: true,
@@ -166,7 +177,7 @@ export default class LeitorService {
       if (response.affectedRows <= 0)
         throw new Error("Erro ao registrar o aparelho.")
 
-      return { success: true, message: "aparelho registrado com sucesso." }
+      return { success: true, message: "Aparelho registrado com sucesso." }
     } catch (error: any) {
       return {
         success: false,

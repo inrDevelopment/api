@@ -1,19 +1,17 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const markAsUnreaded: swaggerJSDoc.PathItem = {
+const markAsUnReaded: swaggerJSDoc.PathItem = {
   delete: {
-    description: "Marca um determinado Boletim como não lido.",
+    description: "Remove um boletim previamente marcado como lido.",
     tags: ["/leitor"],
-    summary: "Marcar como não lido.",
+    summary: "Remove um boletim de leitura.",
     parameters: [
       {
         in: "path",
         name: "id",
+        type: "integer",
         required: true,
-        schema: {
-          type: "integer"
-        },
-        description: "Id do boletim que será marcado como não lido."
+        description: "O número do boletim a ser removido."
       }
     ],
     responses: {
@@ -27,15 +25,17 @@ const markAsUnreaded: swaggerJSDoc.PathItem = {
                   type: "boolean"
                 },
                 message: {
-                  type: "string"
+                  type: "string",
+                  description: "Boletim marcado como não lido."
                 }
               }
             }
           }
-        }
+        },
+        description: "Resposta de sucesso."
       }
     }
   }
 }
 
-export default markAsUnreaded
+export default markAsUnReaded

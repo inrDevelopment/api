@@ -60,9 +60,9 @@ export default class BoletimRepository extends Repository {
 
   async listarBoletim(params: {
     idUsuario: number
-    searchText: string
+    numero: string
     tipo_id: number
-    data_boletim: Date
+    data_boletim: string
     limite: number
     pagina: number
   }): Promise<
@@ -84,13 +84,14 @@ export default class BoletimRepository extends Repository {
         lido: string
         favorito: string
       }>(
-        "listar_boletim_painel",
+        "listar_boletim",
         params.idUsuario,
-        params.searchText,
+        params.numero,
         params.tipo_id,
-        params.data_boletim,
+        this.zeroDate(params.data_boletim),
+        this.finalDate(params.data_boletim),
         params.limite,
-        params.pagina
+        params.pagina * params.limite
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -98,9 +99,9 @@ export default class BoletimRepository extends Repository {
   }
 
   async listarBoletimCount(params: {
-    searchText: string
+    numero: string
     tipo_id: number
-    data_boletim: Date
+    data_boletim: string
   }): Promise<{
     count: number
   } | null> {
@@ -108,10 +109,11 @@ export default class BoletimRepository extends Repository {
       return await this.procedure<{
         count: number
       }>(
-        "listar_boletim_painel_count",
-        params.searchText,
+        "listar_boletim_count",
+        params.numero,
         params.tipo_id,
-        params.data_boletim
+        this.zeroDate(params.data_boletim),
+        this.finalDate(params.data_boletim)
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -342,6 +344,21 @@ export default class BoletimRepository extends Repository {
         params.conteudo,
         params.url,
         params.ordem
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async verificaMarcacaoLeitura(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.procedure<{ count: number }>(
+        "verifica_marcacao_leitura",
+        params.idBoletim,
+        params.idUsuario
       )
     } catch (error: any) {
       throw new Error(error.message)

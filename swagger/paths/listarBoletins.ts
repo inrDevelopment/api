@@ -3,7 +3,7 @@ import swaggerJSDoc from "swagger-jsdoc"
 const listarBoletins: swaggerJSDoc.PathItem = {
   post: {
     description:
-      "Lista os boletins criados que já foram aprovados e publicados.",
+      "Lista os boletins criados que já foram aprovados e publicados. Usar somente para o leitor.",
     tags: ["/leitor"],
     summary: "Listar boletim.",
     requestBody: {
@@ -13,24 +13,34 @@ const listarBoletins: swaggerJSDoc.PathItem = {
           schema: {
             type: "object",
             properties: {
-              titulo: {
-                type: "string"
+              numero: {
+                type: "string",
+                required: false,
+                description: "Número do boletim"
               },
               boletim_tipo_id: {
-                type: "number"
+                type: "number",
+                required: true,
+                description:
+                  "tipos de boletim: 1 - Ordinária, 2 - Extraordinária, 3 - Classificadores, 4 - Parceria IEPTB, 5 - Outros"
               },
               data: {
                 type: "string",
-                format: "date"
+                format: "date",
+                required: false,
+                description:
+                  "Tipo de dado String mas en formato de data ex:'2025-05-30T18:52:23.529Z'."
               },
               limite: {
-                type: "number"
+                type: "number",
+                required: true
               },
               pagina: {
-                type: "number"
+                type: "number",
+                required: true
               }
             },
-            required: ["boletim_tipo_id", "data", "limite", "pagina"]
+            required: ["boletim_tipo_id", "limite", "pagina"]
           }
         }
       }
@@ -57,11 +67,11 @@ const listarBoletins: swaggerJSDoc.PathItem = {
                           titulo: { type: "string" },
                           data: {
                             type: "string",
-                            format: "date"
+                            format: "datetime"
                           },
                           numero: { type: "string" },
-                          lido: { type: "string" },
-                          favorito: { type: "string" }
+                          lido: { type: "boolean" },
+                          favorito: { type: "boolean" }
                         }
                       }
                     },

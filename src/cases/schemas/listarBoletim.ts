@@ -1,12 +1,12 @@
 import { z } from "zod"
 
 export const listarBoletimValidation = z.object({
-  titulo: z.string(),
+  numero: z.string().nullish(),
   boletim_tipo_id: z.number({ message: "Tipo do boletim é necessário." }),
-  data: z.date({ message: "Data do Boletim é obrigatório." }),
-  idusuario: z.number(),
-  limite: z.number(),
-  pagina: z.number()
+  data: z.string().nullish(),
+  idusuario: z.number({ message: "idusuario" }),
+  limite: z.number({ message: "limite" }),
+  pagina: z.number({ message: "pagina" })
 })
 
 export type listarBoletimControllerProps = z.input<

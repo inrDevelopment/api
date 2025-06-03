@@ -1,18 +1,18 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
-import { siteProccess } from "../lib/protection"
+import { mobileProccess, siteProccess } from "../lib/protection"
 const leitorRoute = express.Router()
 
 leitorRoute.post(
   "/boletims",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarBoletins({
-          titulo: req.body.titulo,
+          numero: req.body.numero,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
-          idusuario: req.credenciais.id,
+          idusuario: /*req.credenciais.id*/ 37,
           limite: req.body.limite,
           pagina: req.body.pagina
         })
@@ -33,7 +33,7 @@ leitorRoute.get(
       res.status(200).json(
         await leitorController.markAsReaded({
           idboletim: +req.params.id,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: 8893 /* req.credenciais.idusuario */
         })
       )
     },
@@ -52,7 +52,7 @@ leitorRoute.delete(
       res.status(200).json(
         await leitorController.markAsUnreaded({
           idboletim: +req.params.id,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: 8893 /* req.credenciais.idusuario */
         })
       )
     },
@@ -71,7 +71,7 @@ leitorRoute.get(
       res.status(200).json(
         await leitorController.favoriteThis({
           idboletim: +req.params.id,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: 8893 /* req.credenciais.idusuario */
         })
       )
     },
@@ -90,7 +90,7 @@ leitorRoute.delete(
       res.status(200).json(
         await leitorController.unfavoriteThis({
           idboletim: +req.params.id,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: 8893 /* req.credenciais.idusuario */
         })
       )
     },

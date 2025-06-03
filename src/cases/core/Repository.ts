@@ -68,7 +68,7 @@ export class Repository {
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
 
-      return QueryResult.affectedRows
+      return QueryResult
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -95,6 +95,46 @@ export class Repository {
   }
 
   protected formatDate(isoDate: Date): string {
-    return isoDate.toISOString().slice(0, 19).replace("T", " ")
+    return `'${isoDate.toISOString().slice(0, 19).replace("T", " ")}'`
+  }
+
+  protected zeroDate(value: string): string {
+    if (value === "NULL") return "NULL"
+
+    const date = new Date(value)
+
+    if (isNaN(date.getTime())) {
+      throw new Error("Data inválida")
+    }
+
+    const dataZerada = new Date(
+      Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    )
+
+    return `'${dataZerada.toISOString().slice(0, 19).replace("T", " ")}'`
+  }
+
+  protected finalDate(value: string): string {
+    if (value === "NULL") return "NULL"
+
+    const date = new Date(value)
+
+    if (isNaN(date.getTime())) {
+      throw new Error("Data inválida")
+    }
+
+    const dataAjustada = new Date(
+      Date.UTC(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      )
+    )
+
+    return `'${dataAjustada.toISOString().slice(0, 19).replace("T", " ")}'`
   }
 }

@@ -2,18 +2,16 @@ import swaggerJSDoc from "swagger-jsdoc"
 
 const markAsReaded: swaggerJSDoc.PathItem = {
   get: {
-    description: "Marca um determinado Boletim como lido.",
+    description: "Marca um boletim como favorito de um usuário",
     tags: ["/leitor"],
-    summary: "Marcar como lido.",
+    summary: "Marca um boletim como favorito",
     parameters: [
       {
         in: "path",
         name: "id",
+        type: "integer",
         required: true,
-        schema: {
-          type: "integer"
-        },
-        description: "Id do boletim que será marcado como lido."
+        description: "O número do boletim a ser favoritado."
       }
     ],
     responses: {
@@ -27,12 +25,14 @@ const markAsReaded: swaggerJSDoc.PathItem = {
                   type: "boolean"
                 },
                 message: {
-                  type: "string"
+                  type: "string",
+                  description: "Boletim marcado como lido."
                 }
               }
             }
           }
-        }
+        },
+        description: "Resposte de sucesso."
       }
     }
   }

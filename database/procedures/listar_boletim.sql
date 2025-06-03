@@ -4,52 +4,59 @@ DROP PROCEDURE IF EXISTS listar_boletim;
 
 CREATE PROCEDURE listar_boletim (
 	idUsuario INT,
-    searchText VARCHAR(200),    
+    numero_boletim VARCHAR(10),    
     tipo_id INT,
-	data_boletim DATETIME,
+	data_boletim_inicio DATETIME,
+	data_boletim_fim DATETIME,
     limite INT,
     pagina INT
 )
 BEGIN  
 	SELECT
-		be.id, 
+		be.id,
 		be.titulo,
 		be.`data`,
 		be.numero,
-		CASE 
-			WHEN bf.id IS NOT NULL THEN 'S'
-			ELSE  'N'
-		END AS 'lido',
-		CASE 
-			WHEN bl.id IS NOT NULL THEN 'S'
-			ELSE  'N'
-		END AS 'favorito'
-	FROM boletim as be
-	LEFT JOIN boletim_favorito bf 
-		ON bf.boletim_id = be.id
-	LEFT JOIN boletim_leitura bl 
-		ON bl.boletim_id = be.id
+		(SELECT 
+			true 
+		FROM 
+			boletim_leitura as bl 
+		WHERE 
+			bl.boletim_id = be.id
+		AND bl.usuario_id = idUsuario
+		) AS 'lido',
+		(SELECT 
+			true 
+		FROM 
+			boletim_favorito as bf 
+		WHERE 
+			bf.boletim_id = be.id
+		AND bf.usuario_id = idUsuario) AS 'favorito'
+	FROM
+		boletim as be
 	WHERE 
-		be.titulo LIKE CONCAT(searchText, '%')
-	AND 
 		be.boletim_tipo_id = tipo_id
 	AND 
-		be.`data` = data_boletim
-	AND
+		(be.numero = numero_boletim OR numero_boletim IS NULL)
+	AND 
+		(be.`data` >= data_boletim_inicio OR data_boletim_inicio IS NULL)
+	AND 
+		(be.`data` <= data_boletim_fim OR data_boletim_inicio IS NULL)
+	AND 
+		be.publicado = "S"
+	AND 
 		be.exc = "N"
 	AND 
 		be.excluido_em IS NULL
 	AND 
-		be.excluido_em IS NULL
+		be.excluido_id IS NULL
 	AND 
-		bf.usuario_id = idUsuario
-	AND 
-		bl.usuario_id = idUsuario
+		be.ativo = true
 	ORDER BY 
 		be.numero DESC, 
 		be.`data` DESC
 	LIMIT 
 		limite
 	OFFSET 
-		pagina;
+		pagina;	
 END;
