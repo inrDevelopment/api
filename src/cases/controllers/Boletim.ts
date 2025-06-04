@@ -28,10 +28,6 @@ import {
   editarBoletimControllerProps,
   editarBoletimValidation
 } from "../schemas/editarBoletim"
-import {
-  listarBoletimControllerProps,
-  listarBoletimValidation
-} from "../schemas/listarBoletimPrivado"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
@@ -112,16 +108,16 @@ export default class BoletimController {
     }
   }
 
-  async listaBoletim(
-    params: listarBoletimControllerProps
-  ): Promise<defaultResponse> {
+  async listaBoletim(params: any): Promise<defaultResponse> {
     try {
-      const validation = await listarBoletimValidation.safeParseAsync(params)
+      // const validation = await listarBoletimValidation.safeParseAsync(params)
 
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
+      // if (!validation.success)
+      //   throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.listaBoletim(validation.data)
+      // return await this.boletimService.listaBoletim(validation.data)
+
+      return { success: true }
     } catch (error: any) {
       return {
         success: false,
