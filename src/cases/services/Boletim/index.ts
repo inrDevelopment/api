@@ -10,7 +10,6 @@ import { boletimNovoServiceProps } from "../../schemas/boletimNovo"
 import { boletimPublicarServiceProps } from "../../schemas/boletimPublicar"
 import { boletimSelecionarServiceProps } from "../../schemas/boletimSelecionar"
 import { editarBoletimServiceProps } from "../../schemas/editarBoletim"
-import { listarBoletimServiceProps } from "../../schemas/listarBoletimPrivado"
 import Core from "./Core"
 //#endregion imports
 
@@ -202,39 +201,39 @@ export default class BoletimService {
     }
   }
 
-  async listaBoletim(
-    params: listarBoletimServiceProps
-  ): Promise<defaultResponse> {
-    try {
-      const list = await this.boletimRepository.listarBoletim({
-        idUsuario: 37,
-        searchText: params.titulo,
-        tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data,
-        limite: params.limite,
-        pagina: params.pagina * params.limite
-      })
+  // async listaBoletim(
+  //   params: listarBoletimServiceProps
+  // ): Promise<defaultResponse> {
+  //   try {
+  //     const list = await this.boletimRepository.listarBoletim({
+  //       idUsuario: 37,
+  //       searchText: params.titulo,
+  //       tipo_id: params.boletim_tipo_id,
+  //       data_boletim: params.data,
+  //       limite: params.limite,
+  //       pagina: params.pagina * params.limite
+  //     })
 
-      const count = await this.boletimRepository.listarBoletimCount({
-        searchText: params.titulo,
-        tipo_id: params.boletim_tipo_id,
-        data_boletim: params.data
-      })
+  //     const count = await this.boletimRepository.listarBoletimCount({
+  //       searchText: params.titulo,
+  //       tipo_id: params.boletim_tipo_id,
+  //       data_boletim: params.data
+  //     })
 
-      return {
-        success: true,
-        data: {
-          list,
-          count
-        }
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
+  //     return {
+  //       success: true,
+  //       data: {
+  //         list,
+  //         count
+  //       }
+  //     }
+  //   } catch (error: any) {
+  //     return {
+  //       success: false,
+  //       message: error.message
+  //     }
+  //   }
+  // }
 
   async aprovarBoletim(
     params: boletimAprovarServiceProps

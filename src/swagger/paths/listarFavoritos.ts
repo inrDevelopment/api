@@ -1,11 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const listarBoletinsPrivado: swaggerJSDoc.PathItem = {
+const listarFavoritos: swaggerJSDoc.PathItem = {
   post: {
-    description:
-      "Lista os boletins criados que já foram aprovados e publicados para usuários LOGADOS. Usar somente para o leitor.",
+    description: "Lista os boletins favoritados por um usuário.",
     tags: ["/leitor"],
-    summary: "Listar boletim Privado (logado).",
+    summary: "Listar favoritos (logado).",
     parameters: [
       {
         in: "header",
@@ -77,8 +76,7 @@ const listarBoletinsPrivado: swaggerJSDoc.PathItem = {
                             format: "datetime"
                           },
                           numero: { type: "string" },
-                          lido: { type: "boolean" },
-                          favorito: { type: "boolean" }
+                          lido: { type: "boolean" }
                         }
                       }
                     },
@@ -91,10 +89,10 @@ const listarBoletinsPrivado: swaggerJSDoc.PathItem = {
             }
           }
         },
-        description: "Resposte de sucesso."
+        description: "Resposta de sucesso."
       }
     }
   }
 }
 
-export default listarBoletinsPrivado
+export default listarFavoritos

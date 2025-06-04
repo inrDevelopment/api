@@ -1,11 +1,15 @@
 import { z } from "zod"
 
 export const listarFavoritoValidation = z.object({
-  titulo: z.string(),
-  boletim_tipo_id: z.number({ message: "Tipo do boletim é necessário." }),
-  data: z.date({ message: "Data do Boletim é obrigatório." }),
-  limite: z.number(),
-  pagina: z.number()
+  numero: z.string().nullable(),
+  boletim_tipo_id: z.array(
+    z.number({ message: "Tipo do boletim é necessário." }),
+    { message: "Tipo de boletim deve ser uma array." }
+  ),
+  data: z.string().nullable(),
+  idusuario: z.number({ message: "idusuario" }),
+  limite: z.number({ message: "limite" }),
+  pagina: z.number({ message: "pagina" })
 })
 
 export type listarFavoritoControllerProps = z.input<
