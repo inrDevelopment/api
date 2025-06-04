@@ -4,8 +4,16 @@ const markAsUnReaded: swaggerJSDoc.PathItem = {
   delete: {
     description: "Remove um boletim previamente marcado como lido.",
     tags: ["/leitor"],
-    summary: "Remove um boletim de leitura.",
+    summary: "Remove um boletim da lista leitura.",
     parameters: [
+      {
+        in: "header",
+        name: "authorization",
+        schema: {
+          type: "string",
+          required: true
+        }
+      },
       {
         in: "path",
         name: "id",

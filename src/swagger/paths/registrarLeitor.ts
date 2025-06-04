@@ -3,7 +3,7 @@ import swaggerJSDoc from "swagger-jsdoc"
 const registrarLeitor: swaggerJSDoc.PathItem = {
   post: {
     description:
-      "Registra uma instalação do Leitor INR para permitir notificações futuras.",
+      "Registra uma instalação do Leitor INR para permitir o dispositivo receber notificações futuras.",
     tags: ["/leitor"],
     summary: "Registra Leitor INR",
     requestBody: {
@@ -14,15 +14,10 @@ const registrarLeitor: swaggerJSDoc.PathItem = {
             type: "object",
             properties: {
               uuid: {
-                type: "string",
-                required: true,
-                description:
-                  "Identificador unico criado após a instalação do Leitor INR."
+                type: "string"
               },
               token: {
-                type: "string",
-                required: true,
-                description: "Token gerado atravez do Expo notification."
+                type: "string"
               }
             },
             required: ["uuid", "token"]

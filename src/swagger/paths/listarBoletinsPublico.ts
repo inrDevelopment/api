@@ -19,10 +19,10 @@ const listarBoletinsPublico: swaggerJSDoc.PathItem = {
                 description: "Número do boletim"
               },
               boletim_tipo_id: {
-                type: "number",
-                required: true,
-                description:
-                  "tipos de boletim: 1 - Ordinária, 2 - Extraordinária, 3 - Classificadores, 4 - Parceria IEPTB, 5 - Outros"
+                type: "array",
+                items: {
+                  type: "integer"
+                }
               },
               data: {
                 type: "string",

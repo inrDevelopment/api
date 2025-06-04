@@ -27,8 +27,6 @@ export class Repository {
 
   protected async many<T>(name: string, ...values: any[]): Promise<T[]> {
     try {
-      console.log(`CALL ${name}(${values})`)
-
       const [QueryResult] = await database.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
