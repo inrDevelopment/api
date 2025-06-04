@@ -29,5 +29,9 @@ app.listen(application.port, async () => {
       ? `${application.host}:${application.port}`
       : `${application.host}`
 
-  console.log(`Api ouvindo no endereço: http://${finalHost}`)
+  console.log(
+    `Api ouvindo no endereço: ${
+      application.env === "dev" ? "http" : "https"
+    }://${finalHost}`
+  )
 })
