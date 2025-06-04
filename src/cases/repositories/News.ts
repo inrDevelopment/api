@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class NewsRepository extends Repository {
   async getNews(params: { limit: number; page: number }): Promise<

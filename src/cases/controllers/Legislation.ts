@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   legislationByIdControllerProps,
   legislationByIdValidation
@@ -7,7 +8,6 @@ import {
   legislationHomeValidation
 } from "../schemas/legislationHome"
 import LegislationService from "../services/Legislation"
-import { defaultResponse } from "../types"
 
 export default class LegislationController {
   constructor(private legislationService: LegislationService) {}

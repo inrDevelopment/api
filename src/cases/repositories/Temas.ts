@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class TemasRepository extends Repository {
   async getThemes(): Promise<{ idtema: number; titulo: string }[]> {

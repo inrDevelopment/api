@@ -1,5 +1,7 @@
+//#region Imports
+import { defaultResponse } from "../core/defaultResponse"
 import type HomeService from "../services/Home"
-import type { defaultResponse } from "../types"
+//#endregion Imports
 
 export default class HomeController {
   constructor(private homeService: HomeService) {}

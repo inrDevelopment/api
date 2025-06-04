@@ -1,11 +1,13 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class AuthorsRepository extends Repository {
-  async getAuthorsByIdOpinion(params: { id: number }): Promise<{
-    foto: string
-    nome: string
-    curriculo: string
-  }[]> {
+  async getAuthorsByIdOpinion(params: { id: number }): Promise<
+    {
+      foto: string
+      nome: string
+      curriculo: string
+    }[]
+  > {
     try {
       return await this.many<{
         foto: string

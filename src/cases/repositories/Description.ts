@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class DescriptionRepository extends Repository {
   async get(params: { id: number }): Promise<{ conteudo: string } | null> {

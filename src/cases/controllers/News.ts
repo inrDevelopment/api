@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   getNewsByIdControllerProps,
   getNewsByIdValidation
@@ -7,7 +8,6 @@ import {
   newsHomeValidation
 } from "../schemas/newsHome"
 import NewsService from "../services/News"
-import { defaultResponse } from "../types"
 
 export default class NewsController {
   constructor(private newService: NewsService) {}

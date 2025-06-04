@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class LinkRepository extends Repository {
   async getLinks(): Promise<

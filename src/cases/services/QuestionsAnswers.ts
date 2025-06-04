@@ -1,8 +1,10 @@
+//#region imports
+import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import QuestionsAnswersRepository from "../repositories/QuestionsAnswers"
 import { questionsAnswersByIdServiceProps } from "../schemas/questionsAnswersById"
 import { questionsAnswersHomeServiceProps } from "../schemas/questionsAnswersHome"
-import { defaultResponse } from "../types"
+//#endregion imports
 
 export default class QuestionsAnswersService {
   constructor(

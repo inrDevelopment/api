@@ -1,4 +1,5 @@
-import { stringify } from "querystring"
+//#region imports
+import { defaultResponse } from "../core/defaultResponse"
 import ActsRepository from "../repositories/Acts"
 import AttachmentRepository from "../repositories/Attachment"
 import BarRepository from "../repositories/Bar"
@@ -6,12 +7,12 @@ import ClassifiersRepository from "../repositories/Classifiers"
 import ClientProductRepository from "../repositories/ClientProduct"
 import DepartamentRepository from "../repositories/Departament"
 import OrganRepository from "../repositories/Organ"
-import { getClassifiersIndexByIdServiceProps } from "../schemas/getClassifiersIndexById"
-import { getClassifiersByStateIdServiceProps } from "../schemas/getClassifiersByStateId"
-import { stateByTitleServiceProps } from "../schemas/stateByTitle"
-import { defaultResponse } from "../types"
-import { getClassifiersContentByIdServiceProps } from "../schemas/getClassifiersContentById"
 import { getBarPreviousActsByActIdServiceProps } from "../schemas/getBarPreviousActsByActId"
+import { getClassifiersByStateIdServiceProps } from "../schemas/getClassifiersByStateId"
+import { getClassifiersContentByIdServiceProps } from "../schemas/getClassifiersContentById"
+import { getClassifiersIndexByIdServiceProps } from "../schemas/getClassifiersIndexById"
+import { stateByTitleServiceProps } from "../schemas/stateByTitle"
+//#endregion imports
 
 export default class ClassifiersService {
   constructor(

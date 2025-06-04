@@ -1,3 +1,4 @@
+import { defaultResponse } from "../core/defaultResponse"
 import {
   opnionByIdControllerProps,
   opnionByIdValidation
@@ -7,7 +8,6 @@ import {
   opnionHomeValidation
 } from "../schemas/opnionHome"
 import OpinionService from "../services/Opnion"
-import { defaultResponse } from "../types"
 
 export default class OpinionController {
   constructor(private opinionService: OpinionService) {}

@@ -3,48 +3,60 @@
 DROP PROCEDURE IF EXISTS listar_boletim;
 
 CREATE PROCEDURE listar_boletim (
-    searchText VARCHAR(200),
-    usuario_id INT,
+	idUsuario INT,
+    numero_boletim VARCHAR(10),    
     tipo_id INT,
-    total INT,
+	data_boletim_inicio DATETIME,
+	data_boletim_fim DATETIME,
+    limite INT,
     pagina INT
 )
-BEGIN
-    SELECT 
-		b.id, 
-		b.titulo, 
-		b.numero, 
-		b.data, 
-		bt.nome AS 'tipo',
-		CASE
-			WHEN (SELECT COUNT(id) 
-                    FROM boletim_favorito blf
-                    WHERE blf.boletim_id = b.id 
-                    AND blf.usuario_id = usuario_id) > 0 THEN
-				TRUE
-			ELSE
-				FALSE
-		END AS 'favorito'
+BEGIN  
+	SELECT
+		be.id,
+		be.titulo,
+		be.`data`,
+		be.numero,
+		(SELECT 
+			true 
+		FROM 
+			boletim_leitura as bl 
+		WHERE 
+			bl.boletim_id = be.id
+		AND bl.usuario_id = idUsuario
+		) AS 'lido',
+		(SELECT 
+			true 
+		FROM 
+			boletim_favorito as bf 
+		WHERE 
+			bf.boletim_id = be.id
+		AND bf.usuario_id = idUsuario) AS 'favorito'
 	FROM
-		boletim b
-	INNER JOIN
-		boletim_tipo bt 
-	ON 
-		bt.id = b.boletim_tipo_id
+		boletim as be
 	WHERE 
-		(b.numero LIKE CONCAT(searchText, '%') OR b.data LIKE CONCAT(searchText, '%'))
+		be.boletim_tipo_id = tipo_id
 	AND 
-        b.aprovado = 'S' 
+		(be.numero = numero_boletim OR numero_boletim IS NULL)
 	AND 
-		b.publicado = 'S'
+		(be.`data` >= data_boletim_inicio OR data_boletim_inicio IS NULL)
 	AND 
-		b.ativo = TRUE
+		(be.`data` <= data_boletim_fim OR data_boletim_inicio IS NULL)
 	AND 
-		b.exc = 'N'
+		be.publicado = "S"
 	AND 
-		b.boletim_tipo_id = tipo_id
+		be.exc = "N"
+	AND 
+		be.excluido_em IS NULL
+	AND 
+		be.excluido_id IS NULL
+	AND 
+		be.ativo = true
 	ORDER BY 
-		b.numero DESC
-	LIMIT total 
-	OFFSET pagina;    
+		be.numero DESC, 
+		be.`data` DESC
+	LIMIT 
+		limite
+	OFFSET 
+		pagina;	
 END;

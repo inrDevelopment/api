@@ -1,4 +1,4 @@
-import { Repository } from "../types"
+import { Repository } from "../core/Repository"
 
 export default class HistoriaRepository extends Repository {
   async getById(params: { id: number }): Promise<{ conteudo: string } | null> {
