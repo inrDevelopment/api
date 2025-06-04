@@ -1,10 +1,12 @@
 import swaggerJSDoc from "swagger-jsdoc"
+import addFavorito from "./addFavorito"
 import listarBoletinsPrivado from "./listarBoletinsPrivado"
 import listarBoletinsPublico from "./listarBoletinsPublico"
 import loginLeitor from "./loginLeitor"
 import markAsReaded from "./markAsReaded"
 import markAsUnReaded from "./markAsUnReaded"
 import registrarLeitor from "./registrarLeitor"
+import removeFavoritos from "./removeFavoritos"
 
 const paths: Record<string, swaggerJSDoc.PathItem> = {
   /* /boletim */
@@ -15,7 +17,9 @@ const paths: Record<string, swaggerJSDoc.PathItem> = {
   "/leitor/boletims/publico": listarBoletinsPublico,
   "/leitor/registrar": registrarLeitor,
   "/leitor/leitura/{id}/adicionar": markAsReaded,
-  "/leitor/leitura/{id}/remover": markAsUnReaded
+  "/leitor/leitura/{id}/remover": markAsUnReaded,
+  "/leitor/favorito/{id}/adicionar": addFavorito,
+  "/leitor/favorito/{id}/remover": removeFavoritos
   /* ---------------------------------------------- */
 }
 
