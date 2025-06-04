@@ -210,7 +210,31 @@ export default class LeitorService {
     params: listarFavoritoServiceProps
   ): Promise<defaultResponse> {
     try {
-      return { success: true }
+      const list = await this.boletimRepository.listaFavoritos({
+        idUsuario: params.idusuario,
+        tipo_id: params.boletim_tipo_id,
+        numero: params.numero,
+        data_boletim: params.data,
+        limite: params.limite,
+        pagina: params.pagina
+      })
+
+      const count = await this.boletimRepository.listaFavoritosCount({
+        idUsuario: params.idusuario,
+        tipo_id: params.boletim_tipo_id,
+        numero: params.numero,
+        data_boletim: params.data
+      })
+
+      if (!count) throw new Error("Erro ao listar os favoritos.")
+
+      return {
+        success: true,
+        data: {
+          list,
+          count: count.count
+        }
+      }
     } catch (error: any) {
       return {
         success: false,

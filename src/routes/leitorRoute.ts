@@ -130,9 +130,10 @@ leitorRoute.post(
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarFavoritos({
-          titulo: req.body.titulo,
+          numero: req.body.numero,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
+          idusuario: req.credenciais.id,
           limite: req.body.limite,
           pagina: req.body.pagina
         })

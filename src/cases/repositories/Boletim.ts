@@ -417,4 +417,66 @@ export default class BoletimRepository extends Repository {
       throw new Error(error.message)
     }
   }
+
+  async listaFavoritos(params: {
+    idUsuario: number
+    numero: string | null
+    tipo_id: number[] | null
+    data_boletim: string | null
+    limite: number
+    pagina: number
+  }): Promise<
+    {
+      id: number
+      titulo: string
+      data: Date
+      numero: number
+      lido: string
+    }[]
+  > {
+    try {
+      return this.many<{
+        id: number
+        titulo: string
+        data: Date
+        numero: number
+        lido: string
+      }>(
+        "listar_favoritos",
+        params.idUsuario,
+        params.numero ?? "NULL",
+        params.tipo_id ? `'${params.tipo_id.join(",")}'` : "NULL",
+        params.data_boletim ? this.zeroDate(params.data_boletim) : "NULL",
+        params.data_boletim ? this.finalDate(params.data_boletim) : "NULL",
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async listaFavoritosCount(params: {
+    idUsuario: number
+    numero: string | null
+    tipo_id: number[] | null
+    data_boletim: string | null
+  }): Promise<{
+    count: number
+  } | null> {
+    try {
+      return this.procedure<{
+        count: number
+      }>(
+        "listar_favoritos_count",
+        params.idUsuario,
+        params.numero ?? "NULL",
+        params.tipo_id ? `'${params.tipo_id.join(",")}'` : "NULL",
+        params.data_boletim ? this.zeroDate(params.data_boletim) : "NULL",
+        params.data_boletim ? this.finalDate(params.data_boletim) : "NULL"
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
 }
