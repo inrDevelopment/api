@@ -3,9 +3,9 @@ import cors from "cors"
 import "dotenv/config"
 import express from "express"
 import swaggerUi from "swagger-ui-express"
-import swaggerDocs from "../swagger"
 import application from "./config/application"
 import router from "./router"
+import swaggerDocs from "./swagger"
 
 const app = express()
 
