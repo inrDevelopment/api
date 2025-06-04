@@ -2,12 +2,12 @@ import { defaultResponse } from "../core/defaultResponse"
 import {
   messagesEditorsByIdControllerProps,
   messagesEditorsByIdValidation
-} from "../schemas/MessagesEditorsById"
+} from "../schemas/messagesEditorsById"
 import {
   messagesEditorsHomeControllerProps,
   messagesEditorsHomeValidation
-} from "../schemas/MessagesEditorsHome"
-import MessagesEditorsService from "../services/messagesEditors"
+} from "../schemas/messagesEditorsHome"
+import MessagesEditorsService from "../services/MessagesEditors"
 
 export default class MessagesEditorsController {
   constructor(private messagesEditorsService: MessagesEditorsService) {}

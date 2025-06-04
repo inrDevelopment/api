@@ -1,6 +1,6 @@
 import MessagesEditorsController from "../controllers/MessagesEditors"
 import MessagesEditorRepository from "../repositories/MessagesEditor"
-import MessagesEditorsService from "../services/messagesEditors"
+import MessagesEditorsService from "../services/MessagesEditors"
 
 const messagesEditorRepository = new MessagesEditorRepository()
 const messagesEditorsService = new MessagesEditorsService(
