@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const listarBoletimValidation = z.object({
+export const listarBoletimPrivadoValidation = z.object({
   numero: z.string().nullish(),
   boletim_tipo_id: z.number({ message: "Tipo do boletim é necessário." }),
   data: z.string().nullish(),
@@ -9,7 +9,9 @@ export const listarBoletimValidation = z.object({
   pagina: z.number({ message: "pagina" })
 })
 
-export type listarBoletimControllerProps = z.input<
-  typeof listarBoletimValidation
+export type listarBoletimPrivadoControllerProps = z.input<
+  typeof listarBoletimPrivadoValidation
 >
-export type listarBoletimServiceProps = z.output<typeof listarBoletimValidation>
+export type listarBoletimPrivadoServiceProps = z.output<
+  typeof listarBoletimPrivadoValidation
+>

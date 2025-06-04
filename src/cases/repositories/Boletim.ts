@@ -98,6 +98,44 @@ export default class BoletimRepository extends Repository {
     }
   }
 
+  async listarBoletimPublico(params: {
+    numero: string
+    tipo_id: number
+    data_boletim: string
+    limite: number
+    pagina: number
+  }): Promise<
+    {
+      id: number
+      titulo: string
+      data: Date
+      numero: number
+      lido: string
+      favorito: string
+    }[]
+  > {
+    try {
+      return await this.many<{
+        id: number
+        titulo: string
+        data: Date
+        numero: number
+        lido: string
+        favorito: string
+      }>(
+        "listar_boletim_publico",
+        params.numero,
+        params.tipo_id,
+        this.zeroDate(params.data_boletim),
+        this.finalDate(params.data_boletim),
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   async listarBoletimCount(params: {
     numero: string
     tipo_id: number
@@ -357,6 +395,21 @@ export default class BoletimRepository extends Repository {
     try {
       return this.procedure<{ count: number }>(
         "verifica_marcacao_leitura",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async verificaFavorito(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.procedure<{ count: number }>(
+        "verifica_favorito",
         params.idBoletim,
         params.idUsuario
       )

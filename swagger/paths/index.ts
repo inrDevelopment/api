@@ -1,5 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc"
-import listarBoletins from "./listarBoletins"
+import listarBoletinsPrivado from "./listarBoletinsPrivado"
+import listarBoletinsPublico from "./listarBoletinsPublico"
 import loginLeitor from "./loginLeitor"
 import markAsReaded from "./markAsReaded"
 import markAsUnReaded from "./markAsUnReaded"
@@ -10,7 +11,8 @@ const paths: Record<string, swaggerJSDoc.PathItem> = {
   /* ---------------------------------------------- */
   /* /leitor */
   "/leitor/autenticacao": loginLeitor,
-  "/leitor/listar": listarBoletins,
+  "/leitor/boletims/privado": listarBoletinsPrivado,
+  "/leitor/boletims/publico": listarBoletinsPublico,
   "/leitor/registrar": registrarLeitor,
   "/leitor/{id}/adicionar": markAsReaded,
   "/leitor/{id}/remover": markAsUnReaded

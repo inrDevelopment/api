@@ -10,7 +10,7 @@ import { boletimNovoServiceProps } from "../../schemas/boletimNovo"
 import { boletimPublicarServiceProps } from "../../schemas/boletimPublicar"
 import { boletimSelecionarServiceProps } from "../../schemas/boletimSelecionar"
 import { editarBoletimServiceProps } from "../../schemas/editarBoletim"
-import { listarBoletimServiceProps } from "../../schemas/listarBoletim"
+import { listarBoletimServiceProps } from "../../schemas/listarBoletimPrivado"
 import Core from "./Core"
 //#endregion imports
 

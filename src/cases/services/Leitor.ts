@@ -6,7 +6,8 @@ import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
 import UserRepository from "../repositories/User"
 import { favoriteThisServiceProps } from "../schemas/favoriteThis"
-import { listarBoletimServiceProps } from "../schemas/listarBoletim"
+import { listarBoletimPrivadoServiceProps } from "../schemas/listarBoletimPrivado"
+import { listarBoletimPublicoServiceProps } from "../schemas/listarBoletimPublico"
 import { listarFavoritoServiceProps } from "../schemas/listarFavorito"
 import { loginLeitorServiceProps } from "../schemas/loginLeitor"
 import { markAsReadedServiceProps } from "../schemas/markAsReaded"
@@ -21,12 +22,47 @@ export default class LeitorService {
     private userRepository: UserRepository
   ) {}
 
-  async listarBoletins(
-    params: listarBoletimServiceProps
+  async listarBoletinsPrivado(
+    params: listarBoletimPrivadoServiceProps
   ): Promise<defaultResponse> {
     try {
       const list = await this.boletimRepository.listarBoletim({
         idUsuario: params.idusuario,
+        numero: params.numero ?? "NULL",
+        tipo_id: params.boletim_tipo_id,
+        data_boletim: params.data ?? "NULL",
+        limite: params.limite,
+        pagina: params.pagina * params.limite
+      })
+
+      const res = await this.boletimRepository.listarBoletimCount({
+        numero: params.numero ?? "NULL",
+        tipo_id: params.boletim_tipo_id,
+        data_boletim: params.data ?? "NULL"
+      })
+
+      if (!res) throw new Error("Erro ao listar os boletins.")
+
+      return {
+        success: true,
+        data: {
+          list,
+          count: res.count
+        }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listarBoletinsPublico(
+    params: listarBoletimPublicoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const list = await this.boletimRepository.listarBoletimPublico({
         numero: params.numero ?? "NULL",
         tipo_id: params.boletim_tipo_id,
         data_boletim: params.data ?? "NULL",
@@ -112,12 +148,25 @@ export default class LeitorService {
     params: favoriteThisServiceProps
   ): Promise<defaultResponse> {
     try {
+      const verifica = await this.boletimRepository.verificaFavorito({
+        idBoletim: params.idboletim,
+        idUsuario: params.idusuario
+      })
+
+      if (!verifica) throw new Error("Erro ao verificar favoritos.")
+
+      if (verifica.count >= 1)
+        throw new Error("Você já favoritou esse boletim.")
+
       const res = await this.boletimRepository.favoriteThis({
         idBoletim: params.idboletim,
         idUsuario: params.idusuario
       })
 
-      if (res) throw new Error("Erro ao marcar boletim como favorito.")
+      if (!res) throw new Error("Erro ao marcar boletim como favorito.")
+
+      if (res.affectedRows <= 0)
+        throw new Error("Erro ao marcar boletim como favorito.")
 
       return {
         success: true,
@@ -140,7 +189,10 @@ export default class LeitorService {
         idUsuario: params.idusuario
       })
 
-      if (res) throw new Error("Erro ao remover o boletim dos favorito.")
+      if (!res) throw new Error("Erro ao remover o boletim dos favorito.")
+
+      if (res.affectedRows <= 0)
+        throw new Error("Erro ao remover o boletim dos favorito.")
 
       return {
         success: true,

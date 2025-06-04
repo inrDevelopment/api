@@ -4,15 +4,37 @@ import { mobileProccess, siteProccess } from "../lib/protection"
 const leitorRoute = express.Router()
 
 leitorRoute.post(
-  "/boletims",
+  "/boletims/privado",
   mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.listarBoletins({
+        await leitorController.listarBoletinsPrivado({
           numero: req.body.numero,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
-          idusuario: /*req.credenciais.id*/ 37,
+          idusuario: 8893 /* req.credenciais.id*/,
+          limite: req.body.limite,
+          pagina: req.body.pagina
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "leitor",
+      acao: "ler"
+    }
+  })
+)
+
+leitorRoute.post(
+  "/boletims/publico",
+  mobileProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await leitorController.listarBoletinsPublico({
+          numero: req.body.numero,
+          boletim_tipo_id: req.body.boletim_tipo_id,
+          data: req.body.data,
           limite: req.body.limite,
           pagina: req.body.pagina
         })

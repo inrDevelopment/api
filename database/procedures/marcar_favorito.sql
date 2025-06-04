@@ -7,7 +7,7 @@ CREATE PROCEDURE marcar_favorito (
 )
 BEGIN
     INSERT INTO 
-        boletim_leitura (
+        boletim_favorito (
             boletim_id,
             usuario_id
         ) 

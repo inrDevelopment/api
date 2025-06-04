@@ -31,7 +31,7 @@ import {
 import {
   listarBoletimControllerProps,
   listarBoletimValidation
-} from "../schemas/listarBoletim"
+} from "../schemas/listarBoletimPrivado"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
