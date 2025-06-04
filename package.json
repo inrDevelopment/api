@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {},
+  "devDependencies": {
+    "dotenv": "16.4.5",
+    "typescript": "5.5.4"
+  },
   "dependencies": {
     "@types/bcrypt": "5.0.2",
     "@types/cors": "2.8.17",
@@ -33,8 +36,6 @@
     "swagger-ui-express": "5.0.1",
     "tsup": "8.2.4",
     "tsx": "4.17.0",
-    "zod": "3.23.8",
-    "dotenv": "16.4.5",
-    "typescript": "5.5.4"
+    "zod": "3.23.8"
   }
 }

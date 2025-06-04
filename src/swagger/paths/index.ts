@@ -14,8 +14,8 @@ const paths: Record<string, swaggerJSDoc.PathItem> = {
   "/leitor/boletims/privado": listarBoletinsPrivado,
   "/leitor/boletims/publico": listarBoletinsPublico,
   "/leitor/registrar": registrarLeitor,
-  "/leitor/{id}/adicionar": markAsReaded,
-  "/leitor/{id}/remover": markAsUnReaded
+  "/leitor/leitura/{id}/adicionar": markAsReaded,
+  "/leitor/leitura/{id}/remover": markAsUnReaded
   /* ---------------------------------------------- */
 }
 
