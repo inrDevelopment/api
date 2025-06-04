@@ -2,9 +2,9 @@ import swaggerJSDoc from "swagger-jsdoc"
 
 const loginLeitor: swaggerJSDoc.PathItem = {
   post: {
-    description: "Login exclusivo para o leitor INR",
+    description: "Login Leitor INR",
     tags: ["/leitor"],
-    summary: "Login Leitor INR",
+    summary: "Login exclusivo para o leitor INR",
     requestBody: {
       required: true,
       content: {
@@ -14,19 +14,15 @@ const loginLeitor: swaggerJSDoc.PathItem = {
             properties: {
               uuid: {
                 type: "string",
-                required: true,
-                description:
-                  "Identificador gerado no dispositivo para identificar a instalação do Leitor INR."
+                required: true
               },
               login: {
                 type: "string",
-                required: true,
-                description: "Login do usuário para login no Leitor INR"
+                required: true
               },
               senha: {
                 type: "string",
-                required: true,
-                description: "Senha do usuário para login no Leitor INR"
+                required: true
               }
             },
             required: ["uuid", "login", "senha"]

@@ -1,10 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const markAsUnReaded: swaggerJSDoc.PathItem = {
-  delete: {
-    description: "Remove um boletim previamente marcado como lido.",
+const addFavorito: swaggerJSDoc.PathItem = {
+  get: {
+    description: "Marca um boletim como favorito",
     tags: ["/leitor"],
-    summary: "Remove um boletim da lista leitura.",
+    summary: "Marca um boletim favorito somente para usuários autenticados.",
     parameters: [
       {
         in: "header",
@@ -20,7 +20,7 @@ const markAsUnReaded: swaggerJSDoc.PathItem = {
         name: "id",
         type: "integer",
         required: true,
-        description: "O número do boletim a ser removido."
+        description: "O número do boletim a ser marcado como favorito."
       }
     ],
     responses: {
@@ -35,7 +35,7 @@ const markAsUnReaded: swaggerJSDoc.PathItem = {
                 },
                 message: {
                   type: "string",
-                  description: "Boletim marcado como não lido."
+                  description: "Boletim adicionado aos favorito."
                 }
               }
             }
@@ -47,4 +47,4 @@ const markAsUnReaded: swaggerJSDoc.PathItem = {
   }
 }
 
-export default markAsUnReaded
+export default addFavorito

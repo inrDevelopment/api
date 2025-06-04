@@ -12,14 +12,14 @@ leitorRoute.post(
           numero: req.body.numero,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
-          idusuario: 8893 /* req.credenciais.id*/,
+          idusuario: req.credenciais.id,
           limite: req.body.limite,
           pagina: req.body.pagina
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "ler"
     }
@@ -55,12 +55,12 @@ leitorRoute.get(
       res.status(200).json(
         await leitorController.markAsReaded({
           idboletim: +req.params.id,
-          idusuario: 8893 /* req.credenciais.idusuario */
+          idusuario: req.credenciais.idusuario
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "criar"
     }
@@ -74,12 +74,12 @@ leitorRoute.delete(
       res.status(200).json(
         await leitorController.markAsUnreaded({
           idboletim: +req.params.id,
-          idusuario: 8893 /* req.credenciais.idusuario */
+          idusuario: req.credenciais.idusuario
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "excluir"
     }
@@ -125,7 +125,7 @@ leitorRoute.delete(
 )
 
 leitorRoute.post(
-  "/favorito",
+  "/favoritos",
   siteProccess({
     handle: async (req, res) => {
       res.status(200).json(
@@ -160,7 +160,7 @@ leitorRoute.post(
     configuracao: {
       nivel: 0,
       recurso: "leitor",
-      acao: "ler"
+      acao: "criar"
     }
   })
 )

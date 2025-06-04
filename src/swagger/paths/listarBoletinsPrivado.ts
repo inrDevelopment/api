@@ -6,7 +6,20 @@ const listarBoletinsPrivado: swaggerJSDoc.PathItem = {
       "Lista os boletins criados que já foram aprovados e publicados para usuários LOGADOS. Usar somente para o leitor.",
     tags: ["/leitor"],
     summary: "Listar boletim Privado (logado).",
+    parameters: [
+      {
+        in: "header",
+        name: "authorization",
+        schema: {
+          type: "string",
+          required: true
+        },
+        description: "Token credencial do usuário"
+      }
+    ],
     requestBody: {
+      description:
+        "tipos de boletim: 1 - Ordinária, 2 - Extraordinária, 3 - Classificadores, 4 - Parceria IEPTB, 5 - Outros",
       required: true,
       content: {
         "application/json": {
@@ -19,25 +32,20 @@ const listarBoletinsPrivado: swaggerJSDoc.PathItem = {
                 description: "Número do boletim"
               },
               boletim_tipo_id: {
-                type: "number",
-                required: true,
-                description:
-                  "tipos de boletim: 1 - Ordinária, 2 - Extraordinária, 3 - Classificadores, 4 - Parceria IEPTB, 5 - Outros"
+                type: "array",
+                items: {
+                  type: "integer"
+                }
               },
               data: {
                 type: "string",
-                format: "date",
-                required: false,
-                description:
-                  "Tipo de dado String mas en formato de data ex:'2025-05-30T18:52:23.529Z'."
+                format: "date"
               },
               limite: {
-                type: "number",
-                required: true
+                type: "number"
               },
               pagina: {
-                type: "number",
-                required: true
+                type: "number"
               }
             },
             required: ["boletim_tipo_id", "limite", "pagina"]

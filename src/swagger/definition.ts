@@ -1,6 +1,19 @@
 import swaggerJSDoc from "swagger-jsdoc"
+import application from "../config/application"
 import components from "./components"
 import paths from "./paths"
+const servers = [
+  {
+    url: "https://api.publicacoesinr.com.br",
+    description: "Servidor de produção"
+  }
+]
+
+if (application.env === "dev")
+  servers.push({
+    url: "http://localhost:3001",
+    description: "Servidor local"
+  })
 
 const definition: swaggerJSDoc.OAS3Definition = {
   openapi: "3.0.0",
@@ -9,16 +22,7 @@ const definition: swaggerJSDoc.OAS3Definition = {
     version: "1.0.0",
     description: "Documentação da API INR"
   },
-  servers: [
-    {
-      url: "http://localhost:3001",
-      description: "Servidor local"
-    },
-    {
-      url: "https://api.inrpublicacoes.com.br",
-      description: "Servidor de produção"
-    }
-  ],
+  servers,
   paths,
   components
 }
