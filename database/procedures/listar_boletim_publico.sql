@@ -4,7 +4,7 @@ DROP PROCEDURE IF EXISTS listar_boletim_publico;
 
 CREATE PROCEDURE listar_boletim_publico (
     numero_boletim VARCHAR(10),    
-    tipo_id INT,
+    tipo_id TEXT,
 	data_boletim_inicio DATETIME,
 	data_boletim_fim DATETIME,
     limite INT,
@@ -19,7 +19,7 @@ BEGIN
 	FROM
 		boletim as be
 	WHERE 
-		be.boletim_tipo_id = tipo_id
+		(tipo_id IS NULL OR FIND_IN_SET(be.boletim_tipo_id, tipo_id))
 	AND 
 		(be.numero = numero_boletim OR numero_boletim IS NULL)
 	AND 

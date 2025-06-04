@@ -12,7 +12,8 @@ const markAsReaded: swaggerJSDoc.PathItem = {
         schema: {
           type: "string",
           required: true
-        }
+        },
+        description: "Token credencial do usuário"
       },
       {
         in: "path",

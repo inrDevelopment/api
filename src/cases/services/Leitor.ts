@@ -196,7 +196,7 @@ export default class LeitorService {
 
       return {
         success: true,
-        message: "Boletim removido como favorito."
+        message: "Boletim removido dos favoritos."
       }
     } catch (error: any) {
       return {

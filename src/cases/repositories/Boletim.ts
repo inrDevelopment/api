@@ -61,7 +61,7 @@ export default class BoletimRepository extends Repository {
   async listarBoletim(params: {
     idUsuario: number
     numero: string
-    tipo_id: number
+    tipo_id: number[] | null
     data_boletim: string
     limite: number
     pagina: number
@@ -87,7 +87,7 @@ export default class BoletimRepository extends Repository {
         "listar_boletim",
         params.idUsuario,
         params.numero,
-        params.tipo_id,
+        `'${params.tipo_id ? params.tipo_id.join(",") : null}'`,
         this.zeroDate(params.data_boletim),
         this.finalDate(params.data_boletim),
         params.limite,
@@ -100,7 +100,7 @@ export default class BoletimRepository extends Repository {
 
   async listarBoletimPublico(params: {
     numero: string
-    tipo_id: number
+    tipo_id: number[] | null
     data_boletim: string
     limite: number
     pagina: number
@@ -125,7 +125,7 @@ export default class BoletimRepository extends Repository {
       }>(
         "listar_boletim_publico",
         params.numero,
-        params.tipo_id,
+        `'${params.tipo_id ? params.tipo_id.join(",") : null}'`,
         this.zeroDate(params.data_boletim),
         this.finalDate(params.data_boletim),
         params.limite,
@@ -138,7 +138,7 @@ export default class BoletimRepository extends Repository {
 
   async listarBoletimCount(params: {
     numero: string
-    tipo_id: number
+    tipo_id: number[] | null
     data_boletim: string
   }): Promise<{
     count: number
@@ -149,7 +149,7 @@ export default class BoletimRepository extends Repository {
       }>(
         "listar_boletim_count",
         params.numero,
-        params.tipo_id,
+        `'${params.tipo_id ? params.tipo_id.join(",") : null}'`,
         this.zeroDate(params.data_boletim),
         this.finalDate(params.data_boletim)
       )
