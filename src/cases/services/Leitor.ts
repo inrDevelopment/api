@@ -13,6 +13,7 @@ import { loginLeitorServiceProps } from "../schemas/loginLeitor"
 import { markAsReadedServiceProps } from "../schemas/markAsReaded"
 import { markAsUnreadedServiceProps } from "../schemas/markAsUnreaded"
 import { registerServiceProps } from "../schemas/register"
+import { ultimoConteudoServiceProps } from "../schemas/ultimoConteudo"
 import { unfavoriteThisServiceProps } from "../schemas/unfavoriteThis"
 //#endregion imports
 
@@ -316,6 +317,29 @@ export default class LeitorService {
           nome: userConfirmed.nome,
           credential: token
         }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async ultimoConteudo(
+    params: ultimoConteudoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const content = await this.boletimRepository.ultimoConteudo({
+        tipo_id: params.tipo_id
+      })
+
+      if (!content)
+        throw new Error("Erro ao selecionar o último conteúdo selecionado.")
+
+      return {
+        success: true,
+        data: content
       }
     } catch (error: any) {
       return {
