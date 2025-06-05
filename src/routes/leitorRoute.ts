@@ -124,8 +124,26 @@ leitorRoute.delete(
   })
 )
 
+leitorRoute.get(
+  "/ultimo-boletim",
+  siteProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await leitorController.ultimoConteudo({
+          tipo_id: req.query.id ? +req.query.id : 0
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "leitor",
+      acao: "criar"
+    }
+  })
+)
+
 leitorRoute.post(
-  "/favoritos",
+  "/favorito",
   siteProccess({
     handle: async (req, res) => {
       res.status(200).json(

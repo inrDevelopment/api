@@ -33,6 +33,10 @@ import {
   registerValidation
 } from "../schemas/register"
 import {
+  ultimoConteudoControllerProps,
+  ultimoConteudoValidation
+} from "../schemas/ultimoConteudo"
+import {
   unfavoriteThisControllerProps,
   unfavoriteThisValidation
 } from "../schemas/unfavoriteThis"
@@ -164,6 +168,24 @@ export default class LeitorController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.leitorService.listarFavoritos(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async ultimoConteudo(
+    params: ultimoConteudoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await ultimoConteudoValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.leitorService.ultimoConteudo(validation.data)
     } catch (error: any) {
       return {
         success: false,

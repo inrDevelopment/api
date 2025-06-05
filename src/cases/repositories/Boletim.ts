@@ -479,4 +479,22 @@ export default class BoletimRepository extends Repository {
       throw new Error(error.message)
     }
   }
+
+  async ultimoConteudo(params: { tipo_id: number }): Promise<{
+    id: number
+    titulo: string
+    data: string
+    numero: string
+  } | null> {
+    try {
+      return this.procedure<{
+        id: number
+        titulo: string
+        data: string
+        numero: string
+      }>("ultimo_conteudo", params.tipo_id)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
 }
