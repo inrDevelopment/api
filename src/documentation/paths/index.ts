@@ -15,17 +15,20 @@ const paths: Record<string, swaggerJSDoc.PathItem> = {
   /* /boletim */
   /* ---------------------------------------------- */
   /* /leitor */
+  /* - GET */
+  "/leitor/leitura/{id}/adicionar": markAsReaded,
+  "/leitor/favorito/{id}/adicionar": addFavorito,
+  "/leitor/ultimo-boletim": ultimoBoletim,
+  "/leitor/ler": lerBoletim,
+  /* - POST */
   "/leitor/autenticacao": loginLeitor,
   "/leitor/boletims/privado": listarBoletinsPrivado,
   "/leitor/boletims/publico": listarBoletinsPublico,
   "/leitor/registrar": registrarLeitor,
-  "/leitor/leitura/{id}/adicionar": markAsReaded,
-  "/leitor/leitura/{id}/remover": markAsUnReaded,
-  "/leitor/favorito/{id}/adicionar": addFavorito,
-  "/leitor/favorito/{id}/remover": removeFavoritos,
   "/leitor/favorito": listarFavoritos,
-  "/leitor/ultimo-boletim": ultimoBoletim,
-  "/leitor/ler": lerBoletim
+  /* - DELETE */
+  "/leitor/leitura/{id}/remover": markAsUnReaded,
+  "/leitor/favorito/{id}/remover": removeFavoritos
   /* ---------------------------------------------- */
 }
 
