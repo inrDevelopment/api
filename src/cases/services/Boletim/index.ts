@@ -10,6 +10,8 @@ import { boletimNovoServiceProps } from "../../schemas/boletimNovo"
 import { boletimPublicarServiceProps } from "../../schemas/boletimPublicar"
 import { boletimSelecionarServiceProps } from "../../schemas/boletimSelecionar"
 import { editarBoletimServiceProps } from "../../schemas/editarBoletim"
+import { editarItemBoletimServiceProps } from "../../schemas/editarItemBoletim"
+import { excluirItemBoletimServiceProps } from "../../schemas/excluirItemBoletim"
 import Core from "./Core"
 //#endregion imports
 
@@ -134,6 +136,81 @@ export default class BoletimService {
       return {
         success: true,
         message: `Boletim alterado com sucesso.`
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async editarBoletimItem(
+    params: editarItemBoletimServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const valida = await this.boletimRepository.validaEdicaoItem({
+        boletimId: params.boletimId,
+        conteudoTipoId: params.conteudoTipoId,
+        identificador: params.identificador,
+        idItem: params.id
+      })
+
+      if (!valida) throw new Error("Erro ao validar a edição.")
+      if (valida.count >= 1)
+        throw new Error(
+          "Já existe um item com essas informações. Por favor verifique."
+        )
+
+      const needContent =
+        params.conteudoTipoId >= 31 || params.conteudoTipoId <= 40
+          ? true
+          : false
+
+      const be = await this.boletimRepository.selecionarBoletim({
+        idBoletim: params.boletimId
+      })
+
+      if (!be) throw new Error("Erro ao processar o boletim.")
+
+      const res = await this.core.processBoletimItem({
+        id: params.identificador,
+        boletim_conteudo_tipo_id: params.conteudoTipoId,
+        content: needContent,
+        data: be.data
+      })
+
+      let url = `https://inrpublicacoes.com.br/site/${
+        tag[`${params.conteudoTipoId}` as keyof typeof tag]
+      }/${params.identificador}`
+
+      if (
+        params.conteudoTipoId === 12 ||
+        params.conteudoTipoId === 15 ||
+        params.conteudoTipoId === 18
+      ) {
+        url = url + "/ler"
+      } else {
+        url = url + `/${sanitize(res.titulo).urlFriendly()}`
+      }
+
+      const item = await this.boletimRepository.editarItemBoletim({
+        boletimId: params.boletimId,
+        conteudo: needContent && res.text ? res.text : null,
+        conteudoTipoId: params.conteudoTipoId,
+        id: params.id,
+        identificador: params.identificador,
+        ordem: params.ordem,
+        titulo: res.titulo,
+        url: url
+      })
+
+      if (item.affectedRows <= 0)
+        throw new Error("Nenhuma alteração foi realizada.")
+
+      return {
+        success: false,
+        message: "Item alterado com sucesso."
       }
     } catch (error: any) {
       return {
@@ -287,6 +364,17 @@ export default class BoletimService {
     params: adicionarItemBoletimServiceProps
   ): Promise<defaultResponse> {
     try {
+      const validadeItem = await this.boletimRepository.validaItem({
+        idItem: params.id,
+        idBoletim: params.idBoletim,
+        conteudoTipoId: params.boletimConteudoTipoId
+      })
+
+      if (!validadeItem) throw new Error("Erro ao validar o item.")
+
+      if (validadeItem.count >= 1)
+        throw new Error("Esse item ja foi inserído no boletim;")
+
       const be = await this.boletimRepository.selecionarBoletim({
         idBoletim: params.idBoletim
       })
@@ -316,12 +404,13 @@ export default class BoletimService {
       ) {
         url = url + "/ler"
       } else {
-        url = url + `/${sanitize(res.titulo)}`
+        url = url + `/${sanitize(res.titulo).urlFriendly()}`
       }
 
       const item = await this.boletimRepository.novoItemBoletim({
         boletimId: params.idBoletim,
-        conteudo: needContent && res.text ? res.text : "",
+        conteudo: needContent && res.text ? res.text : null,
+        identificador: params.id,
         conteudoTipoId: params.boletimConteudoTipoId,
         ordem: params.ordem,
         titulo: res.titulo,
@@ -335,6 +424,30 @@ export default class BoletimService {
         data: {
           id: item.id
         }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async excluirItemBoletim(
+    params: excluirItemBoletimServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const res = await this.boletimRepository.excluirBoletimItem({
+        idBoletimItem: params.id
+      })
+
+      if (!res) throw new Error("Erro ao excluir o item.")
+
+      if (res.affectedRows <= 0) throw new Error("Não houve alteração")
+
+      return {
+        success: true,
+        message: "Item do boletim excluido com sucesso."
       }
     } catch (error: any) {
       return {

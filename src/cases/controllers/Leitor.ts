@@ -5,6 +5,10 @@ import {
   favoriteThisValidation
 } from "../schemas/favoriteThis"
 import {
+  getBoletimLeituraControllerProps,
+  getBoletimLeituraValidation
+} from "../schemas/getBoletimLeitura"
+import {
   listarBoletimPrivadoControllerProps,
   listarBoletimPrivadoValidation
 } from "../schemas/listarBoletimPrivado"
@@ -218,6 +222,26 @@ export default class LeitorController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.leitorService.login(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async lerBoletim(
+    params: getBoletimLeituraControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await getBoletimLeituraValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.leitorService.lerBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,

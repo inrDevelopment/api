@@ -6,6 +6,7 @@ import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
 import UserRepository from "../repositories/User"
 import { favoriteThisServiceProps } from "../schemas/favoriteThis"
+import { getBoletimLeituraServiceProps } from "../schemas/getBoletimLeitura"
 import { listarBoletimPrivadoServiceProps } from "../schemas/listarBoletimPrivado"
 import { listarBoletimPublicoServiceProps } from "../schemas/listarBoletimPublico"
 import { listarFavoritoServiceProps } from "../schemas/listarFavorito"
@@ -340,6 +341,44 @@ export default class LeitorService {
       return {
         success: true,
         data: content
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async lerBoletim(
+    params: getBoletimLeituraServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const be = await this.boletimRepository.selecionarBoletimLeitura({
+        id: params.id
+      })
+
+      if (!be) throw new Error("Erro ao selecionar o boletim.")
+
+      const items = await this.boletimRepository.selecionarBoletimItemLeitura({
+        idBoletim: params.id
+      })
+
+      this.boletimRepository.vizualizacao({
+        idBoletim: params.id,
+        quantidade: be.vizualizacao + 1
+      })
+
+      return {
+        success: false,
+        data: {
+          id: be.id,
+          titulo: be.titulo,
+          numero: be.numero,
+          data: be.data,
+          favorito: be.favorito,
+          conteudo: items
+        }
       }
     } catch (error: any) {
       return {

@@ -26,7 +26,7 @@ boletimRoute.post(
 )
 
 boletimRoute.put(
-  "/:id/editar",
+  "/:id/update",
   painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
@@ -63,6 +63,46 @@ boletimRoute.post(
       nivel: 0,
       recurso: "boletim",
       acao: "criar"
+    }
+  })
+)
+
+boletimRoute.put(
+  "/item/:id/update",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.editarItemBoletim({
+          id: +req.params.id,
+          conteudoTipoId: req.body.boletimConteudoTipoId,
+          boletimId: req.body.idBoletim,
+          identificador: req.body.identificador,
+          ordem: req.body.ordem
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "boletim",
+      acao: "editar"
+    }
+  })
+)
+
+boletimRoute.delete(
+  "/item/:id/delete",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.excluirItemBoletim({
+          id: +req.params.id
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "boletim",
+      acao: "excluir"
     }
   })
 )

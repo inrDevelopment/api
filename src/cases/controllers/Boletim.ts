@@ -28,6 +28,14 @@ import {
   editarBoletimControllerProps,
   editarBoletimValidation
 } from "../schemas/editarBoletim"
+import {
+  editarItemBoletimControllerProps,
+  editarItemBoletimValidation
+} from "../schemas/editarItemBoletim"
+import {
+  excluirItemBoletimControllerProps,
+  excluirItemBoletimValidation
+} from "../schemas/excluirItemBoletim"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
@@ -174,6 +182,46 @@ export default class BoletimController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.boletimService.adicionarItemBoletim(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async editarItemBoletim(
+    params: editarItemBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await editarItemBoletimValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.editarBoletimItem(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async excluirItemBoletim(
+    params: excluirItemBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await excluirItemBoletimValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.excluirItemBoletim(validation.data)
     } catch (error: any) {
       return {
         success: false,
