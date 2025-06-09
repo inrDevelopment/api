@@ -267,6 +267,7 @@ export default class BoletimRepository extends Repository {
   async selecionarBoletimitems(params: { idBoletim: number }): Promise<
     {
       id: number
+      identificador: number
       conteudo_tipo_id: number
       conteudo_tipo: string
       titulo: string
@@ -278,6 +279,7 @@ export default class BoletimRepository extends Repository {
     try {
       return this.many<{
         id: number
+        identificador: number
         conteudo_tipo_id: number
         conteudo_tipo: string
         titulo: string
@@ -368,8 +370,9 @@ export default class BoletimRepository extends Repository {
   async novoItemBoletim(params: {
     conteudoTipoId: number
     boletimId: number
+    identificador: number
     titulo: string
-    conteudo: string
+    conteudo: string | null
     url: string
     ordem: number
   }): Promise<{ id: number } | null> {
@@ -378,9 +381,10 @@ export default class BoletimRepository extends Repository {
         "novo_item_boletim",
         params.conteudoTipoId,
         params.boletimId,
-        params.titulo,
-        params.conteudo,
-        params.url,
+        params.identificador,
+        `'${params.titulo}'`,
+        `${params.conteudo ?? "NULL"}`,
+        `'${params.url}'`,
         params.ordem
       )
     } catch (error: any) {
@@ -493,6 +497,140 @@ export default class BoletimRepository extends Repository {
         data: string
         numero: string
       }>("ultimo_conteudo", params.tipo_id)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async validaItem(params: {
+    idItem: number
+    idBoletim: number
+    conteudoTipoId: number
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.procedure<{ count: number }>(
+        "validar_item_boletim",
+        params.idItem,
+        params.idBoletim,
+        params.conteudoTipoId
+      )
+    } catch (error: any) {
+      throw new Error(error.mensagem)
+    }
+  }
+
+  async validaEdicaoItem(params: {
+    idItem: number
+    conteudoTipoId: number
+    boletimId: number
+    identificador: number
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.procedure<{ count: number }>(
+        "validar_edicao_boletim_item",
+        params.idItem,
+        params.conteudoTipoId,
+        params.boletimId,
+        params.identificador
+      )
+    } catch (error: any) {
+      throw new Error(error.mensagem)
+    }
+  }
+
+  async editarItemBoletim(params: {
+    id: number
+    conteudoTipoId: number
+    boletimId: number
+    identificador: number
+    titulo: string
+    conteudo: string | null
+    url: string
+    ordem: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "editar_item_boletim",
+        params.id,
+        params.conteudoTipoId,
+        params.boletimId,
+        params.identificador,
+        `'${params.titulo}'`,
+        `${params.conteudo ?? "NULL"}`,
+        `'${params.url}'`,
+        params.ordem
+      )
+    } catch (error: any) {
+      throw new Error(error.mensagem)
+    }
+  }
+
+  async excluirBoletimItem(params: {
+    idBoletimItem: number
+  }): Promise<{ affectedRows: number } | null> {
+    try {
+      return this.deleteprocedure("excluir_boletim_item", params.idBoletimItem)
+    } catch (error: any) {
+      throw new Error(error.mensagem)
+    }
+  }
+
+  async selecionarBoletimLeitura(params: { id: number }): Promise<{
+    id: number
+    titulo: string
+    numero: string
+    data: string
+    favorito: number
+    vizualizacao: number
+  } | null> {
+    try {
+      return this.procedure<{
+        id: number
+        titulo: string
+        numero: string
+        data: string
+        favorito: number
+        vizualizacao: number
+      }>("selecionar_boletim_leitura", params.id)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async selecionarBoletimItemLeitura(params: { idBoletim: number }): Promise<
+    {
+      id: number
+      conteudo_tipo_id: number
+      nome: string
+      titulo: string
+      url: string
+      conteudo: string
+    }[]
+  > {
+    try {
+      return this.many<{
+        id: number
+        conteudo_tipo_id: number
+        nome: string
+        titulo: string
+        url: string
+        conteudo: string
+      }>("selecionar_boletim_item_leitura", params.idBoletim)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async vizualizacao(params: {
+    idBoletim: number
+    quantidade: number
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.updateprocedure(
+        "atualiza_leitura",
+        params.idBoletim,
+        params.quantidade
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }

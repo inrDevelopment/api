@@ -4,8 +4,8 @@ import "dotenv/config"
 import express from "express"
 import swaggerUi from "swagger-ui-express"
 import application from "./config/application"
+import swaggerDocs from "./documentation"
 import router from "./router"
-import swaggerDocs from "./swagger"
 
 const app = express()
 
@@ -23,11 +23,12 @@ app.use((req, _, next) => {
   next()
 })
 app.use("/", router)
+
 app.listen(application.port, async () => {
   let finalHost =
     application.env === "dev"
-      ? `${application.host}:${application.port}`
-      : `${application.host}`
+      ? `${application.host.dev}:${application.port}`
+      : `${application.host.prod}`
 
   console.log(
     `Api ouvindo no endereço: ${

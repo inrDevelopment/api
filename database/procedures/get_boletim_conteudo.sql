@@ -7,6 +7,7 @@ CREATE PROCEDURE get_boletim_conteudo (
 BEGIN
     SELECT
         bc.id,
+        bc.identificador,
         bc.conteudo_tipo_id,
         bct.nome as "conteudo_tipo",
         bc.titulo,

@@ -1,7 +1,7 @@
 export default {
   env: process.env.ENV || "",
   key: process.env.KEY || "",
-  host: process.env.HOST || "",
+  host: { dev: process.env.HOST_DEV || "", prod: process.env.HOST_PROD || "" },
   name: process.env.NAME || "",
   port: process.env.PORT || ""
 }

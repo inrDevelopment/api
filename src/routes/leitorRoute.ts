@@ -204,4 +204,22 @@ leitorRoute.post(
   })
 )
 
+leitorRoute.get(
+  "/ler",
+  siteProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await leitorController.lerBoletim({
+          id: req.query.id ? +req.query.id : 0
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      recurso: "leitor",
+      acao: "criar"
+    }
+  })
+)
+
 export default leitorRoute

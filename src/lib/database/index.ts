@@ -25,9 +25,9 @@ export async function execute<T = any>(sql: string): Promise<T | null> {
   try {
     const [QueryResult] = await database.execute<RowDataPacket[]>(sql)
 
-    if (!QueryResult[0][0]) return null
+    if (!QueryResult[0]) return null
 
-    return QueryResult[0][0] as T
+    return QueryResult[0] as T
   } catch (error: any) {
     throw new Error(error.message)
   }

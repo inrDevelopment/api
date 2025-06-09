@@ -10,14 +10,18 @@ export default class Core {
   ) {}
 
   private fixText(html: string): string {
-    // Remove tags HTML com regex básico
-    const semTags = html.replace(/<[^>]+>/g, "")
+    let texto = decode(html)
 
-    // Decodifica entidades HTML como &aacute; -> á
-    const textoLimpo = decode(semTags)
+    texto = texto.replace(/<[^>]+>/g, "")
 
-    // Remove espaços extras, se necessário
-    return textoLimpo.trim()
+    texto = decode(texto)
+
+    texto = texto
+      .replace(/[\r\n\t]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+
+    return texto
   }
 
   async processoBloqueio(): Promise<void> {
