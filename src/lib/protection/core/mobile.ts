@@ -33,13 +33,12 @@ export function process(
         case 2:
           if (!req.headers["authorization"]) throw new Error("Não autorizado")
 
-          req.credenciais = new UsuarioMobile(
-            verify(
-              req.headers["authorization"],
-              application.key
-            ) as IUsuarioMobile
-          )
+          const credentialObject = verify(
+            req.headers["authorization"],
+            application.key
+          ) as IUsuarioMobile
 
+          req.credenciais = new UsuarioMobile(credentialObject)
           return await params.handle(req, res)
       }
     } catch (error: any) {

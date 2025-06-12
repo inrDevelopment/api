@@ -22,7 +22,7 @@ enum Niveis {
 }
 
 type baseUser = {
-  id: number
+  idusuario: number
   nome: string
   email: string
   tipo: tipo
@@ -62,7 +62,7 @@ class UsuarioPainel {
   tipo: "painel" = "painel"
 
   constructor(data: IUsuarioPainel) {
-    this.id = data.id
+    this.id = data.idusuario
     this.email = data.email
     this.nome = data.nome
     this.recurso = data.recurso
@@ -84,7 +84,7 @@ class UsuarioSite {
   autorizacao_trabalhista: string
 
   constructor(data: IUsuarioSite) {
-    this.id = data.id
+    this.id = data.idusuario
     this.idcliente = data.idcliente
     this.nome = data.nome
     this.email = data.email
@@ -105,7 +105,7 @@ class UsuarioMobile {
   autorizacao_trabalhista: string
 
   constructor(data: IUsuarioMobile) {
-    this.id = data.id
+    this.id = data.idusuario
     this.idcliente = data.idcliente
     this.nome = data.nome
     this.email = data.email

@@ -1,6 +1,6 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
-import { mobileProccess, siteProccess } from "../lib/protection"
+import { mobileProccess } from "../lib/protection"
 const leitorRoute = express.Router()
 
 leitorRoute.post(
@@ -50,7 +50,7 @@ leitorRoute.post(
 
 leitorRoute.get(
   "/leitura/:id(\\d+)/adicionar",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsReaded({
@@ -69,7 +69,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/leitura/:id(\\d+)/remover",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsUnreaded({
@@ -88,7 +88,7 @@ leitorRoute.delete(
 
 leitorRoute.get(
   "/favorito/:id(\\d+)/adicionar",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.favoriteThis({
@@ -107,7 +107,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/favorito/:id(\\d+)/remover",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.unfavoriteThis({
@@ -126,7 +126,7 @@ leitorRoute.delete(
 
 leitorRoute.get(
   "/ultimo-boletim",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.ultimoConteudo({
@@ -144,7 +144,7 @@ leitorRoute.get(
 
 leitorRoute.post(
   "/favorito",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarFavoritos({
@@ -167,7 +167,7 @@ leitorRoute.post(
 
 leitorRoute.post(
   "/registrar",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.register({
@@ -186,7 +186,7 @@ leitorRoute.post(
 
 leitorRoute.post(
   "/autenticacao",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.login({
@@ -206,7 +206,7 @@ leitorRoute.post(
 
 leitorRoute.get(
   "/ler",
-  siteProccess({
+  mobileProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.lerBoletim({

@@ -11,6 +11,7 @@ import newsRoutes from "./routes/newsRoutes"
 import opinionRoutes from "./routes/opinionRoutes"
 import pareceresRoutes from "./routes/pareceresRoutes"
 import questionsAnswersRoutes from "./routes/questionsAnswersRoutes"
+import recursoRoutes from "./routes/recursoRoute"
 import supplementsRoutes from "./routes/supplementsRoutes"
 import userRoutes from "./routes/userRoutes"
 
@@ -30,5 +31,6 @@ router.use("/descricao", descriptionRoute)
 router.use("/suplementos", supplementsRoutes)
 router.use("/boletim", boletimRoutes)
 router.use("/leitor", leitorRoutes)
+router.use("/recurso", recursoRoutes)
 
 export default router
