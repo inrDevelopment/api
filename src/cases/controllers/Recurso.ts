@@ -1,3 +1,4 @@
+//#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
   criarRecursoControllerProps,
@@ -20,6 +21,7 @@ import {
   selecionarRecursoValidation
 } from "../schemas/selecionarRecurso"
 import RecursoService from "../services/Recurso"
+//#endregion Imports
 
 export default class RecursoController {
   constructor(private recursoService: RecursoService) {}
