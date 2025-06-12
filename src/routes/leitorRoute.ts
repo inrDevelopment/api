@@ -55,7 +55,7 @@ leitorRoute.get(
       res.status(200).json(
         await leitorController.markAsReaded({
           idboletim: +req.params.id,
-          idusuario: req.credenciais.idusuario
+          idusuario: req.credenciais.id
         })
       )
     },
@@ -74,7 +74,7 @@ leitorRoute.delete(
       res.status(200).json(
         await leitorController.markAsUnreaded({
           idboletim: +req.params.id,
-          idusuario: req.credenciais.idusuario
+          idusuario: req.credenciais.id
         })
       )
     },
@@ -93,7 +93,7 @@ leitorRoute.get(
       res.status(200).json(
         await leitorController.favoriteThis({
           idboletim: +req.params.id,
-          idusuario: 8893 /* req.credenciais.idusuario */
+          idusuario: req.credenciais.id
         })
       )
     },
@@ -112,7 +112,7 @@ leitorRoute.delete(
       res.status(200).json(
         await leitorController.unfavoriteThis({
           idboletim: +req.params.id,
-          idusuario: 8893 /* req.credenciais.idusuario */
+          idusuario: req.credenciais.id
         })
       )
     },
