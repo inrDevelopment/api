@@ -8,7 +8,7 @@ const removeFavoritos: swaggerJSDoc.PathItem = {
     parameters: [
       {
         in: "header",
-        name: "authorization",
+        name: "Authorization",
         schema: {
           type: "string",
           required: true
