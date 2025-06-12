@@ -1,6 +1,5 @@
 import { z } from "zod"
-export const salvarRecursoValidation = z.object({
-  id: z.number().optional(),
+export const criarRecursoValidation = z.object({
   recurso_tipo_id: z.number(),
   nome: z
     .string()
@@ -20,7 +19,5 @@ export const salvarRecursoValidation = z.object({
   idusuario: z.number()
 })
 
-export type salvarRecursoControllerProps = z.input<
-  typeof salvarRecursoValidation
->
-export type salvarRecursoServiceProps = z.output<typeof salvarRecursoValidation>
+export type criarRecursoControllerProps = z.input<typeof criarRecursoValidation>
+export type criarRecursoServiceProps = z.output<typeof criarRecursoValidation>

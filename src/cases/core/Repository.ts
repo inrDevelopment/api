@@ -57,6 +57,23 @@ export class Repository {
     }
   }
 
+  protected async insertprocedure(
+    name: string,
+    ...values: any[]
+  ): Promise<{ affectedRows: number }> {
+    try {
+      const [QueryResult] = await database.execute<any>(
+        `CALL ${name}(${values})`
+      )
+
+      if (!QueryResult) throw new Error("Erro ao verificar alterações.")
+
+      return { affectedRows: QueryResult.affectedRows }
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   protected async updateprocedure(
     name: string,
     ...values: any[]
@@ -68,7 +85,7 @@ export class Repository {
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
 
-      return QueryResult
+      return { affectedRows: QueryResult.affectedRows }
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -88,7 +105,7 @@ export class Repository {
           "Não foi possivel verificar se a exclusão foi realizada."
         )
 
-      return QueryResult.affectedRows
+      return { affectedRows: QueryResult.affectedRows }
     } catch (error: any) {
       throw new Error(error.message)
     }
