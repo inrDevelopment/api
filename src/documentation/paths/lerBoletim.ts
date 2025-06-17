@@ -7,15 +7,6 @@ const lerBoletim: swaggerJSDoc.PathItem = {
     summary: "Seleciona boletim para leitura.",
     parameters: [
       {
-        in: "header",
-        name: "Authorization",
-        schema: {
-          type: "string",
-          required: true
-        },
-        description: "Token credencial do usuário"
-      },
-      {
         in: "query",
         name: "id",
         type: "integer",

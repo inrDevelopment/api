@@ -5,12 +5,11 @@ CREATE PROCEDURE criar_recurso (
     IN recursoNome VARCHAR(150),
     IN recursoIcone VARCHAR(30),
     IN recursoTag VARCHAR(5),
-    IN recursoCaminho VARCHAR(200),
-    IN recursoAcoes VARCHAR(6),
+    IN recursoUrl VARCHAR(200),
+    IN recursoAtributos VARCHAR(6),
     IN recursoAtivo BOOL,
-    IN plataformaId INT,
-    IN criadoId INT,
-    OUT created INT
+    IN recursoTipoId INT,
+    IN criadoId INT
 )
 BEGIN
     INSERT INTO recurso 
@@ -18,23 +17,25 @@ BEGIN
             nome, 
             icone, 
             tag, 
-            caminho, 
-            acoes, 
+            url, 
+            atributos, 
             ativo, 
-            plataforma_id, 
+            recurso_tipo_id, 
             criado_id,
-            criado_em
+            criado_em,
+            exc
         ) VALUES (
             recursoNome, 
             recursoIcone, 
             recursoTag, 
-            recursoCaminho, 
-            recursoAcoes, 
+            recursoUrl, 
+            recursoAtributos, 
             recursoAtivo, 
-            plataformaId,
+            recursoTipoId,
             criadoId,
-            NOW()
+            NOW(),
+            'N'
         );
 
-        SET created = LAST_INSERT_ID();
+        SELECT LAST_INSERT_ID() AS recursoid;
 END;

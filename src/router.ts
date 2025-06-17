@@ -17,7 +17,7 @@ import userRoutes from "./routes/userRoutes"
 
 const router = express.Router()
 
-router.use("/user", userRoutes)
+router.use("/seguranca", userRoutes)
 router.use("/home", homeRoutes)
 router.use("/noticias", newsRoutes)
 router.use("/jurisprudencia", jurisprudenceRoutes)

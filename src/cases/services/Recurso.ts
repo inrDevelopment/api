@@ -1,6 +1,7 @@
 //#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import RecursoRepository from "../repositories/Recurso"
+import UserRepository from "../repositories/User"
 import { criarRecursoServiceProps } from "../schemas/criarRecurso"
 import { editarRecursoServiceProps } from "../schemas/editarRecurso"
 import { excluirRecursoServiceProps } from "../schemas/excluirRecurso"
@@ -9,13 +10,68 @@ import { selecionarRecursoServiceProps } from "../schemas/selecionarRecurso"
 //#endregion imports
 
 export default class RecursoService {
-  constructor(private recursoRepository: RecursoRepository) {}
+  constructor(
+    private recursoRepository: RecursoRepository,
+    private userRepository: UserRepository
+  ) {}
+
   async editarRecurso(
     params: editarRecursoServiceProps
   ): Promise<defaultResponse> {
     try {
+      const existNome = await this.recursoRepository.verificaEditarNome({
+        nome: params.nome,
+        id: params.id
+      })
+      if (!existNome) throw new Error("Erro ao verificar contéudo.")
+      if (existNome.count >= 1)
+        throw new Error("Ja existe um recurso com esse nome.")
+
+      const existTag = await this.recursoRepository.verificaEditarTag({
+        tag: params.tag,
+        id: params.id
+      })
+      if (!existTag) throw new Error("Erro ao verificar contéudo.")
+      if (existTag.count >= 1)
+        throw new Error("Ja existe um recurso com essa tag.")
+
+      const existUrl = await this.recursoRepository.verificaEditarUrl({
+        url: params.url,
+        id: params.id
+      })
+      if (!existUrl) throw new Error("Erro ao verificar contéudo.")
+      if (existUrl.count >= 1)
+        throw new Error("Ja existe um recurso com esse url.")
+
+      const recurso = await this.recursoRepository.editar({
+        ativo: params.ativo,
+        atributos: params.atributos,
+        icone: params.icone,
+        id: params.id,
+        idusuario: params.idusuario,
+        nome: params.nome,
+        recurso_tipo_id: params.recurso_tipo_id,
+        tag: params.tag,
+        url: params.url
+      })
+
+      if (recurso.affectedRows <= 0) throw new Error("Nada foi alterado.")
+
+      const nomeUsuario = await this.userRepository.getUserName({
+        id: params.idusuario
+      })
+
+      if (!nomeUsuario)
+        throw new Error("Erro ao identificar usuário responsável pela edição.")
+
       return {
-        success: true
+        success: true,
+        data: {
+          editadoid: params.idusuario,
+          editadonome: nomeUsuario.nome,
+          editadoem: new Date()
+        },
+        message: "Recurso alterado com sucesso."
       }
     } catch (error: any) {
       return {
@@ -29,8 +85,56 @@ export default class RecursoService {
     params: criarRecursoServiceProps
   ): Promise<defaultResponse> {
     try {
+      const existNome = await this.recursoRepository.verificaCriarNome({
+        nome: params.nome
+      })
+      if (!existNome) throw new Error("Erro ao verificar contéudo.")
+      if (existNome.count >= 1)
+        throw new Error("Ja existe um recurso com esse nome.")
+
+      const existTag = await this.recursoRepository.verificaCriarTag({
+        tag: params.tag
+      })
+      if (!existTag) throw new Error("Erro ao verificar contéudo.")
+      if (existTag.count >= 1)
+        throw new Error("Ja existe um recurso com essa tag.")
+
+      const existUrl = await this.recursoRepository.verificaCriarUrl({
+        url: params.url
+      })
+      if (!existUrl) throw new Error("Erro ao verificar contéudo.")
+      if (existUrl.count >= 1)
+        throw new Error("Ja existe um recurso com esse url.")
+
+      const novoRecurso = await this.recursoRepository.criar({
+        ativo: params.ativo,
+        atributos: params.atributos,
+        icone: params.icone,
+        idusuario: params.idusuario,
+        nome: params.nome,
+        recurso_tipo_id: params.recurso_tipo_id,
+        tag: params.tag,
+        url: params.url
+      })
+
+      if (!novoRecurso) throw new Error("Erro ao criar o recurso.")
+
+      const nomeUsuario = await this.userRepository.getUserName({
+        id: params.idusuario
+      })
+
+      if (!nomeUsuario)
+        throw new Error("Erro ao identificar usuário responsável pela criação.")
+
       return {
-        success: true
+        success: true,
+        data: {
+          recursoid: novoRecurso.recursoid,
+          criadoid: params.idusuario,
+          criadonome: nomeUsuario.nome,
+          criadoem: new Date()
+        },
+        message: "Recurso criado com sucesso."
       }
     } catch (error: any) {
       return {
@@ -44,8 +148,29 @@ export default class RecursoService {
     params: listarRecursoServiceProps
   ): Promise<defaultResponse> {
     try {
+      const list = await this.recursoRepository.lista({
+        nome: params.nome,
+        tag: params.tag,
+        url: params.url,
+        ativo: params.ativo,
+        recurso_tipo_id: params.recurso_tipo_id,
+        limite: params.limite,
+        pagina: params.pagina * params.limite
+      })
+
+      const count = await this.recursoRepository.count({
+        nome: params.nome,
+        tag: params.tag,
+        url: params.url,
+        ativo: params.ativo,
+        recurso_tipo_id: params.recurso_tipo_id
+      })
+
+      if (!count) throw new Error("Erro ao listar os recursos.")
+
       return {
-        success: true
+        success: true,
+        data: { list, count: count.count }
       }
     } catch (error: any) {
       return {
@@ -59,8 +184,15 @@ export default class RecursoService {
     params: selecionarRecursoServiceProps
   ): Promise<defaultResponse> {
     try {
+      const response = await this.recursoRepository.selecionar({
+        id: params.id
+      })
+
+      if (!response) throw new Error("Erro ao selecionar o recurso.")
+
       return {
-        success: true
+        success: true,
+        data: response
       }
     } catch (error: any) {
       return {
@@ -74,8 +206,17 @@ export default class RecursoService {
     params: excluirRecursoServiceProps
   ): Promise<defaultResponse> {
     try {
+      const response = await this.recursoRepository.excluir({
+        id: params.id,
+        idusuario: params.idusuario
+      })
+
+      if (response.affectedRows <= 0)
+        throw new Error("Nada foi alterado. favor verificar.")
+
       return {
-        success: true
+        success: true,
+        message: "Recurso excluido com sucesso."
       }
     } catch (error: any) {
       return {

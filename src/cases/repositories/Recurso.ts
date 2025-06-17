@@ -10,17 +10,17 @@ export default class RecursoRepository extends Repository {
     ativo: boolean
     atributos: string
     idusuario: number
-  }): Promise<any> {
+  }): Promise<{ recursoid: number } | null> {
     try {
-      return this.procedure(
-        "",
+      return this.procedure<{ recursoid: number }>(
+        "criar_recurso",
         params.nome,
         params.icone,
-        params.url,
         params.tag,
-        params.recurso_tipo_id,
-        params.ativo,
+        params.url,
         params.atributos,
+        params.ativo,
+        params.recurso_tipo_id,
         params.idusuario
       )
     } catch (error: any) {
@@ -43,15 +43,15 @@ export default class RecursoRepository extends Repository {
   }> {
     try {
       return this.updateprocedure(
-        "",
+        "editar_recurso",
         params.id,
         params.nome,
         params.icone,
-        params.url,
         params.tag,
-        params.recurso_tipo_id,
-        params.ativo,
+        params.url,
         params.atributos,
+        params.ativo,
+        params.recurso_tipo_id,
         params.idusuario
       )
     } catch (error: any) {
@@ -66,6 +66,7 @@ export default class RecursoRepository extends Repository {
     url: string
     tag: string
     recurso_tipo_id: number
+    recurso_tipo_nome: string
     ativo: boolean
     atributos: string
     criadoid: number
@@ -83,6 +84,7 @@ export default class RecursoRepository extends Repository {
         url: string
         tag: string
         recurso_tipo_id: number
+        recurso_tipo_nome: string
         ativo: boolean
         atributos: string
         criadoid: number
@@ -91,7 +93,7 @@ export default class RecursoRepository extends Repository {
         editadoid: number
         editadonome: string
         editadoem: string
-      }>("", params.id)
+      }>("selecionar_recurso", params.id)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -101,7 +103,7 @@ export default class RecursoRepository extends Repository {
     affectedRows: number
   }> {
     try {
-      return this.deleteprocedure("", params.id, params.idusuario)
+      return this.deleteprocedure("delete_recurso", params.id, params.idusuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -128,14 +130,13 @@ export default class RecursoRepository extends Repository {
   > {
     try {
       return this.many(
-        "",
+        "listar_recursos",
         params.nome,
-        params.url,
-        params.tag,
         params.recurso_tipo_id,
+        params.tag,
         params.ativo,
         params.limite,
-        params.pagina
+        params.pagina * params.limite
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -151,7 +152,7 @@ export default class RecursoRepository extends Repository {
   }): Promise<{ count: number } | null> {
     try {
       return this.procedure<{ count: number }>(
-        "",
+        "count_lista_recurso",
         params.nome,
         params.url,
         params.tag,
@@ -163,33 +164,81 @@ export default class RecursoRepository extends Repository {
     }
   }
 
-  async verificaCriarNome(nome: string): Promise<{ count: number } | any> {
+  async verificaCriarNome(params: {
+    nome: string
+  }): Promise<{ count: number } | null> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>(
+        "verifica_criar_nome",
+        params.nome
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
-  async verificaEditarNome(nome: string): Promise<{ count: number } | any> {
+  async verificaEditarNome(params: {
+    id: number
+    nome: string
+  }): Promise<{ count: number } | null> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>(
+        "verifica_editar_nome",
+        params.id,
+        params.nome
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
-  async verificaCriarTag(tag: string): Promise<{ count: number } | any> {
+  async verificaCriarTag(params: {
+    tag: string
+  }): Promise<{ count: number } | null> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>("verifica_criar_tag", params.tag)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
-  async verificaEditarTag(tag: string): Promise<{ count: number } | any> {
+  async verificaEditarTag(params: {
+    id: number
+    tag: string
+  }): Promise<{ count: number } | null> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>(
+        "verifica_editar_tag",
+        params.id,
+        params.tag
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
-  async verificaCriarUrl(url: string): Promise<{ count: number } | any> {
+  async verificaCriarUrl(params: {
+    url: string
+  }): Promise<{ count: number } | any> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>("verifica_criar_url", params.url)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
-  async verificaEditarUrl(url: string): Promise<{ count: number } | any> {
+  async verificaEditarUrl(params: {
+    id: number
+    url: string
+  }): Promise<{ count: number } | any> {
     try {
-    } catch (error: any) {}
+      return this.procedure<{ count: number }>(
+        "verifica_editar_url",
+        params.id,
+        params.url
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 }

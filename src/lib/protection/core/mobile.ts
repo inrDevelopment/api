@@ -33,10 +33,16 @@ export function process(
         case 2:
           if (!req.headers["authorization"]) throw new Error("Não autorizado")
 
-          const credentialObject = verify(
-            req.headers["authorization"],
-            application.key
-          ) as IUsuarioMobile
+          let credentialObject = null
+
+          try {
+            credentialObject = verify(
+              req.headers["authorization"],
+              application.key
+            ) as IUsuarioMobile
+          } catch (error: any) {
+            throw new Error("Erro ao verificar credenciais, Não autorizado.")
+          }
 
           req.credenciais = new UsuarioMobile(credentialObject)
           return await params.handle(req, res)

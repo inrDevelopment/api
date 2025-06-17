@@ -33,13 +33,18 @@ export function process(
         case 2:
           if (!req.headers["authorization"]) throw new Error("Não autorizado")
 
-          req.credenciais = new UsuarioSite(
-            verify(
+          let credentialObject = null
+
+          try {
+            credentialObject = verify(
               req.headers["authorization"],
               application.key
             ) as IUsuarioSite
-          )
+          } catch (error: any) {
+            throw new Error("Erro ao verificar credenciais, Não autorizado.")
+          }
 
+          req.credenciais = new UsuarioSite(credentialObject)
           return await params.handle(req, res)
       }
     } catch (error: any) {

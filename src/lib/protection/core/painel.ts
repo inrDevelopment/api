@@ -43,12 +43,18 @@ export function process(
         case 2:
           if (!req.headers["authorization"]) throw new Error("Não autorizado")
 
-          req.credenciais = new UsuarioPainel(
-            verify(
+          let credentialObject = null
+
+          try {
+            credentialObject = verify(
               req.headers["authorization"],
               application.key
             ) as IUsuarioPainel
-          )
+          } catch (error: any) {
+            throw new Error("Erro ao verificar credenciais, Não autorizado.")
+          }
+
+          req.credenciais = new UsuarioPainel(credentialObject)
 
           if (
             !req.credenciais.autorizado(
