@@ -5,7 +5,10 @@ import md5 from "md5"
 import application from "../../config/application"
 import { defaultResponse } from "../core/defaultResponse"
 import type UserRepository from "../repositories/User"
+import { confirmaRecuperacaoServiceProps } from "../schemas/confirmaRecuperacao"
 import { painelAuthServiceProps } from "../schemas/painelAuth"
+import { recuperacaoCelServiceProps } from "../schemas/recuperacaoCel"
+import { recuperacaoMailServiceProps } from "../schemas/recuperacaoEmail"
 import type { siteAuthServiceProps } from "../schemas/siteAuth"
 //#endregion Imports
 
@@ -120,29 +123,24 @@ export default class UserService {
         })
       }
 
-      let credential: Record<string, Record<string, string>> = {}
+      let credential: Record<string, string> = {}
       let settings: Record<
         string,
-        Record<string, { nome: string; icone: string; url: string }>
+        { nome: string; icone: string; url: string }[]
       > = {}
 
       for (let i = 0; i < content.length; i++) {
-        if (!credential[content[i].tipo as keyof typeof credential]) {
-          credential[content[i].tipo as keyof typeof credential] = {}
-        }
-
-        credential[content[i].tipo as keyof typeof credential][content[i].tag] =
+        credential[content[i].tipo as keyof typeof credential] =
           content[i].atributos
 
-        if (!settings[content[i].tipo as keyof typeof credential]) {
-          settings[content[i].tipo as keyof typeof credential] = {}
-        }
+        if (!settings[content[i].tipo as keyof typeof credential])
+          settings[content[i].tipo as keyof typeof credential] = []
 
-        settings[content[i].tipo as keyof typeof credential][content[i].tag] = {
-          nome: content[i].nome,
+        settings[content[i].tipo as keyof typeof credential].push({
           icone: content[i].icone,
+          nome: content[i].nome,
           url: content[i].url
-        }
+        })
       }
 
       const token = jwt.sign(
@@ -163,6 +161,51 @@ export default class UserService {
           credencial: token,
           configuracoes: settings
         }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async recuperacaoEmail(
+    params: recuperacaoMailServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async recuperacaoCel(
+    params: recuperacaoCelServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async confirmaRecuperacao(
+    params: confirmaRecuperacaoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
       }
     } catch (error: any) {
       return {

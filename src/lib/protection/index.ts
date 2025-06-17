@@ -35,7 +35,7 @@ type params = {
 
 interface IUsuarioPainel extends baseUser {
   tipo: "painel"
-  recurso: Record<string, string[]>
+  recurso: Record<string, string>
 }
 
 interface IUsuarioSite extends baseUser {
@@ -58,7 +58,7 @@ class UsuarioPainel {
   id: number
   email: string
   nome: string
-  recurso: Record<string, string[]>
+  recurso: Record<string, string>
   tipo: "painel" = "painel"
 
   constructor(data: IUsuarioPainel) {
@@ -68,8 +68,8 @@ class UsuarioPainel {
     this.recurso = data.recurso
   }
 
-  autorizado(recurso: string, acao: string): boolean {
-    return this.recurso[recurso].findIndex(i => i === acao) >= 0
+  autorizado(recurso: string, acao: acao): boolean {
+    return recurso.indexOf(acao[0]) >= 0
   }
 }
 
