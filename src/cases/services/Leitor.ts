@@ -370,7 +370,7 @@ export default class LeitorService {
       })
 
       return {
-        success: false,
+        success: true,
         data: {
           id: be.id,
           titulo: be.titulo,
