@@ -1,3 +1,4 @@
+//#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
   confirmaRecuperacaoControllerProps,
@@ -20,6 +21,7 @@ import {
   siteAuthValidation
 } from "../schemas/siteAuth"
 import type UserService from "../services/User"
+//#endregion Imports
 
 export default class UserController {
   constructor(private userService: UserService) {}
@@ -58,7 +60,7 @@ export default class UserController {
     }
   }
 
-  async recuperacaoEmail(
+  async recuperacaoEmailSite(
     params: recuperacaoMailControllerProps
   ): Promise<defaultResponse> {
     try {
@@ -67,7 +69,7 @@ export default class UserController {
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.userService.recuperacaoEmail(validation.data)
+      return await this.userService.recuperacaoEmailSite(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -76,7 +78,25 @@ export default class UserController {
     }
   }
 
-  async recuperacaoCel(
+  async recuperacaoEmailPainel(
+    params: recuperacaoMailControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await recuperacaoMailValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.userService.recuperacaoEmailPainel(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async recuperacaoCelSite(
     params: recuperacaoCelControllerProps
   ): Promise<defaultResponse> {
     try {
@@ -85,7 +105,7 @@ export default class UserController {
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.userService.recuperacaoCel(validation.data)
+      return await this.userService.recuperacaoCelSite(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -94,7 +114,25 @@ export default class UserController {
     }
   }
 
-  async confirmaRecuperacao(
+  async recuperacaoCelPainel(
+    params: recuperacaoCelControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await recuperacaoCelValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.userService.recuperacaoCelPainel(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async confirmaRecuperacaoSite(
     params: confirmaRecuperacaoControllerProps
   ): Promise<defaultResponse> {
     try {
@@ -105,7 +143,27 @@ export default class UserController {
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.userService.confirmaRecuperacao(validation.data)
+      return await this.userService.confirmaRecuperacaoSite(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async confirmaRecuperacaoPainel(
+    params: confirmaRecuperacaoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await confirmaRecuperacaoValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.userService.confirmaRecuperacaoPainel(validation.data)
     } catch (error: any) {
       return {
         success: false,

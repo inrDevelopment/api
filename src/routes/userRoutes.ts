@@ -43,11 +43,11 @@ userRoute.post(
 )
 
 userRoute.get(
-  "/recuperacao-acesso/email",
+  "/recuperacao-acesso/email/painel",
   painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await userController.recuperacaoEmail({
+        await userController.recuperacaoEmailPainel({
           email: req.query.v ? req.query.v.toString() : ""
         })
       )
@@ -61,11 +61,47 @@ userRoute.get(
 )
 
 userRoute.get(
-  "/recuperacao-acesso/cel",
+  "/recuperacao-acesso/email/site",
   painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await userController.recuperacaoCel({
+        await userController.recuperacaoEmailSite({
+          email: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "ler",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/cel/painel",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoCelPainel({
+          cell: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "ler",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/cel/site",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoCelSite({
           cell: req.query.v ? req.query.v.toString() : ""
         })
       )
@@ -79,11 +115,30 @@ userRoute.get(
 )
 
 userRoute.post(
-  "/recuperacao-acesso/finalizar",
+  "/recuperacao-acesso/finalizar/painel",
   painelProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await userController.confirmaRecuperacao({
+        await userController.confirmaRecuperacaoPainel({
+          token: req.body.token,
+          senha: req.body.senha
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "ler",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.post(
+  "/recuperacao-acesso/finalizar/site",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.confirmaRecuperacaoSite({
           token: req.body.token,
           senha: req.body.senha
         })
