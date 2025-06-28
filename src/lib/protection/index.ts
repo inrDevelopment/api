@@ -1,140 +1,150 @@
 import { Request, Response } from "express"
-import { process as appProccess } from "./core/app"
-import { process as painelProccess } from "./core/painel"
-import { process as siteProccess } from "./core/site"
 
+//#region tipo
 type acao = "criar" | "ler" | "editar" | "excluir" | "aprovar" | "publicar"
 type nivel = 0 | 1 | 2
-type tipo = "painel" | "site" | "mobile"
-type defaultResponse = { success: boolean; data?: any; message?: string }
-type handle = (req: Request, res: Response<defaultResponse>) => Promise<void>
-
-type configuracao = {
-  acao: acao
-  recurso: string
-  nivel: nivel
-}
-
 enum Niveis {
   "nenhum",
   "medio",
   "alto"
 }
-
-type baseUser = {
-  idusuario: number
-  nome: string
-  email: string
-  tipo: tipo
+type handle = (req: Request, res: Response<defaultResponse>) => Promise<void>
+type defaultResponse<T = any> = {
+  success: boolean
+  data?: T
+  message?: string
 }
-
+type configuracao = {
+  acao: acao
+  recurso: string
+  nivel: nivel
+}
 type params = {
   handle: handle
   configuracao: configuracao
 }
-
-interface IUsuarioPainel extends baseUser {
-  tipo: "painel"
-  recurso: Record<string, string>
+type usuario = UsuarioInterno | UsuarioExterno
+type segurancaParams = {
+  recurso: string
+  acao: string
 }
+type meta = Meta
+//#endregion tipo
 
-interface IUsuarioSite extends baseUser {
-  tipo: "site"
-  idcliente: number
-  idgrupo_site: number
-  admin: string
-  autorizacao_trabalhista: string
-}
-
-interface IUsuarioMobile extends baseUser {
-  tipo: "mobile"
-  idcliente: number
-  idgrupo_site: number
-  admin: string
-  autorizacao_trabalhista: string
-}
-
-class UsuarioPainel {
+//#region interfaces
+interface IUsuarioBase {
   id: number
-  email: string
-  nome: string
-  recurso: Record<string, string>
-  tipo: "painel" = "painel"
-
-  constructor(data: IUsuarioPainel) {
-    this.id = data.idusuario
-    this.email = data.email
-    this.nome = data.nome
-    this.recurso = data.recurso
-  }
-
-  autorizado(recurso: string, acao: acao): boolean {
-    return recurso.indexOf(acao[0]) >= 0
-  }
-}
-
-class UsuarioSite {
-  id: number
-  idcliente: number
-  tipo: "site" = "site"
   nome: string
   email: string
+}
+
+interface IUsuarioInterno extends IUsuarioBase {
+  super: "S" | "N"
+  credenciais: Record<string, string[]>
+}
+
+interface IUsuarioExterno extends IUsuarioBase {
+  idcliente: number
   idgrupo_site: number
   admin: string
   autorizacao_trabalhista: string
+}
 
-  constructor(data: IUsuarioSite) {
-    this.id = data.idusuario
-    this.idcliente = data.idcliente
-    this.nome = data.nome
-    this.email = data.email
-    this.idgrupo_site = data.idgrupo_site
-    this.admin = data.admin
-    this.autorizacao_trabalhista = data.autorizacao_trabalhista
+interface IMetaParams {
+  url: string
+  date: Date
+  method: string
+  start: number
+}
+//#endregion interfaces
+
+//#region classes
+class UsuarioInterno {
+  public id: number
+  public nome: string
+  public email: string
+  private credenciais: Record<string, string[]>
+
+  constructor(private params: IUsuarioInterno) {
+    this.id = this.params.id
+    this.nome = this.params.nome
+    this.email = this.params.email
+    this.credenciais = this.params.credenciais
+  }
+
+  public seguranca(params: segurancaParams): boolean {
+    if (!(params.recurso in this.credenciais)) return false
+    return this.credenciais[params.recurso].indexOf(params.acao) >= 0
   }
 }
 
-class UsuarioMobile {
+class UsuarioExterno {
   id: number
-  idcliente: number
-  tipo: "mobile" = "mobile"
   nome: string
   email: string
+  idcliente: number
   idgrupo_site: number
   admin: string
   autorizacao_trabalhista: string
 
-  constructor(data: IUsuarioMobile) {
-    this.id = data.idusuario
-    this.idcliente = data.idcliente
-    this.nome = data.nome
-    this.email = data.email
-    this.idgrupo_site = data.idgrupo_site
-    this.admin = data.admin
-    this.autorizacao_trabalhista = data.autorizacao_trabalhista
+  constructor(private params: IUsuarioExterno) {
+    this.id = this.params.id
+    this.nome = this.params.nome
+    this.email = this.params.email
+    this.idcliente = this.params.idcliente
+    this.idgrupo_site = this.params.idgrupo_site
+    this.admin = this.params.admin
+    this.autorizacao_trabalhista = this.params.autorizacao_trabalhista
   }
 }
 
-type usuario = UsuarioPainel | UsuarioSite | UsuarioMobile
+class Meta {
+  private url: string
+  private date: Date
+  private method: string
+  private start: number
+  private end: number
+  private time: string
+
+  constructor(private params: IMetaParams) {
+    this.url = params.url
+    this.date = this.params.date
+    this.method = this.params.method
+    this.start = this.params.start
+    this.end = 0
+    this.time = ""
+  }
+
+  finish() {
+    this.end = new Date().getTime()
+    this.time = `${this.end - this.start}ms`
+  }
+
+  log(): void {
+    console.log(
+      `URL: ${this.url.toLowerCase()} | METHOD: ${this.method.toLowerCase()} | TIME: ${
+        this.time
+      }`
+    )
+  }
+}
+//#endregion classes
 
 export {
   acao,
-  appProccess,
-  baseUser,
   configuracao,
   defaultResponse,
   handle,
-  IUsuarioMobile,
-  IUsuarioPainel,
-  IUsuarioSite,
+  IUsuarioBase,
+  IUsuarioExterno,
+  IUsuarioInterno,
+  Meta,
+  meta,
   Niveis,
   nivel,
-  painelProccess,
   params,
-  siteProccess,
-  tipo,
+  segurancaParams,
   usuario,
-  UsuarioMobile,
-  UsuarioPainel,
-  UsuarioSite
+  UsuarioExterno,
+  UsuarioInterno
 }
