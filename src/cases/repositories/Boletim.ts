@@ -422,6 +422,21 @@ export default class BoletimRepository extends Repository {
     }
   }
 
+  async verificaLeitura(params: {
+    idBoletim: number
+    idUsuario: number
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.procedure<{ count: number }>(
+        "verifica_leitura",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   async listaFavoritos(params: {
     idUsuario: number
     numero: string | null
@@ -580,7 +595,6 @@ export default class BoletimRepository extends Repository {
     titulo: string
     numero: string
     data: string
-    favorito: number
     vizualizacao: number
   } | null> {
     try {
@@ -589,7 +603,6 @@ export default class BoletimRepository extends Repository {
         titulo: string
         numero: string
         data: string
-        favorito: number
         vizualizacao: number
       }>("selecionar_boletim_leitura", params.id)
     } catch (error: any) {

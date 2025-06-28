@@ -31,20 +31,21 @@ export function process(
           return await params.handle(req, res)
         case 1:
         case 2:
-          if (!req.headers["authorization"]) throw new Error("Não autorizado")
+          if (!req.headers["credential"]) throw new Error("Não autorizado")
 
           let credentialObject = null
 
+          const credential = req.headers["credential"].toString()
+
           try {
-            credentialObject = verify(
-              req.headers["authorization"],
-              application.key
-            ) as IUsuarioMobile
+            credentialObject = verify(credential, application.key)
           } catch (error: any) {
             throw new Error("Erro ao verificar credenciais, Não autorizado.")
           }
 
-          req.credenciais = new UsuarioMobile(credentialObject)
+          req.credenciais = new UsuarioMobile(
+            credentialObject as IUsuarioMobile
+          )
           return await params.handle(req, res)
       }
     } catch (error: any) {

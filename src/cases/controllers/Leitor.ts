@@ -5,9 +5,13 @@ import {
   favoriteThisValidation
 } from "../schemas/favoriteThis"
 import {
-  getBoletimLeituraControllerProps,
-  getBoletimLeituraValidation
-} from "../schemas/getBoletimLeitura"
+  getBoletimLeituraPrivadoControllerProps,
+  getBoletimLeituraPrivadoValidation
+} from "../schemas/getBoletimLeituraPrivado"
+import {
+  getBoletimLeituraPublicoControllerProps,
+  getBoletimLeituraPublicoValidation
+} from "../schemas/getBoletimLeituraPublico"
 import {
   listarBoletimPrivadoControllerProps,
   listarBoletimPrivadoValidation
@@ -230,18 +234,36 @@ export default class LeitorController {
     }
   }
 
-  async lerBoletim(
-    params: getBoletimLeituraControllerProps
+  async lerBoletimPrivado(
+    params: getBoletimLeituraPrivadoControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await getBoletimLeituraValidation.safeParseAsync(
-        params
-      )
+      const validation =
+        await getBoletimLeituraPrivadoValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.leitorService.lerBoletim(validation.data)
+      return await this.leitorService.lerBoletimPrivado(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async lerBoletimPublico(
+    params: getBoletimLeituraPublicoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation =
+        await getBoletimLeituraPublicoValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.leitorService.lerBoletimPublico(validation.data)
     } catch (error: any) {
       return {
         success: false,

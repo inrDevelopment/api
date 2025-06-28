@@ -1,4 +1,5 @@
 import express from "express"
+import leitorController from "../cases/entry/leitor"
 import { userController } from "../cases/entry/user"
 import { painelProccess, siteProccess } from "../lib/protection"
 const userRoute = express.Router()
@@ -31,6 +32,26 @@ userRoute.post(
           login: req.body.login,
           senha: req.body.senha,
           keep: req.body.keep
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "ler",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.post(
+  "/autenticacao/app",
+  painelProccess({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await leitorController.login({
+          login: req.body.login,
+          senha: req.body.senha,
+          uuid: req.body.uuid
         })
       )
     },

@@ -1,11 +1,11 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
-import { mobileProccess } from "../lib/protection"
+import { appProccess } from "../lib/protection"
 const leitorRoute = express.Router()
 
 leitorRoute.post(
   "/boletims/privado",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarBoletinsPrivado({
@@ -28,7 +28,7 @@ leitorRoute.post(
 
 leitorRoute.post(
   "/boletims/publico",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarBoletinsPublico({
@@ -50,7 +50,7 @@ leitorRoute.post(
 
 leitorRoute.get(
   "/leitura/:id(\\d+)/adicionar",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsReaded({
@@ -69,7 +69,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/leitura/:id(\\d+)/remover",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.markAsUnreaded({
@@ -88,7 +88,7 @@ leitorRoute.delete(
 
 leitorRoute.get(
   "/favorito/:id(\\d+)/adicionar",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.favoriteThis({
@@ -98,7 +98,7 @@ leitorRoute.get(
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "criar"
     }
@@ -107,7 +107,7 @@ leitorRoute.get(
 
 leitorRoute.delete(
   "/favorito/:id(\\d+)/remover",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.unfavoriteThis({
@@ -117,7 +117,7 @@ leitorRoute.delete(
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "excluir"
     }
@@ -126,7 +126,7 @@ leitorRoute.delete(
 
 leitorRoute.get(
   "/ultimo-boletim",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.ultimoConteudo({
@@ -144,7 +144,7 @@ leitorRoute.get(
 
 leitorRoute.post(
   "/favorito",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.listarFavoritos({
@@ -158,7 +158,7 @@ leitorRoute.post(
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "ler"
     }
@@ -167,7 +167,7 @@ leitorRoute.post(
 
 leitorRoute.post(
   "/registrar",
-  mobileProccess({
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.register({
@@ -184,20 +184,19 @@ leitorRoute.post(
   })
 )
 
-leitorRoute.post(
-  "/autenticacao",
-  mobileProccess({
+leitorRoute.get(
+  "/ler/privado",
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.login({
-          login: req.body.login,
-          senha: req.body.senha,
-          uuid: req.body.uuid
+        await leitorController.lerBoletimPrivado({
+          id: req.query.id ? +req.query.id : 0,
+          idusuario: req.credenciais.id
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "leitor",
       acao: "ler"
     }
@@ -205,11 +204,11 @@ leitorRoute.post(
 )
 
 leitorRoute.get(
-  "/ler",
-  mobileProccess({
+  "/ler/publico",
+  appProccess({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.lerBoletim({
+        await leitorController.lerBoletimPublico({
           id: req.query.id ? +req.query.id : 0
         })
       )
@@ -217,7 +216,7 @@ leitorRoute.get(
     configuracao: {
       nivel: 0,
       recurso: "leitor",
-      acao: "criar"
+      acao: "ler"
     }
   })
 )

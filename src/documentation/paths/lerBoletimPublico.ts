@@ -1,6 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const lerBoletim: swaggerJSDoc.PathItem = {
+const lerBoletimPublico: swaggerJSDoc.PathItem = {
   get: {
     description: "",
     tags: ["/leitor"],
@@ -70,4 +70,4 @@ const lerBoletim: swaggerJSDoc.PathItem = {
   }
 }
 
-export default lerBoletim
+export default lerBoletimPublico

@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { process as mobileProccess } from "./core/mobile"
+import { process as appProccess } from "./core/app"
 import { process as painelProccess } from "./core/painel"
 import { process as siteProccess } from "./core/site"
 
@@ -119,6 +119,7 @@ type usuario = UsuarioPainel | UsuarioSite | UsuarioMobile
 
 export {
   acao,
+  appProccess,
   baseUser,
   configuracao,
   defaultResponse,
@@ -126,7 +127,6 @@ export {
   IUsuarioMobile,
   IUsuarioPainel,
   IUsuarioSite,
-  mobileProccess,
   Niveis,
   nivel,
   painelProccess,
