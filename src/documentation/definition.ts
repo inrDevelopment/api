@@ -3,6 +3,13 @@ import application from "../config/application"
 import components from "./components"
 import paths from "./paths"
 
+const svrs = {
+  url:
+    application.env === "dev"
+      ? `${application.host.dev}:${application.port}`
+      : `${application.host.prod}`
+}
+
 const definition: swaggerJSDoc.OAS3Definition = {
   openapi: "3.0.0",
   info: {
@@ -10,10 +17,7 @@ const definition: swaggerJSDoc.OAS3Definition = {
     version: "1.0.0",
     description: "Documentação da API INR"
   },
-  servers: [
-    { url: `${application.host.dev}:${application.port}` },
-    { url: `${application.host.prod}` }
-  ],
+  servers: [svrs],
   paths,
   components
 }
