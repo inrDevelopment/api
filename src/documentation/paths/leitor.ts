@@ -1,6 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const TAG = "Classificadores"
+const TAG = "Leitor"
 
 const bePrivado: swaggerJSDoc.PathItem = { post: { tags: [TAG] } }
 const bePublico: swaggerJSDoc.PathItem = { post: { tags: [TAG] } }
