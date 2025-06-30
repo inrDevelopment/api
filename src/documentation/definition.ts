@@ -2,12 +2,16 @@ import swaggerJSDoc from "swagger-jsdoc"
 import application from "../config/application"
 import components from "./components"
 import paths from "./paths"
+
 let server: swaggerJSDoc.Server = {
   url: ""
 }
 
-if (application.env === "prod") server.url = `${application.host.prod}`
-else server.url = `${application.host.dev}:${application.port}`
+if (application.env === "dev") {
+  server.url = `${application.host.dev}:${application.port}`
+} else {
+  server.url = `${application.host.prod}`
+}
 
 const definition: swaggerJSDoc.OAS3Definition = {
   openapi: "3.0.0",
