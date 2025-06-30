@@ -53,6 +53,7 @@ const authSite: swaggerJSDoc.PathItem = {
     }
   }
 }
+
 const authPainel: swaggerJSDoc.PathItem = {
   post: {
     description: "Login painel INR",
@@ -104,6 +105,7 @@ const authPainel: swaggerJSDoc.PathItem = {
     }
   }
 }
+
 const authApp: swaggerJSDoc.PathItem = {
   post: {
     description: "Login Leitor INR",
