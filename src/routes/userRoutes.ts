@@ -1,12 +1,12 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
 import { userController } from "../cases/entry/user"
-import { painelProccess, siteProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 const userRoute = express.Router()
 
 userRoute.post(
   "/autenticacao/site",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.siteAuth({
@@ -17,7 +17,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "usuario"
     }
   })
@@ -25,7 +25,7 @@ userRoute.post(
 
 userRoute.post(
   "/autenticacao/painel",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.painelAuth({
@@ -37,7 +37,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "usuario"
     }
   })
@@ -45,7 +45,7 @@ userRoute.post(
 
 userRoute.post(
   "/autenticacao/app",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await leitorController.login({
@@ -57,7 +57,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "usuario"
     }
   })
@@ -65,7 +65,7 @@ userRoute.post(
 
 userRoute.get(
   "/recuperacao-acesso/email/painel",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.recuperacaoEmailPainel({
@@ -75,7 +75,7 @@ userRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })
@@ -83,7 +83,7 @@ userRoute.get(
 
 userRoute.get(
   "/recuperacao-acesso/email/site",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.recuperacaoEmailSite({
@@ -93,7 +93,7 @@ userRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })
@@ -101,7 +101,7 @@ userRoute.get(
 
 userRoute.get(
   "/recuperacao-acesso/cel/painel",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.recuperacaoCelPainel({
@@ -111,7 +111,7 @@ userRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })
@@ -119,7 +119,7 @@ userRoute.get(
 
 userRoute.get(
   "/recuperacao-acesso/cel/site",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.recuperacaoCelSite({
@@ -129,7 +129,7 @@ userRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })
@@ -137,7 +137,7 @@ userRoute.get(
 
 userRoute.post(
   "/recuperacao-acesso/finalizar/painel",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.confirmaRecuperacaoPainel({
@@ -148,7 +148,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })
@@ -156,7 +156,7 @@ userRoute.post(
 
 userRoute.post(
   "/recuperacao-acesso/finalizar/site",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.confirmaRecuperacaoSite({
@@ -167,7 +167,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
       recurso: "usuario"
     }
   })

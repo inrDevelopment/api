@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
+import process from "../protection/core/process"
 
 //#region tipo
-type acao = "criar" | "ler" | "editar" | "excluir" | "aprovar" | "publicar"
+type acao = "create" | "read" | "update" | "delete" | "approve" | "publish"
 type nivel = 0 | 1 | 2
 enum Niveis {
   "nenhum",
@@ -23,7 +24,7 @@ type params = {
   handle: handle
   configuracao: configuracao
 }
-type usuario = UsuarioInterno | UsuarioExterno
+type usuario = Usuario
 type segurancaParams = {
   recurso: string
   acao: string
@@ -32,22 +33,16 @@ type meta = Meta
 //#endregion tipo
 
 //#region interfaces
-interface IUsuarioBase {
+interface IUsuario {
   id: number
   nome: string
   email: string
-}
-
-interface IUsuarioInterno extends IUsuarioBase {
-  super: "S" | "N"
-  credenciais: Record<string, string[]>
-}
-
-interface IUsuarioExterno extends IUsuarioBase {
-  idcliente: number
-  idgrupo_site: number
-  admin: string
-  autorizacao_trabalhista: string
+  super?: "S" | "N"
+  credenciais?: Record<string, string>
+  idcliente?: number
+  idgrupo_site?: number
+  admin?: string
+  autorizacao_trabalhista?: string
 }
 
 interface IMetaParams {
@@ -59,42 +54,57 @@ interface IMetaParams {
 //#endregion interfaces
 
 //#region classes
-class UsuarioInterno {
-  public id: number
-  public nome: string
-  public email: string
-  private credenciais: Record<string, string[]>
+class Usuario {
+  public readonly id: number
+  public readonly nome: string
+  public readonly email: string
+  private readonly _super?: "S" | "N"
+  private readonly _credenciais?: Record<string, string>
+  private readonly _idcliente?: number
+  private readonly _idgrupo_site?: number
+  private readonly _admin?: string
+  private readonly _autorizacao_trabalhista?: string
 
-  constructor(private params: IUsuarioInterno) {
+  constructor(private params: IUsuario) {
     this.id = this.params.id
     this.nome = this.params.nome
     this.email = this.params.email
-    this.credenciais = this.params.credenciais
+    this._super = this.params.super
+    this._credenciais = this.params.credenciais
+    this._idcliente = this.params.idcliente
+    this._idgrupo_site = this.params.idgrupo_site
+    this._admin = this.params.admin
+    this._autorizacao_trabalhista = this.params.autorizacao_trabalhista
   }
 
-  public seguranca(params: segurancaParams): boolean {
-    if (!(params.recurso in this.credenciais)) return false
-    return this.credenciais[params.recurso].indexOf(params.acao) >= 0
+  public isSuper(): boolean {
+    return this._super === "S"
   }
-}
 
-class UsuarioExterno {
-  id: number
-  nome: string
-  email: string
-  idcliente: number
-  idgrupo_site: number
-  admin: string
-  autorizacao_trabalhista: string
+  public isAllowed(params: segurancaParams): boolean {
+    if (!this._credenciais) return false
+    if (!(params.recurso in this._credenciais)) return false
+    return this._credenciais[params.recurso].indexOf(params.acao[0]) >= 0
+  }
 
-  constructor(private params: IUsuarioExterno) {
-    this.id = this.params.id
-    this.nome = this.params.nome
-    this.email = this.params.email
-    this.idcliente = this.params.idcliente
-    this.idgrupo_site = this.params.idgrupo_site
-    this.admin = this.params.admin
-    this.autorizacao_trabalhista = this.params.autorizacao_trabalhista
+  get idcliente(): number {
+    if (!this._idcliente) throw new Error("propertie undefinied")
+    return this._idcliente
+  }
+
+  get idgrupo_site(): number {
+    if (!this._idgrupo_site) throw new Error("propertie undefinied")
+    return this._idgrupo_site
+  }
+
+  get admin(): string {
+    if (!this._admin) throw new Error("propertie undefinied")
+    return this._admin
+  }
+
+  get autorizacao_trabalhista(): string {
+    if (!this._autorizacao_trabalhista) throw new Error("propertie undefinied")
+    return this._autorizacao_trabalhista
   }
 }
 
@@ -115,7 +125,7 @@ class Meta {
     this.time = ""
   }
 
-  finish() {
+  finish(): void {
     this.end = new Date().getTime()
     this.time = `${this.end - this.start}ms`
   }
@@ -135,16 +145,14 @@ export {
   configuracao,
   defaultResponse,
   handle,
-  IUsuarioBase,
-  IUsuarioExterno,
-  IUsuarioInterno,
+  IUsuario,
   Meta,
   meta,
   Niveis,
   nivel,
   params,
+  process,
   segurancaParams,
   usuario,
-  UsuarioExterno,
-  UsuarioInterno
+  Usuario
 }

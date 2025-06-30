@@ -1,15 +1,12 @@
+//#region Imports
 import { Request, Response } from "express"
 import { verify } from "jsonwebtoken"
-import {
-  defaultResponse,
-  IUsuarioInterno,
-  Meta,
-  params,
-  UsuarioInterno
-} from ".."
+import { Meta, params, Usuario } from ".."
+import { defaultResponse } from "../../../cases/core/defaultResponse"
 import application from "../../../config/application"
+//#endregion Imports
 
-export function process(
+export default function process(
   params: params
 ): (req: Request, res: Response<defaultResponse>) => Promise<void> {
   return async (
@@ -36,37 +33,33 @@ export function process(
         case 1: {
           if (!req.headers["credential"]) throw new Error("Não autorizado")
 
-          try {
-            const paramConstructor: IUsuarioInterno = verify(
-              req.headers["credential"].toString(),
-              application.key
-            ) as IUsuarioInterno
+          const paramsConstructor: any = verify(
+            req.headers["credential"].toString(),
+            application.key
+          )
 
-            req.usuario = new UsuarioInterno(paramConstructor)
-          } catch (error: any) {
-            throw new Error("Erro ao validar credenciais do usuário.")
-          }
+          req.usuario = new Usuario(paramsConstructor)
 
           return await params.handle(req, res)
         }
         case 2: {
           if (!req.headers["credential"]) throw new Error("Não autorizado")
 
-          try {
-            const paramConstructor: IUsuarioInterno = verify(
-              req.headers["credential"].toString(),
-              application.key
-            ) as IUsuarioInterno
+          const paramsConstructor: any = verify(
+            req.headers["credential"].toString(),
+            application.key
+          )
 
-            req.usuario = new UsuarioInterno(paramConstructor)
-          } catch (error: any) {
-            throw new Error("Erro ao validar credenciais do usuário.")
+          req.usuario = new Usuario(paramsConstructor)
+
+          if (req.usuario.isSuper()) {
+            return await params.handle(req, res)
           }
 
           if (
-            req.usuario.seguranca({
-              recurso: params.configuracao.recurso,
-              acao: params.configuracao.acao
+            !req.usuario.isAllowed({
+              acao: params.configuracao.acao,
+              recurso: params.configuracao.recurso
             })
           )
             throw new Error("Não autorizado.")

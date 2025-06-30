@@ -1,12 +1,12 @@
 import express from "express"
 import { jurisprudenceController } from "../cases/entry/jurisprudence"
-import { siteProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 
 const jurisprudenceRoute = express.Router()
 
 jurisprudenceRoute.get(
   "/",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await jurisprudenceController.jurisprudenceContent({
@@ -18,26 +18,26 @@ jurisprudenceRoute.get(
     configuracao: {
       nivel: 0,
       recurso: "jurisprudencia",
-      acao: "ler"
+      acao: "read"
     }
   })
 )
 
 jurisprudenceRoute.get(
   "/:id",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await jurisprudenceController.getJurisprudenceById({
           id: +req.params.id,
-          client: req.credenciais ? req.credenciais.idcliente : null
+          client: req.usuario.idcliente
         })
       )
     },
     configuracao: {
       nivel: 0,
       recurso: "jurisprudencia",
-      acao: "ler"
+      acao: "read"
     }
   })
 )

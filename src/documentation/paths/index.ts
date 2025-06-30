@@ -1,56 +1,33 @@
 import swaggerJSDoc from "swagger-jsdoc"
-import addFavorito from "./addFavorito"
-import lerBoletimPrivado from "./lerBoletimPrivado"
-import lerBoletimPublico from "./lerBoletimPublico"
-import listarBoletinsPrivado from "./listarBoletinsPrivado"
-import listarBoletinsPublico from "./listarBoletinsPublico"
-import listarFavoritos from "./listarFavoritos"
-import { default as loginApp } from "./loginApp"
-import loginPanel from "./loginPanel"
-import loginSite from "./loginSite"
-import markAsReaded from "./markAsReaded"
-import markAsUnReaded from "./markAsUnReaded"
-import registrarLeitor from "./registrarLeitor"
-import removeFavoritos from "./removeFavoritos"
-import ultimoBoletim from "./ultimoBoletim"
+import boletim from "./boletim"
+import classifiers from "./classifiers"
+import leitor from "./leitor"
 
 const paths: Record<string, swaggerJSDoc.PathItem> = {
-  //#region /seguranca
-  /* - POST */
-  "/seguranca/autenticacao/app": loginApp,
-  "/seguranca/autenticacao/site": loginSite,
-  "/seguranca/autenticacao/painel": loginPanel,
-  /* - GET */
-  /* - PUT */
-  /* - DELETE */
-  /* ---------------------------------------------- */
-  //#endregion /seguranca
-
-  //#region /boletim
-  /* - POST */
-  /* - GET */
-  /* - PUT */
-  /* - DELETE */
-  /* ---------------------------------------------- */
-  //#endregion /seguranca
-
-  //#region /leitor
-  /* - POST */
-  "/leitor/boletims/privado": listarBoletinsPrivado,
-  "/leitor/boletims/publico": listarBoletinsPublico,
-  "/leitor/registrar": registrarLeitor,
-  "/leitor/favorito": listarFavoritos,
-  /* - GET */
-  "/leitor/leitura/{id}/adicionar": markAsReaded,
-  "/leitor/favorito/{id}/adicionar": addFavorito,
-  "/leitor/ultimo-boletim": ultimoBoletim,
-  "/leitor/ler/privado": lerBoletimPrivado,
-  "/leitor/ler/publico": lerBoletimPublico,
-  /* - DELETE */
-  "/leitor/leitura/{id}/remover": markAsUnReaded,
-  "/leitor/favorito/{id}/remover": removeFavoritos
-  /* ---------------------------------------------- */
-  //#endregion /leitor
+  "/boletim/novo": boletim.novo,
+  "/boletim/item": boletim.item,
+  "/boletim/{id}/update": boletim.update,
+  "/boletim/item/{id}/update": boletim.itemUpdate,
+  "/boletim/item/{id}/delete": boletim.itemDelete,
+  /**---------------------------------------------- */
+  "/classificadores/state": classifiers.state,
+  "/classificadores": classifiers.list,
+  "/classificadores/{id}": classifiers.select,
+  "/classificadores/act-content": classifiers.actContent,
+  "/classificadores/previous-acts": classifiers.previousActs,
+  "/classificadores/previous-bars": classifiers.previousBars,
+  /**---------------------------------------------- */
+  "/leitor/leitura/{id}/adicionar": leitor.addLeitura,
+  "/leitor/favorito/{id}/adicionar": leitor.favAdicionar,
+  "/leitor/ultimo-boletim": leitor.ultimoBoletim,
+  "/leitor/ler/privado": leitor.lerPrivado,
+  "/leitor/ler/publico": leitor.lerPublico,
+  "/leitor/boletims/privado": leitor.bePrivado,
+  "/leitor/boletims/publico": leitor.bePublico,
+  "/leitor/favorito": leitor.listaBoletim,
+  "/leitor/registrar": leitor.registrarAplicacao,
+  "/leitor/favorito/{id}/remover": leitor.favRemover,
+  "/leitor/leitura/{id}/remover": leitor.delRemove
 }
 
 export default paths
