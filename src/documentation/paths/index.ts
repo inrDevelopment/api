@@ -2,6 +2,7 @@ import swaggerJSDoc from "swagger-jsdoc"
 import boletim from "./boletim"
 import classifiers from "./classifiers"
 import leitor from "./leitor"
+import seguranca from "./seguranca"
 
 const paths: Record<string, swaggerJSDoc.PathItem> = {
   "/boletim/novo": boletim.novo,
@@ -27,7 +28,12 @@ const paths: Record<string, swaggerJSDoc.PathItem> = {
   "/leitor/favorito": leitor.listaBoletim,
   "/leitor/registrar": leitor.registrarAplicacao,
   "/leitor/favorito/{id}/remover": leitor.favRemover,
-  "/leitor/leitura/{id}/remover": leitor.delRemove
+  "/leitor/leitura/{id}/remover": leitor.delRemove,
+  /**---------------------------------------------- */
+  "/autenticacao/site": seguranca.authSite,
+  "/autenticacao/painel": seguranca.authPainel,
+  "/autenticacao/app": seguranca.authApp
+  /**---------------------------------------------- */
 }
 
 export default paths

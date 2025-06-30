@@ -18,7 +18,7 @@
     "src/documentation/paths/.old/listarBoletinsPrivado.ts",
     "src/documentation/paths/.old/listarBoletinsPublico.ts",
     "src/documentation/paths/.old/listarFavoritos.ts",
-    "src/documentation/paths/.old/loginApp.ts",
+    "src/documentation/paths/loginApp.ts",
     "src/documentation/paths/.old/loginPanel.ts",
     "src/documentation/paths/.old/loginSite.ts",
     "src/documentation/paths/.old/markAsReaded.ts",
