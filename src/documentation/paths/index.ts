@@ -1,35 +1,39 @@
 import swaggerJSDoc from "swagger-jsdoc"
-import addFavorito from "./addFavorito"
-import lerBoletim from "./lerBoletim"
-import listarBoletinsPrivado from "./listarBoletinsPrivado"
-import listarBoletinsPublico from "./listarBoletinsPublico"
-import listarFavoritos from "./listarFavoritos"
-import loginLeitor from "./loginLeitor"
-import markAsReaded from "./markAsReaded"
-import markAsUnReaded from "./markAsUnReaded"
-import registrarLeitor from "./registrarLeitor"
-import removeFavoritos from "./removeFavoritos"
-import ultimoBoletim from "./ultimoBoletim"
+import boletim from "./boletim"
+import classifiers from "./classifiers"
+import leitor from "./leitor"
+import seguranca from "./seguranca"
 
 const paths: Record<string, swaggerJSDoc.PathItem> = {
-  /* /boletim */
-  /* ---------------------------------------------- */
-  /* /leitor */
-  /* - GET */
-  "/leitor/leitura/{id}/adicionar": markAsReaded,
-  "/leitor/favorito/{id}/adicionar": addFavorito,
-  "/leitor/ultimo-boletim": ultimoBoletim,
-  "/leitor/ler": lerBoletim,
-  /* - POST */
-  "/leitor/autenticacao": loginLeitor,
-  "/leitor/boletims/privado": listarBoletinsPrivado,
-  "/leitor/boletims/publico": listarBoletinsPublico,
-  "/leitor/registrar": registrarLeitor,
-  "/leitor/favorito": listarFavoritos,
-  /* - DELETE */
-  "/leitor/leitura/{id}/remover": markAsUnReaded,
-  "/leitor/favorito/{id}/remover": removeFavoritos
-  /* ---------------------------------------------- */
+  "/boletim/novo": boletim.novo,
+  "/boletim/item": boletim.item,
+  "/boletim/{id}/update": boletim.update,
+  "/boletim/item/{id}/update": boletim.itemUpdate,
+  "/boletim/item/{id}/delete": boletim.itemDelete,
+  /**---------------------------------------------- */
+  "/classificadores/state": classifiers.state,
+  "/classificadores": classifiers.list,
+  "/classificadores/{id}": classifiers.select,
+  "/classificadores/act-content": classifiers.actContent,
+  "/classificadores/previous-acts": classifiers.previousActs,
+  "/classificadores/previous-bars": classifiers.previousBars,
+  /**---------------------------------------------- */
+  "/leitor/leitura/{id}/adicionar": leitor.addLeitura,
+  "/leitor/favorito/{id}/adicionar": leitor.favAdicionar,
+  "/leitor/ultimo-boletim": leitor.ultimoBoletim,
+  "/leitor/ler/privado": leitor.lerPrivado,
+  "/leitor/ler/publico": leitor.lerPublico,
+  "/leitor/boletims/privado": leitor.bePrivado,
+  "/leitor/boletims/publico": leitor.bePublico,
+  "/leitor/favorito": leitor.listaBoletim,
+  "/leitor/registrar": leitor.registrarAplicacao,
+  "/leitor/favorito/{id}/remover": leitor.favRemover,
+  "/leitor/leitura/{id}/remover": leitor.delRemove,
+  /**---------------------------------------------- */
+  "/autenticacao/site": seguranca.authSite,
+  "/autenticacao/painel": seguranca.authPainel,
+  "/autenticacao/app": seguranca.authApp
+  /**---------------------------------------------- */
 }
 
 export default paths

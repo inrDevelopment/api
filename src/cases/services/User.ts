@@ -15,6 +15,7 @@ import type { siteAuthServiceProps } from "../schemas/siteAuth"
 export default class UserService {
   constructor(private userRepository: UserRepository) {}
 
+  //#region site
   async siteAuth(params: siteAuthServiceProps): Promise<defaultResponse> {
     try {
       const salt = await this.userRepository.getSalt({
@@ -78,6 +79,49 @@ export default class UserService {
     }
   }
 
+  async recuperacaoEmailSite(params: {}): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async recuperacaoCelSite(params: any): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async confirmaRecuperacaoSite(
+    params: confirmaRecuperacaoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      return {
+        success: true
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+  //#endregion Imports
+
+  //#region painel
   async painelAuth(params: painelAuthServiceProps): Promise<defaultResponse> {
     try {
       const userSalt = await this.userRepository.getUserPainelLogin({
@@ -146,7 +190,7 @@ export default class UserService {
       const token = jwt.sign(
         JSON.stringify(credential),
         application.key,
-        params.keep ? {} : { expiresIn: "8h" }
+        params.keep ? { expiresIn: undefined } : { expiresIn: "8h" }
       )
 
       return {
@@ -170,7 +214,7 @@ export default class UserService {
     }
   }
 
-  async recuperacaoEmail(
+  async recuperacaoEmailPainel(
     params: recuperacaoMailServiceProps
   ): Promise<defaultResponse> {
     try {
@@ -185,7 +229,7 @@ export default class UserService {
     }
   }
 
-  async recuperacaoCel(
+  async recuperacaoCelPainel(
     params: recuperacaoCelServiceProps
   ): Promise<defaultResponse> {
     try {
@@ -200,7 +244,7 @@ export default class UserService {
     }
   }
 
-  async confirmaRecuperacao(
+  async confirmaRecuperacaoPainel(
     params: confirmaRecuperacaoServiceProps
   ): Promise<defaultResponse> {
     try {
@@ -214,4 +258,5 @@ export default class UserService {
       }
     }
   }
+  //#endregion Imports
 }

@@ -6,7 +6,8 @@ import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
 import UserRepository from "../repositories/User"
 import { favoriteThisServiceProps } from "../schemas/favoriteThis"
-import { getBoletimLeituraServiceProps } from "../schemas/getBoletimLeitura"
+import { getBoletimLeituraPrivadoServiceProps } from "../schemas/getBoletimLeituraPrivado"
+import { getBoletimLeituraPublicoServiceProps } from "../schemas/getBoletimLeituraPublico"
 import { listarBoletimPrivadoServiceProps } from "../schemas/listarBoletimPrivado"
 import { listarBoletimPublicoServiceProps } from "../schemas/listarBoletimPublico"
 import { listarFavoritoServiceProps } from "../schemas/listarFavorito"
@@ -350,8 +351,57 @@ export default class LeitorService {
     }
   }
 
-  async lerBoletim(
-    params: getBoletimLeituraServiceProps
+  async lerBoletimPrivado(
+    params: getBoletimLeituraPrivadoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const be = await this.boletimRepository.selecionarBoletimLeitura({
+        id: params.id
+      })
+
+      if (!be) throw new Error("Erro ao selecionar o boletim.")
+
+      const items = await this.boletimRepository.selecionarBoletimItemLeitura({
+        idBoletim: params.id
+      })
+
+      this.boletimRepository.vizualizacao({
+        idBoletim: params.id,
+        quantidade: be.vizualizacao + 1
+      })
+
+      const isFav = await this.boletimRepository.verificaFavorito({
+        idBoletim: params.id,
+        idUsuario: params.idusuario
+      })
+
+      const isRea = await this.boletimRepository.verificaLeitura({
+        idBoletim: params.id,
+        idUsuario: params.idusuario
+      })
+
+      return {
+        success: true,
+        data: {
+          id: be.id,
+          titulo: be.titulo,
+          numero: be.numero,
+          data: be.data,
+          lido: isRea && isRea.count > 0 ? true : false,
+          favorito: isFav && isFav.count > 0 ? true : false,
+          conteudo: items
+        }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async lerBoletimPublico(
+    params: getBoletimLeituraPublicoServiceProps
   ): Promise<defaultResponse> {
     try {
       const be = await this.boletimRepository.selecionarBoletimLeitura({
@@ -376,7 +426,6 @@ export default class LeitorService {
           titulo: be.titulo,
           numero: be.numero,
           data: be.data,
-          favorito: be.favorito,
           conteudo: items
         }
       }

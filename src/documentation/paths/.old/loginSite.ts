@@ -1,10 +1,10 @@
 import swaggerJSDoc from "swagger-jsdoc"
 
-const loginLeitor: swaggerJSDoc.PathItem = {
+const loginSite: swaggerJSDoc.PathItem = {
   post: {
-    description: "Login Leitor INR",
-    tags: ["/leitor"],
-    summary: "Login exclusivo para o leitor INR",
+    description: "Login site INR",
+    tags: ["/seguranca"],
+    summary: "Login exclusivo para o site INR",
     requestBody: {
       required: true,
       content: {
@@ -12,10 +12,6 @@ const loginLeitor: swaggerJSDoc.PathItem = {
           schema: {
             type: "object",
             properties: {
-              uuid: {
-                type: "string",
-                required: true
-              },
               login: {
                 type: "string",
                 required: true
@@ -25,7 +21,7 @@ const loginLeitor: swaggerJSDoc.PathItem = {
                 required: true
               }
             },
-            required: ["uuid", "login", "senha"]
+            required: ["login", "senha"]
           }
         }
       }
@@ -57,4 +53,4 @@ const loginLeitor: swaggerJSDoc.PathItem = {
   }
 }
 
-export default loginLeitor
+export default loginSite

@@ -11,5 +11,21 @@
     "typeRoots": ["./node_modules/@types", "./src/@types/*"],
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/documentation/paths/.old/lerBoletimPrivado.ts",
+    "src/documentation/paths/.old/lerBoletimPublico.ts",
+    "src/documentation/paths/.old/listarBoletinsPrivado.ts",
+    "src/documentation/paths/.old/listarBoletinsPublico.ts",
+    "src/documentation/paths/.old/listarFavoritos.ts",
+    "src/documentation/paths/loginApp.ts",
+    "src/documentation/paths/.old/loginPanel.ts",
+    "src/documentation/paths/.old/loginSite.ts",
+    "src/documentation/paths/.old/markAsReaded.ts",
+    "src/documentation/paths/.old/markAsUnReaded.ts",
+    "src/documentation/paths/.old/registrarLeitor.ts",
+    "src/documentation/paths/.old/removeFavoritos.ts",
+    "src/documentation/paths/.old/ultimoBoletim.ts",
+    "src/documentation/paths/.old/addFavorito.ts"
+  ]
 }

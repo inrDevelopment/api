@@ -1,54 +1,54 @@
 import express from "express"
 import { boletimController } from "../cases/entry/boletim"
-import { painelProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 
 const boletimRoute = express.Router()
 
 boletimRoute.post(
   "/novo",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.novoBoletim({
           titulo: req.body.titulo,
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: req.usuario.id
         })
       )
     },
     configuracao: {
       nivel: 0,
       recurso: "boletim",
-      acao: "criar"
+      acao: "create"
     }
   })
 )
 
 boletimRoute.put(
   "/:id/update",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.editarBoletim({
           id: +req.params.id,
           titulo: req.body.titulo,
           data: req.body.data,
-          idusuario: 37 /* req.credenciais.idusuario */
+          idusuario: req.usuario.id
         })
       )
     },
     configuracao: {
       nivel: 0,
       recurso: "boletim",
-      acao: "editar"
+      acao: "update"
     }
   })
 )
 
 boletimRoute.post(
   "/item",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.adicionarItemBoletim({
@@ -62,14 +62,14 @@ boletimRoute.post(
     configuracao: {
       nivel: 0,
       recurso: "boletim",
-      acao: "criar"
+      acao: "create"
     }
   })
 )
 
 boletimRoute.put(
   "/item/:id/update",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.editarItemBoletim({
@@ -84,14 +84,14 @@ boletimRoute.put(
     configuracao: {
       nivel: 0,
       recurso: "boletim",
-      acao: "editar"
+      acao: "update"
     }
   })
 )
 
 boletimRoute.delete(
   "/item/:id/delete",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await boletimController.excluirItemBoletim({
@@ -102,7 +102,7 @@ boletimRoute.delete(
     configuracao: {
       nivel: 0,
       recurso: "boletim",
-      acao: "excluir"
+      acao: "delete"
     }
   })
 )

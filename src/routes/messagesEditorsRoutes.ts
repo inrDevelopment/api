@@ -1,11 +1,11 @@
 import express from "express"
 import { messagesEditorsController } from "../cases/entry/messagesEditor"
-import { siteProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 const messagesEditorsRoute = express.Router()
 
 messagesEditorsRoute.get(
   "/",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await messagesEditorsController.messagesEditorsContent({
@@ -16,7 +16,7 @@ messagesEditorsRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "menssagemeditores"
     }
   })
@@ -24,18 +24,18 @@ messagesEditorsRoute.get(
 
 messagesEditorsRoute.get(
   "/:id",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await messagesEditorsController.getMessagesEditorsById({
           id: +req.params.id,
-          client: req.credenciais ? req.credenciais.idcliente : null
+          client: req.usuario.idcliente
         })
       )
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "menssagemeditores"
     }
   })

@@ -1,12 +1,12 @@
 import express from "express"
 import { classifiersController } from "../cases/entry/classifiers"
-import { siteProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 
 const classifiersRoute = express.Router()
 
 classifiersRoute.get(
   "/state",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await classifiersController.getStateByTitle({
@@ -16,7 +16,7 @@ classifiersRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })
@@ -24,7 +24,7 @@ classifiersRoute.get(
 
 classifiersRoute.get(
   "/",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await classifiersController.getClassifiersHome({
@@ -36,7 +36,7 @@ classifiersRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })
@@ -44,7 +44,7 @@ classifiersRoute.get(
 
 classifiersRoute.get(
   "/:id(\\d+)",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await classifiersController.getClassifiersIndexById({
@@ -54,7 +54,7 @@ classifiersRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })
@@ -62,18 +62,18 @@ classifiersRoute.get(
 
 classifiersRoute.get(
   "/act-content",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await classifiersController.getClassifierContent({
           id: req.query.id ? +req.query.id : 0,
-          client: req.credenciais ? req.credenciais.idcliente : null
+          client: /** req.credenciais ? req.credenciais.idcliente : null */ 37
         })
       )
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })
@@ -81,13 +81,13 @@ classifiersRoute.get(
 
 classifiersRoute.get(
   "/previous-acts",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(await classifiersController.getPreviousActs())
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })
@@ -95,7 +95,7 @@ classifiersRoute.get(
 
 classifiersRoute.get(
   "/previous-bars",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await classifiersController.getBarPreviousActs({
@@ -105,7 +105,7 @@ classifiersRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "classificador"
     }
   })

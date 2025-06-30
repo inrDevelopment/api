@@ -1,11 +1,11 @@
 import express from "express"
 import { recursoController } from "../cases/entry/recurso"
-import { painelProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 const recursoRoutes = express.Router()
 
 recursoRoutes.post(
   "/",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.listarRecurso({
@@ -20,13 +20,13 @@ recursoRoutes.post(
         })
       )
     },
-    configuracao: { acao: "ler", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "read", nivel: 0, recurso: "recurso" }
   })
 )
 
 recursoRoutes.post(
   "/novo",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.criarRecurso({
@@ -36,30 +36,30 @@ recursoRoutes.post(
           recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
           tag: req.body.tag,
-          idusuario: req.credenciais.id,
+          idusuario: req.usuario.id,
           atributos: req.body.atributos
         })
       )
     },
-    configuracao: { acao: "criar", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "create", nivel: 0, recurso: "recurso" }
   })
 )
 
 recursoRoutes.get(
   "/:id(\\d+)",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res
         .status(200)
         .json(await recursoController.selecionarRecurso({ id: +req.params.id }))
     },
-    configuracao: { acao: "aprovar", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "read", nivel: 0, recurso: "recurso" }
   })
 )
 
 recursoRoutes.put(
   "/:id(\\d+)/editar",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.editarRecurso({
@@ -70,27 +70,27 @@ recursoRoutes.put(
           tag: req.body.tag,
           ativo: req.body.ativo,
           recurso_tipo_id: req.body.recurso_tipo_id,
-          idusuario: req.credenciais.id,
+          idusuario: req.usuario.id,
           atributos: req.body.atributos
         })
       )
     },
-    configuracao: { acao: "aprovar", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "update", nivel: 0, recurso: "recurso" }
   })
 )
 
 recursoRoutes.delete(
   "/:id(\\d+)/excluir",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.excluirRecurso({
           id: +req.params.id,
-          idusuario: req.credenciais.id
+          idusuario: req.usuario.id
         })
       )
     },
-    configuracao: { acao: "aprovar", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "delete", nivel: 0, recurso: "recurso" }
   })
 )
 

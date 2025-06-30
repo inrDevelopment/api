@@ -1,11 +1,12 @@
 import express from "express"
+import leitorController from "../cases/entry/leitor"
 import { userController } from "../cases/entry/user"
-import { painelProccess, siteProccess } from "../lib/protection"
+import { process } from "../lib/protection"
 const userRoute = express.Router()
 
 userRoute.post(
   "/autenticacao/site",
-  siteProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.siteAuth({
@@ -16,7 +17,7 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "usuario"
     }
   })
@@ -24,7 +25,7 @@ userRoute.post(
 
 userRoute.post(
   "/autenticacao/painel",
-  painelProccess({
+  process({
     handle: async (req, res) => {
       res.status(200).json(
         await userController.painelAuth({
@@ -36,54 +37,110 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
-      recurso: "usuario"
-    }
-  })
-)
-
-userRoute.get(
-  "/recuperacao-acesso/email",
-  painelProccess({
-    handle: async (req, res) => {
-      res.status(200).json(
-        await userController.recuperacaoEmail({
-          email: req.query.v ? req.query.v.toString() : ""
-        })
-      )
-    },
-    configuracao: {
-      nivel: 0,
-      acao: "ler",
-      recurso: "usuario"
-    }
-  })
-)
-
-userRoute.get(
-  "/recuperacao-acesso/cel",
-  painelProccess({
-    handle: async (req, res) => {
-      res.status(200).json(
-        await userController.recuperacaoCel({
-          cell: req.query.v ? req.query.v.toString() : ""
-        })
-      )
-    },
-    configuracao: {
-      nivel: 0,
-      acao: "ler",
+      acao: "read",
       recurso: "usuario"
     }
   })
 )
 
 userRoute.post(
-  "/recuperacao-acesso/finalizar",
-  painelProccess({
+  "/autenticacao/app",
+  process({
     handle: async (req, res) => {
       res.status(200).json(
-        await userController.confirmaRecuperacao({
+        await leitorController.login({
+          login: req.body.login,
+          senha: req.body.senha,
+          uuid: req.body.uuid
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "read",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/email/painel",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoEmailPainel({
+          email: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "update",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/email/site",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoEmailSite({
+          email: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "update",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/cel/painel",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoCelPainel({
+          cell: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "update",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.get(
+  "/recuperacao-acesso/cel/site",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.recuperacaoCelSite({
+          cell: req.query.v ? req.query.v.toString() : ""
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "update",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.post(
+  "/recuperacao-acesso/finalizar/painel",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.confirmaRecuperacaoPainel({
           token: req.body.token,
           senha: req.body.senha
         })
@@ -91,7 +148,26 @@ userRoute.post(
     },
     configuracao: {
       nivel: 0,
-      acao: "ler",
+      acao: "update",
+      recurso: "usuario"
+    }
+  })
+)
+
+userRoute.post(
+  "/recuperacao-acesso/finalizar/site",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.confirmaRecuperacaoSite({
+          token: req.body.token,
+          senha: req.body.senha
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "update",
       recurso: "usuario"
     }
   })
