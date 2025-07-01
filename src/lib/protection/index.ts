@@ -34,7 +34,7 @@ type meta = Meta
 
 //#region interfaces
 interface IUsuario {
-  id: number
+  idusuario: number
   nome: string
   email: string
   super?: "S" | "N"
@@ -66,7 +66,7 @@ class Usuario {
   private readonly _autorizacao_trabalhista?: string
 
   constructor(private params: IUsuario) {
-    this.id = this.params.id
+    this.id = this.params.idusuario
     this.nome = this.params.nome
     this.email = this.params.email
     this._super = this.params.super
