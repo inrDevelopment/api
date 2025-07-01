@@ -19,7 +19,7 @@ leitorRoute.post(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "read"
     }
@@ -60,7 +60,7 @@ leitorRoute.get(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "create"
     }
@@ -79,7 +79,7 @@ leitorRoute.delete(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "delete"
     }
@@ -98,7 +98,7 @@ leitorRoute.get(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "create"
     }
@@ -117,7 +117,7 @@ leitorRoute.delete(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "delete"
     }
@@ -158,7 +158,7 @@ leitorRoute.post(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "read"
     }
@@ -196,7 +196,7 @@ leitorRoute.get(
       )
     },
     configuracao: {
-      nivel: 2,
+      nivel: 1,
       recurso: "leitor",
       acao: "read"
     }
