@@ -1,15 +1,14 @@
 import express from "express"
-import { pareceresController } from "../cases/entry/pareceres"
+import { messagesEditorsController } from "../cases/entry/messagesEditor"
 import { process } from "../lib/protection"
+const messagesEditors = express.Router()
 
-const pareceresRouter = express.Router()
-
-pareceresRouter.get(
+messagesEditors.get(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await pareceresController.pareceresContent({
+        await messagesEditorsController.messagesEditorsContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
@@ -18,17 +17,17 @@ pareceresRouter.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "parecer"
+      recurso: "menssagemeditores"
     }
   })
 )
 
-pareceresRouter.get(
+messagesEditors.get(
   "/:id",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await pareceresController.getPareceresById({
+        await messagesEditorsController.getMessagesEditorsById({
           id: +req.params.id,
           client: req.usuario.idcliente
         })
@@ -37,9 +36,9 @@ pareceresRouter.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "parecer"
+      recurso: "menssagemeditores"
     }
   })
 )
 
-export default pareceresRouter
+export default messagesEditors

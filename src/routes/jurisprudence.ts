@@ -1,14 +1,15 @@
 import express from "express"
-import { legislationController } from "../cases/entry/legislation"
+import { jurisprudenceController } from "../cases/entry/jurisprudence"
 import { process } from "../lib/protection"
-const legislationRoute = express.Router()
 
-legislationRoute.get(
+const jurisprudence = express.Router()
+
+jurisprudence.get(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await legislationController.legislationContent({
+        await jurisprudenceController.jurisprudenceContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
@@ -16,18 +17,18 @@ legislationRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "read",
-      recurso: "legislacao"
+      recurso: "jurisprudencia",
+      acao: "read"
     }
   })
 )
 
-legislationRoute.get(
+jurisprudence.get(
   "/:id",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await legislationController.getLegislationById({
+        await jurisprudenceController.getJurisprudenceById({
           id: +req.params.id,
           client: req.usuario.idcliente
         })
@@ -35,10 +36,10 @@ legislationRoute.get(
     },
     configuracao: {
       nivel: 0,
-      acao: "read",
-      recurso: "legislacao"
+      recurso: "jurisprudencia",
+      acao: "read"
     }
   })
 )
 
-export default legislationRoute
+export default jurisprudence

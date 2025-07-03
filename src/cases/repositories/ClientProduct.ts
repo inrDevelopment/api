@@ -6,7 +6,7 @@ export default class ClientProductRepository extends Repository {
     product: number
   }): Promise<{ idproduto: number } | null> {
     try {
-      return await this.procedure<{ idproduto: number }>(
+      return await this.call<{ idproduto: number }>(
         "get_allowed_product",
         `'${params.client}'`,
         `'${params.product}'`

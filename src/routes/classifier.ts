@@ -2,9 +2,9 @@ import express from "express"
 import { classifiersController } from "../cases/entry/classifiers"
 import { process } from "../lib/protection"
 
-const classifiersRoute = express.Router()
+const classifier = express.Router()
 
-classifiersRoute.get(
+classifier.get(
   "/state",
   process({
     handle: async (req, res) => {
@@ -22,7 +22,7 @@ classifiersRoute.get(
   })
 )
 
-classifiersRoute.get(
+classifier.get(
   "/",
   process({
     handle: async (req, res) => {
@@ -42,7 +42,7 @@ classifiersRoute.get(
   })
 )
 
-classifiersRoute.get(
+classifier.get(
   "/:id(\\d+)",
   process({
     handle: async (req, res) => {
@@ -60,7 +60,7 @@ classifiersRoute.get(
   })
 )
 
-classifiersRoute.get(
+classifier.get(
   "/act-content",
   process({
     handle: async (req, res) => {
@@ -79,7 +79,7 @@ classifiersRoute.get(
   })
 )
 
-classifiersRoute.get(
+classifier.get(
   "/previous-acts",
   process({
     handle: async (req, res) => {
@@ -93,7 +93,7 @@ classifiersRoute.get(
   })
 )
 
-classifiersRoute.get(
+classifier.get(
   "/previous-bars",
   process({
     handle: async (req, res) => {
@@ -111,4 +111,4 @@ classifiersRoute.get(
   })
 )
 
-export default classifiersRoute
+export default classifier

@@ -7,7 +7,7 @@ export default class ClassifiersRepository extends Repository {
     banner: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idestado: number
         titulo: string
         banner: string
@@ -23,7 +23,7 @@ export default class ClassifiersRepository extends Repository {
     banner: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idestado: number
         titulo: string
         banner: string
@@ -68,7 +68,7 @@ export default class ClassifiersRepository extends Repository {
     titulo: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
         idestado: number
         sigla: string

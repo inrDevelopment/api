@@ -248,10 +248,27 @@ export default class LeitorService {
 
   async register(params: registerServiceProps): Promise<defaultResponse> {
     try {
-      const response = await this.boletimRepository.registerMobile({
-        userToken: params.token,
+      const verificacao = await this.boletimRepository.verificaToken({
         uuid: params.uuid
       })
+
+      if (!verificacao) throw new Error("Erro ao verificar token de usuário.")
+
+      let response: {
+        affectedRows: number
+      }
+
+      if (verificacao.count <= 0) {
+        response = await this.boletimRepository.registerMobile({
+          userToken: params.token,
+          uuid: params.uuid
+        })
+      } else {
+        response = await this.boletimRepository.atualizaToken({
+          userToken: params.token,
+          uuid: params.uuid
+        })
+      }
 
       if (response.affectedRows <= 0)
         throw new Error("Erro ao registrar o aparelho.")

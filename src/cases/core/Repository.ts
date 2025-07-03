@@ -2,22 +2,13 @@ import type { RowDataPacket } from "mysql2"
 import database from "../../lib/database"
 
 export class Repository {
-  protected async procedure<T>(
-    name: string,
-    ...values: any[]
-  ): Promise<T | null> {
+  protected async call<T>(name: string, ...values: any[]): Promise<T | null> {
     try {
-      const [QueryResult] = await database.execute<RowDataPacket[]>(
+      const conn = await database.getConnection()
+
+      const [QueryResult] = await conn.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
-
-      try {
-        if (!QueryResult[0][0]) return null
-      } catch (error) {
-        throw new Error(
-          "Procedure sem retorno. Use silentprocedure em vez de procedure"
-        )
-      }
 
       return QueryResult[0][0] as T
     } catch (error: any) {
@@ -27,7 +18,8 @@ export class Repository {
 
   protected async many<T>(name: string, ...values: any[]): Promise<T[]> {
     try {
-      const [QueryResult] = await database.execute<RowDataPacket[]>(
+      const conn = await database.getConnection()
+      const [QueryResult] = await conn.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
 
@@ -39,14 +31,10 @@ export class Repository {
     }
   }
 
-  protected async silentprocedure(
-    name: string,
-    ...values: any[]
-  ): Promise<void> {
+  protected async quiet(name: string, ...values: any[]): Promise<void> {
     try {
-      const [QueryResult] = await database.execute<any>(
-        `CALL ${name}(${values})`
-      )
+      const conn = await database.getConnection()
+      const [QueryResult] = await conn.execute<any>(`CALL ${name}(${values})`)
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
 
@@ -57,53 +45,15 @@ export class Repository {
     }
   }
 
-  protected async insertprocedure(
+  protected async commom(
     name: string,
     ...values: any[]
   ): Promise<{ affectedRows: number }> {
     try {
-      const [QueryResult] = await database.execute<any>(
-        `CALL ${name}(${values})`
-      )
+      const conn = await database.getConnection()
+      const [QueryResult] = await conn.execute<any>(`CALL ${name}(${values})`)
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
-
-      return { affectedRows: QueryResult.affectedRows }
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
-  protected async updateprocedure(
-    name: string,
-    ...values: any[]
-  ): Promise<{ affectedRows: number }> {
-    try {
-      const [QueryResult] = await database.execute<any>(
-        `CALL ${name}(${values})`
-      )
-
-      if (!QueryResult) throw new Error("Erro ao verificar alterações.")
-
-      return { affectedRows: QueryResult.affectedRows }
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
-  protected async deleteprocedure(
-    name: string,
-    ...values: any[]
-  ): Promise<{ affectedRows: number }> {
-    try {
-      const [QueryResult] = await database.execute<any>(
-        `CALL ${name}(${values})`
-      )
-
-      if (!QueryResult)
-        throw new Error(
-          "Não foi possivel verificar se a exclusão foi realizada."
-        )
 
       return { affectedRows: QueryResult.affectedRows }
     } catch (error: any) {

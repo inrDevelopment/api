@@ -12,7 +12,7 @@ export default class RecursoRepository extends Repository {
     idusuario: number
   }): Promise<{ recursoid: number } | null> {
     try {
-      return this.procedure<{ recursoid: number }>(
+      return this.call<{ recursoid: number }>(
         "criar_recurso",
         params.nome,
         params.icone,
@@ -42,7 +42,7 @@ export default class RecursoRepository extends Repository {
     affectedRows: number
   }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "editar_recurso",
         params.id,
         params.nome,
@@ -77,7 +77,7 @@ export default class RecursoRepository extends Repository {
     editadoem: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
         nome: string
         icone: string
@@ -103,7 +103,7 @@ export default class RecursoRepository extends Repository {
     affectedRows: number
   }> {
     try {
-      return this.deleteprocedure("delete_recurso", params.id, params.idusuario)
+      return this.commom("delete_recurso", params.id, params.idusuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -151,7 +151,7 @@ export default class RecursoRepository extends Repository {
     ativo: boolean
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "count_lista_recurso",
         params.nome,
         params.url,
@@ -168,10 +168,7 @@ export default class RecursoRepository extends Repository {
     nome: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
-        "verifica_criar_nome",
-        params.nome
-      )
+      return this.call<{ count: number }>("verifica_criar_nome", params.nome)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -182,7 +179,7 @@ export default class RecursoRepository extends Repository {
     nome: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_nome",
         params.id,
         params.nome
@@ -196,7 +193,7 @@ export default class RecursoRepository extends Repository {
     tag: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>("verifica_criar_tag", params.tag)
+      return this.call<{ count: number }>("verifica_criar_tag", params.tag)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -207,7 +204,7 @@ export default class RecursoRepository extends Repository {
     tag: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_tag",
         params.id,
         params.tag
@@ -221,7 +218,7 @@ export default class RecursoRepository extends Repository {
     url: string
   }): Promise<{ count: number } | any> {
     try {
-      return this.procedure<{ count: number }>("verifica_criar_url", params.url)
+      return this.call<{ count: number }>("verifica_criar_url", params.url)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -232,7 +229,7 @@ export default class RecursoRepository extends Repository {
     url: string
   }): Promise<{ count: number } | any> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_url",
         params.id,
         params.url

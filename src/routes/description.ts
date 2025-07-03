@@ -2,9 +2,9 @@ import express from "express"
 import { descriptionController } from "../cases/entry/description"
 import { process } from "../lib/protection"
 
-const descriptionRoute = express.Router()
+const description = express.Router()
 
-descriptionRoute.get(
+description.get(
   "/:id",
   process({
     handle: async (req, res) => {
@@ -22,4 +22,4 @@ descriptionRoute.get(
   })
 )
 
-export default descriptionRoute
+export default description

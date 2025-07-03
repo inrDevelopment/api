@@ -2,9 +2,9 @@ import express from "express"
 import { supplementsController } from "../cases/entry/supplements"
 import { process } from "../lib/protection"
 
-const supplementsRoutes = express.Router()
+const supplements = express.Router()
 
-supplementsRoutes.get(
+supplements.get(
   "/themes/list",
   process({
     handle: async (req, res) => {
@@ -18,7 +18,7 @@ supplementsRoutes.get(
   })
 )
 
-supplementsRoutes.get(
+supplements.get(
   "/",
   process({
     handle: async (req, res) => {
@@ -38,7 +38,7 @@ supplementsRoutes.get(
   })
 )
 
-supplementsRoutes.get(
+supplements.get(
   "/:id",
   process({
     handle: async (req, res) => {
@@ -57,4 +57,4 @@ supplementsRoutes.get(
   })
 )
 
-export default supplementsRoutes
+export default supplements

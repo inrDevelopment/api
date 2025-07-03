@@ -1,9 +1,9 @@
 import express from "express"
 import { recursoController } from "../cases/entry/recurso"
 import { process } from "../lib/protection"
-const recursoRoutes = express.Router()
+const recurso = express.Router()
 
-recursoRoutes.post(
+recurso.post(
   "/",
   process({
     handle: async (req, res) => {
@@ -24,7 +24,7 @@ recursoRoutes.post(
   })
 )
 
-recursoRoutes.post(
+recurso.post(
   "/novo",
   process({
     handle: async (req, res) => {
@@ -45,7 +45,7 @@ recursoRoutes.post(
   })
 )
 
-recursoRoutes.get(
+recurso.get(
   "/:id(\\d+)",
   process({
     handle: async (req, res) => {
@@ -57,7 +57,7 @@ recursoRoutes.get(
   })
 )
 
-recursoRoutes.put(
+recurso.put(
   "/:id(\\d+)/editar",
   process({
     handle: async (req, res) => {
@@ -79,7 +79,7 @@ recursoRoutes.put(
   })
 )
 
-recursoRoutes.delete(
+recurso.delete(
   "/:id(\\d+)/excluir",
   process({
     handle: async (req, res) => {
@@ -94,4 +94,4 @@ recursoRoutes.delete(
   })
 )
 
-export default recursoRoutes
+export default recurso
