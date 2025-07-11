@@ -37,7 +37,7 @@ export default class PareceresRepository extends Repository {
     texto: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         id: number
         numero_processo: string
         ano_processo: string

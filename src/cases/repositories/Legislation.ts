@@ -38,7 +38,7 @@ export default class LegislationRepository extends Repository {
     destaque: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         id: number
         titulo: string
         resumo: string

@@ -1,5 +1,6 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
+import { appAuthControllerProps, appAuthValidation } from "../schemas/appAuth"
 import {
   confirmaRecuperacaoControllerProps,
   confirmaRecuperacaoValidation
@@ -52,6 +53,22 @@ export default class UserController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.userService.painelAuth(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async appAuth(params: appAuthControllerProps): Promise<defaultResponse> {
+    try {
+      const validation = await appAuthValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.userService.appAuth(validation.data)
     } catch (error: any) {
       return {
         success: false,

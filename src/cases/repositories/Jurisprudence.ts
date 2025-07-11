@@ -40,7 +40,7 @@ export default class JurisprudenceRepository extends Repository {
     datacad: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         id: number
         titulo: string
         ementa: string

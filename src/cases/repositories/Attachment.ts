@@ -28,7 +28,7 @@ export default class AttachmentRepository extends Repository {
     arquivo: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idato: number
         idanexo: number
         nome: string

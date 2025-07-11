@@ -1,14 +1,14 @@
 import express from "express"
-import { messagesEditorsController } from "../cases/entry/messagesEditor"
+import { legislationController } from "../cases/entry/legislation"
 import { process } from "../lib/protection"
-const messagesEditorsRoute = express.Router()
+const legislation = express.Router()
 
-messagesEditorsRoute.get(
+legislation.get(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await messagesEditorsController.messagesEditorsContent({
+        await legislationController.legislationContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
@@ -17,17 +17,17 @@ messagesEditorsRoute.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "menssagemeditores"
+      recurso: "legislacao"
     }
   })
 )
 
-messagesEditorsRoute.get(
+legislation.get(
   "/:id",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await messagesEditorsController.getMessagesEditorsById({
+        await legislationController.getLegislationById({
           id: +req.params.id,
           client: req.usuario.idcliente
         })
@@ -36,9 +36,9 @@ messagesEditorsRoute.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "menssagemeditores"
+      recurso: "legislacao"
     }
   })
 )
 
-export default messagesEditorsRoute
+export default legislation

@@ -3,7 +3,7 @@ import { Repository } from "../core/Repository"
 export default class DescriptionRepository extends Repository {
   async get(params: { id: number }): Promise<{ conteudo: string } | null> {
     try {
-      return await this.procedure<{ conteudo: string }>(
+      return await this.call<{ conteudo: string }>(
         "get_content_by_id",
         `'${params.id}'`
       )

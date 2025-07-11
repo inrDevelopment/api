@@ -5,12 +5,11 @@ DROP PROCEDURE IF EXISTS todos_recursos;
 CREATE PROCEDURE todos_recursos ()
 BEGIN
     SELECT 
-        rt.label as 'tipo',
+        rt.tag as 'tipo',
         r.nome,
         r.icone,
         r.tag,
-        r.url,
-        r.atributos
+        r.url
     FROM 
         recurso r
     INNER JOIN 
@@ -24,6 +23,6 @@ BEGIN
     AND 
         r.excluido_id IS NULL
     ORDER BY 
-        rt.label,
+        rt.tag,
         r.nome;
 END;

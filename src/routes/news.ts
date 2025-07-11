@@ -1,9 +1,9 @@
 import express from "express"
 import newsController from "../cases/entry/news"
 import { process } from "../lib/protection"
-const newsRoute = express.Router()
+const news = express.Router()
 
-newsRoute.get(
+news.get(
   "/",
   process({
     handle: async (req, res) => {
@@ -22,7 +22,7 @@ newsRoute.get(
   })
 )
 
-newsRoute.get(
+news.get(
   "/:id",
   process({
     handle: async (req, res) => {
@@ -40,4 +40,4 @@ newsRoute.get(
   })
 )
 
-export default newsRoute
+export default news

@@ -1,22 +1,16 @@
-import axios, { AxiosHeaders, AxiosResponse } from "axios"
-export type requestResponse<T = any> = {
-  success: boolean
-  data?: T
-  message?: string
-}
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import { defaultResponse } from "../protection"
 
 const instance = axios.create()
 
 const get = async <T = any>(
   url: string,
-  headers?: AxiosHeaders
-): Promise<requestResponse<T>> => {
+  config?: AxiosRequestConfig<any>
+): Promise<defaultResponse<T>> => {
   try {
-    const requestHTTP: AxiosResponse<requestResponse<T>> = await instance.get(
+    const requestHTTP: AxiosResponse<defaultResponse<T>> = await instance.get(
       url,
-      {
-        headers
-      }
+      config
     )
 
     if (requestHTTP.status === 200) {
@@ -49,15 +43,13 @@ const get = async <T = any>(
 const post = async <T = any>(
   url: string,
   body?: any,
-  headers?: AxiosHeaders
-): Promise<requestResponse<T>> => {
+  config?: AxiosRequestConfig<any>
+): Promise<defaultResponse<T>> => {
   try {
-    const requestHTTP: AxiosResponse<requestResponse<T>> = await instance.post(
+    const requestHTTP: AxiosResponse<defaultResponse<T>> = await instance.post(
       url,
       body,
-      {
-        headers
-      }
+      config
     )
 
     if (requestHTTP.status === 200) {
@@ -90,15 +82,13 @@ const post = async <T = any>(
 const put = async <T = any>(
   url: string,
   body?: any,
-  headers?: AxiosHeaders
-): Promise<requestResponse<T>> => {
+  config?: AxiosRequestConfig<any>
+): Promise<defaultResponse<T>> => {
   try {
-    const requestHTTP: AxiosResponse<requestResponse<T>> = await instance.put(
+    const requestHTTP: AxiosResponse<defaultResponse<T>> = await instance.put(
       url,
       body,
-      {
-        headers
-      }
+      config
     )
 
     if (requestHTTP.status === 200) {
@@ -130,13 +120,11 @@ const put = async <T = any>(
 
 const del = async <T = any>(
   url: string,
-  headers?: AxiosHeaders
-): Promise<requestResponse<T>> => {
+  config?: AxiosRequestConfig<any>
+): Promise<defaultResponse<T>> => {
   try {
-    const requestHTTP: AxiosResponse<requestResponse<T>> =
-      await instance.delete(url, {
-        headers
-      })
+    const requestHTTP: AxiosResponse<defaultResponse<T>> =
+      await instance.delete(url, config)
 
     if (requestHTTP.status === 200) {
       if (requestHTTP.data.data) {

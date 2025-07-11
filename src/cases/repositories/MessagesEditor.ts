@@ -25,7 +25,7 @@ export default class MessagesEditorRepository extends Repository {
     datacad: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         id: number
         titulo: string
         texto: string

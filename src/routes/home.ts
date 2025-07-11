@@ -2,9 +2,9 @@ import express from "express"
 import { homeController } from "../cases/entry/home"
 import { process } from "../lib/protection"
 
-const homeRoute = express.Router()
+const home = express.Router()
 
-homeRoute.get(
+home.get(
   "/",
   process({
     handle: async (req, res) => {
@@ -18,7 +18,7 @@ homeRoute.get(
   })
 )
 
-homeRoute.get(
+home.get(
   "/curriculum",
   process({
     handle: async (req, res) => {
@@ -32,4 +32,4 @@ homeRoute.get(
   })
 )
 
-export default homeRoute
+export default home

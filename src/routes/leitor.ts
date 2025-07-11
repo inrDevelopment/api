@@ -1,9 +1,9 @@
 import express from "express"
 import leitorController from "../cases/entry/leitor"
 import { process } from "../lib/protection"
-const leitorRoute = express.Router()
+const leitor = express.Router()
 
-leitorRoute.post(
+leitor.post(
   "/boletims/privado",
   process({
     handle: async (req, res) => {
@@ -26,7 +26,7 @@ leitorRoute.post(
   })
 )
 
-leitorRoute.post(
+leitor.post(
   "/boletims/publico",
   process({
     handle: async (req, res) => {
@@ -48,7 +48,7 @@ leitorRoute.post(
   })
 )
 
-leitorRoute.get(
+leitor.get(
   "/leitura/:id(\\d+)/adicionar",
   process({
     handle: async (req, res) => {
@@ -67,7 +67,7 @@ leitorRoute.get(
   })
 )
 
-leitorRoute.delete(
+leitor.delete(
   "/leitura/:id(\\d+)/remover",
   process({
     handle: async (req, res) => {
@@ -86,7 +86,7 @@ leitorRoute.delete(
   })
 )
 
-leitorRoute.get(
+leitor.get(
   "/favorito/:id(\\d+)/adicionar",
   process({
     handle: async (req, res) => {
@@ -105,7 +105,7 @@ leitorRoute.get(
   })
 )
 
-leitorRoute.delete(
+leitor.delete(
   "/favorito/:id(\\d+)/remover",
   process({
     handle: async (req, res) => {
@@ -124,7 +124,7 @@ leitorRoute.delete(
   })
 )
 
-leitorRoute.get(
+leitor.get(
   "/ultimo-boletim",
   process({
     handle: async (req, res) => {
@@ -142,7 +142,7 @@ leitorRoute.get(
   })
 )
 
-leitorRoute.post(
+leitor.post(
   "/favorito",
   process({
     handle: async (req, res) => {
@@ -165,7 +165,7 @@ leitorRoute.post(
   })
 )
 
-leitorRoute.post(
+leitor.post(
   "/registrar",
   process({
     handle: async (req, res) => {
@@ -184,7 +184,7 @@ leitorRoute.post(
   })
 )
 
-leitorRoute.get(
+leitor.get(
   "/ler/privado",
   process({
     handle: async (req, res) => {
@@ -203,7 +203,7 @@ leitorRoute.get(
   })
 )
 
-leitorRoute.get(
+leitor.get(
   "/ler/publico",
   process({
     handle: async (req, res) => {
@@ -221,4 +221,4 @@ leitorRoute.get(
   })
 )
 
-export default leitorRoute
+export default leitor

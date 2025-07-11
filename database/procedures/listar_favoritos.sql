@@ -24,6 +24,7 @@ BEGIN
 		WHERE 
 			bl.boletim_id = bf.boletim_id
 		AND bl.usuario_id = idUsuario
+        LIMIT 1
 		) AS 'lido'
     FROM 
         boletim_favorito as bf

@@ -1,20 +1,20 @@
 import express from "express"
 import { recursoController } from "../cases/entry/recurso"
 import { process } from "../lib/protection"
-const recursoRoutes = express.Router()
+const recurso = express.Router()
 
-recursoRoutes.post(
+recurso.post(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.listarRecurso({
+          recurso_tipo_id: req.body.recurso_tipo_id,
           nome: req.body.nome,
+          tag: req.body.tag,
           icone: req.body.icone,
           url: req.body.url,
-          recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
-          tag: req.body.tag,
           limite: req.body.limite,
           pagina: req.body.pagina
         })
@@ -24,20 +24,20 @@ recursoRoutes.post(
   })
 )
 
-recursoRoutes.post(
-  "/novo",
+recurso.post(
+  "/salvar",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await recursoController.criarRecurso({
+        await recursoController.salvarRecurso({
+          id: req.body.id,
           nome: req.body.nome,
           icone: req.body.icone,
           url: req.body.url,
           recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
           tag: req.body.tag,
-          idusuario: req.usuario.id,
-          atributos: req.body.atributos
+          idusuario: req.usuario.id
         })
       )
     },
@@ -45,7 +45,7 @@ recursoRoutes.post(
   })
 )
 
-recursoRoutes.get(
+recurso.get(
   "/:id(\\d+)",
   process({
     handle: async (req, res) => {
@@ -57,29 +57,7 @@ recursoRoutes.get(
   })
 )
 
-recursoRoutes.put(
-  "/:id(\\d+)/editar",
-  process({
-    handle: async (req, res) => {
-      res.status(200).json(
-        await recursoController.editarRecurso({
-          id: +req.params.id,
-          nome: req.body.nome,
-          icone: req.body.icone,
-          url: req.body.url,
-          tag: req.body.tag,
-          ativo: req.body.ativo,
-          recurso_tipo_id: req.body.recurso_tipo_id,
-          idusuario: req.usuario.id,
-          atributos: req.body.atributos
-        })
-      )
-    },
-    configuracao: { acao: "update", nivel: 0, recurso: "recurso" }
-  })
-)
-
-recursoRoutes.delete(
+recurso.delete(
   "/:id(\\d+)/excluir",
   process({
     handle: async (req, res) => {
@@ -94,4 +72,4 @@ recursoRoutes.delete(
   })
 )
 
-export default recursoRoutes
+export default recurso
