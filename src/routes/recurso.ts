@@ -9,12 +9,12 @@ recurso.post(
     handle: async (req, res) => {
       res.status(200).json(
         await recursoController.listarRecurso({
+          recurso_tipo_id: req.body.recurso_tipo_id,
           nome: req.body.nome,
+          tag: req.body.tag,
           icone: req.body.icone,
           url: req.body.url,
-          recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
-          tag: req.body.tag,
           limite: req.body.limite,
           pagina: req.body.pagina
         })
@@ -25,19 +25,19 @@ recurso.post(
 )
 
 recurso.post(
-  "/novo",
+  "/salvar",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await recursoController.criarRecurso({
+        await recursoController.salvarRecurso({
+          id: req.body.id,
           nome: req.body.nome,
           icone: req.body.icone,
           url: req.body.url,
           recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
           tag: req.body.tag,
-          idusuario: req.usuario.id,
-          atributos: req.body.atributos
+          idusuario: req.usuario.id
         })
       )
     },
@@ -54,28 +54,6 @@ recurso.get(
         .json(await recursoController.selecionarRecurso({ id: +req.params.id }))
     },
     configuracao: { acao: "read", nivel: 0, recurso: "recurso" }
-  })
-)
-
-recurso.put(
-  "/:id(\\d+)/editar",
-  process({
-    handle: async (req, res) => {
-      res.status(200).json(
-        await recursoController.editarRecurso({
-          id: +req.params.id,
-          nome: req.body.nome,
-          icone: req.body.icone,
-          url: req.body.url,
-          tag: req.body.tag,
-          ativo: req.body.ativo,
-          recurso_tipo_id: req.body.recurso_tipo_id,
-          idusuario: req.usuario.id,
-          atributos: req.body.atributos
-        })
-      )
-    },
-    configuracao: { acao: "update", nivel: 0, recurso: "recurso" }
   })
 )
 

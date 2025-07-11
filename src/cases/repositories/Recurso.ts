@@ -2,25 +2,23 @@ import { Repository } from "../core/Repository"
 
 export default class RecursoRepository extends Repository {
   async criar(params: {
+    recurso_tipo_id: number
     nome: string
+    tag: string
     icone: string
     url: string
-    tag: string
-    recurso_tipo_id: number
     ativo: boolean
-    atributos: string
     idusuario: number
-  }): Promise<{ recursoid: number } | null> {
+  }): Promise<{ id: number } | null> {
     try {
-      return this.call<{ recursoid: number }>(
+      return this.call<{ id: number }>(
         "criar_recurso",
-        params.nome,
-        params.icone,
-        params.tag,
-        params.url,
-        params.atributos,
-        params.ativo,
         params.recurso_tipo_id,
+        params.nome,
+        params.tag,
+        params.icone,
+        params.url,
+        params.ativo,
         params.idusuario
       )
     } catch (error: any) {
@@ -30,13 +28,12 @@ export default class RecursoRepository extends Repository {
 
   async editar(params: {
     id: number
+    recurso_tipo_id: number
     nome: string
+    tag: string
     icone: string
     url: string
-    tag: string
-    recurso_tipo_id: number
     ativo: boolean
-    atributos: string
     idusuario: number
   }): Promise<{
     affectedRows: number
@@ -45,13 +42,12 @@ export default class RecursoRepository extends Repository {
       return this.commom(
         "editar_recurso",
         params.id,
-        params.nome,
-        params.icone,
-        params.tag,
-        params.url,
-        params.atributos,
-        params.ativo,
         params.recurso_tipo_id,
+        params.nome,
+        params.tag,
+        params.icone,
+        params.url,
+        params.ativo,
         params.idusuario
       )
     } catch (error: any) {
@@ -61,14 +57,13 @@ export default class RecursoRepository extends Repository {
 
   async selecionar(params: { id: number }): Promise<{
     id: number
-    nome: string
-    icone: string
-    url: string
-    tag: string
     recurso_tipo_id: number
     recurso_tipo_nome: string
+    nome: string
+    tag: string
+    icone: string
+    url: string
     ativo: boolean
-    atributos: string
     criadoid: number
     criadonome: string
     criadoem: string
@@ -79,14 +74,13 @@ export default class RecursoRepository extends Repository {
     try {
       return this.call<{
         id: number
-        nome: string
-        icone: string
-        url: string
-        tag: string
         recurso_tipo_id: number
         recurso_tipo_nome: string
+        nome: string
+        tag: string
+        icone: string
+        url: string
         ativo: boolean
-        atributos: string
         criadoid: number
         criadonome: string
         criadoem: string
@@ -152,7 +146,7 @@ export default class RecursoRepository extends Repository {
   }): Promise<{ count: number } | null> {
     try {
       return this.call<{ count: number }>(
-        "count_lista_recurso",
+        "count_listar_recursos",
         params.nome,
         params.url,
         params.tag,

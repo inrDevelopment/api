@@ -1,5 +1,4 @@
 import express from "express"
-import leitorController from "../cases/entry/leitor"
 import { userController } from "../cases/entry/user"
 import { process } from "../lib/protection"
 const user = express.Router()
@@ -48,7 +47,7 @@ user.post(
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.login({
+        await userController.appAuth({
           login: req.body.login,
           senha: req.body.senha,
           uuid: req.body.uuid

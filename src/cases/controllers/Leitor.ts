@@ -25,10 +25,6 @@ import {
   listarFavoritoValidation
 } from "../schemas/listarFavorito"
 import {
-  loginLeitorControllerProps,
-  loginLeitorValidation
-} from "../schemas/loginLeitor"
-import {
   markAsReadedControllerProps,
   markAsReadedValidation
 } from "../schemas/markAsReaded"
@@ -210,22 +206,6 @@ export default class LeitorController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.leitorService.register(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async login(params: loginLeitorControllerProps): Promise<defaultResponse> {
-    try {
-      const validation = await loginLeitorValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.leitorService.login(validation.data)
     } catch (error: any) {
       return {
         success: false,

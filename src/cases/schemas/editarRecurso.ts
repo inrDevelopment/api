@@ -16,7 +16,6 @@ export const editarRecursoValidation = z.object({
     .min(2, { message: "Url deve ter no mínimo 2 caracteres" })
     .max(200, { message: "Url deve ter ao máximo 200 caracteres" }),
   ativo: z.boolean(),
-  atributos: z.string().length(6),
   idusuario: z.number()
 })
 

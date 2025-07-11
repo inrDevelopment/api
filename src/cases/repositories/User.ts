@@ -135,7 +135,6 @@ export default class UserRepository extends Repository {
       icone: string
       tag: string
       url: string
-      atributos: string
     }[]
   > {
     try {
@@ -145,7 +144,6 @@ export default class UserRepository extends Repository {
         icone: string
         tag: string
         url: string
-        atributos: string
       }>("todos_recursos")
     } catch (error: any) {
       throw new Error(error.message)
@@ -159,7 +157,7 @@ export default class UserRepository extends Repository {
       icone: string
       tag: string
       url: string
-      atributos: string
+      keycode: string
     }[]
   > {
     try {
@@ -169,8 +167,23 @@ export default class UserRepository extends Repository {
         icone: string
         tag: string
         url: string
-        atributos: string
+        keycode: string
       }>("get_usuario_recursos", params.idusuario)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async vinculaUsuario(params: {
+    uuid: string
+    idusuario: number
+  }): Promise<void> {
+    try {
+      return await this.quiet(
+        "vincula_usuairo",
+        `'${params.uuid}'`,
+        params.idusuario
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }

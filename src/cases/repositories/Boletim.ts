@@ -336,21 +336,6 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  async registerMobile(params: {
-    uuid: string
-    userToken: string
-  }): Promise<{ affectedRows: number }> {
-    try {
-      return this.commom(
-        "subscribe_mobile_chanell",
-        params.uuid,
-        params.userToken
-      )
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
   async novoItemBoletim(params: {
     conteudoTipoId: number
     boletimId: number
@@ -637,21 +622,39 @@ export default class BoletimRepository extends Repository {
     uuid: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.call<{ count: number }>("verifica_token", params.uuid)
+      return this.call<{ count: number }>(
+        "verifica_registro",
+        `'${params.uuid}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
   }
 
-  async atualizaToken(params: {
+  async registraCanalApp(params: {
     uuid: string
-    userToken: string
+    token: string
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.commom(
+        "registra_canal_app",
+        `'${params.uuid}'`,
+        `'${params.token}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async atualizaCanalApp(params: {
+    uuid: string
+    token: string
   }): Promise<{ affectedRows: number }> {
     try {
       return await this.commom(
-        "update_subscribe_mobile_chanell",
-        params.uuid,
-        params.userToken
+        "atualiza_canal_app",
+        `'${params.uuid}'`,
+        `'${params.token}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
