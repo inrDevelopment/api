@@ -33,10 +33,8 @@ export default function process(
         case 1: {
           if (!req.headers["credential"]) throw new Error("Não autorizado")
 
-          const paramsConstructor: any = verify(
-            req.headers["credential"].toString(),
-            application.key
-          )
+          const credential = req.headers["credential"].toString()
+          const paramsConstructor: any = verify(credential, application.key)
 
           req.usuario = new Usuario(paramsConstructor)
 
@@ -46,7 +44,6 @@ export default function process(
           if (!req.headers["credential"]) throw new Error("Não autorizado")
 
           const credential = req.headers["credential"].toString()
-
           const paramsConstructor: any = verify(credential, application.key)
 
           req.usuario = new Usuario(paramsConstructor)

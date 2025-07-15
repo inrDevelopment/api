@@ -4,6 +4,7 @@ import RecursoRepository from "../repositories/Recurso"
 import UserRepository from "../repositories/User"
 import { excluirRecursoServiceProps } from "../schemas/excluirRecurso"
 import { listarRecursoServiceProps } from "../schemas/listarRecurso"
+import { listarTipoRecursoServiceProps } from "../schemas/listaTipoRecurso"
 import { salvarRecursoServiceProps } from "../schemas/salvarRecurso"
 import { selecionarRecursoServiceProps } from "../schemas/selecionarRecurso"
 //#endregion imports
@@ -41,6 +42,29 @@ export default class RecursoService {
       return {
         success: true,
         data: { list, count: count.count }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listaTipo(
+    params: listarTipoRecursoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const list = await this.recursoRepository.tipoRecursoList({
+        limite: params.limite,
+        pagina: params.pagina
+      })
+
+      const count = await this.recursoRepository.tipoRecursoListCount()
+
+      return {
+        success: true,
+        data: { list, count }
       }
     } catch (error: any) {
       return {
@@ -144,12 +168,16 @@ export default class RecursoService {
             "Erro ao identificar usuário responsável pela criação."
           )
 
+        console.log(novoRecurso)
+
         return {
           success: true,
           data: {
             id: novoRecurso.id,
-            criadopor: nomeUsuario.nome,
-            criadoem: new Date()
+            criadonome: nomeUsuario.nome,
+            criadoem: new Date(),
+            editadonome: null,
+            editadoem: null
           },
           message: "Recurso criado com sucesso."
         }
@@ -200,11 +228,23 @@ export default class RecursoService {
             "Erro ao identificar usuário responsável pela edição."
           )
 
+        const recursoDetalhes = await this.recursoRepository.selecionar({
+          id: params.id
+        })
+
+        if (!recursoDetalhes)
+          throw new Error(
+            "Erro ao identificar usuário responsável pela edição."
+          )
+
         return {
           success: true,
           data: {
-            editadopor: nomeUsuario.nome,
-            editadoem: new Date()
+            id: recursoDetalhes.id,
+            criadonome: recursoDetalhes.criadonome,
+            criadoem: recursoDetalhes.criadoem,
+            editadonome: recursoDetalhes.editadonome,
+            editadoem: recursoDetalhes.editadoem
           },
           message: "Recurso editado com sucesso."
         }

@@ -13,12 +13,12 @@ export default class RecursoRepository extends Repository {
     try {
       return this.call<{ id: number }>(
         "criar_recurso",
-        params.recurso_tipo_id,
-        params.nome,
-        params.tag,
-        params.icone,
-        params.url,
+        `'${params.nome}'`,
+        `'${params.icone}'`,
+        `'${params.tag}'`,
+        `'${params.url}'`,
         params.ativo,
+        params.recurso_tipo_id,
         params.idusuario
       )
     } catch (error: any) {
@@ -42,11 +42,11 @@ export default class RecursoRepository extends Repository {
       return this.commom(
         "editar_recurso",
         params.id,
+        `'${params.nome}'`,
+        `'${params.icone}'`,
+        `'${params.tag}'`,
+        `'${params.url}'`,
         params.recurso_tipo_id,
-        params.nome,
-        params.tag,
-        params.icone,
-        params.url,
         params.ativo,
         params.idusuario
       )
@@ -162,7 +162,10 @@ export default class RecursoRepository extends Repository {
     nome: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.call<{ count: number }>("verifica_criar_nome", params.nome)
+      return this.call<{ count: number }>(
+        "verifica_criar_nome",
+        `'${params.nome}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -176,7 +179,7 @@ export default class RecursoRepository extends Repository {
       return this.call<{ count: number }>(
         "verifica_editar_nome",
         params.id,
-        params.nome
+        `'${params.nome}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -187,7 +190,10 @@ export default class RecursoRepository extends Repository {
     tag: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.call<{ count: number }>("verifica_criar_tag", params.tag)
+      return this.call<{ count: number }>(
+        "verifica_criar_tag",
+        `'${params.tag}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -201,7 +207,7 @@ export default class RecursoRepository extends Repository {
       return this.call<{ count: number }>(
         "verifica_editar_tag",
         params.id,
-        params.tag
+        `'${params.tag}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -212,7 +218,10 @@ export default class RecursoRepository extends Repository {
     url: string
   }): Promise<{ count: number } | any> {
     try {
-      return this.call<{ count: number }>("verifica_criar_url", params.url)
+      return this.call<{ count: number }>(
+        "verifica_criar_url",
+        `'${params.url}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -226,8 +235,31 @@ export default class RecursoRepository extends Repository {
       return this.call<{ count: number }>(
         "verifica_editar_url",
         params.id,
-        params.url
+        `'${params.url}'`
       )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoRecursoList(params: {
+    pagina: number
+    limite: number
+  }): Promise<{ id: number; nome: string; tag: string }[]> {
+    try {
+      return this.many<{ id: number; nome: string; tag: string }>(
+        "lista_tipo_recurso",
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoRecursoListCount(): Promise<{ count: number } | null> {
+    try {
+      return this.call<{ count: number }>("count_lista_tipo_recurso")
     } catch (error: any) {
       throw new Error(error.message)
     }

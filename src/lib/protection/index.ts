@@ -73,11 +73,8 @@ class Usuario {
     this._admin = this.params.admin
     this._autorizacao_trabalhista = this.params.autorizacao_trabalhista
 
-    if (this.params.idgrupo && this.params.idgrupo === 7) {
-      this._super = true
-    } else {
-      this._super = false
-    }
+    if (this.params.idgrupo && this.params.idgrupo === 7) this._super = true
+    else this._super = false
   }
 
   get isSuper(): boolean {

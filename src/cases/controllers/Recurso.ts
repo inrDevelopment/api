@@ -9,6 +9,10 @@ import {
   listarRecursoValidation
 } from "../schemas/listarRecurso"
 import {
+  listarTipoRecursoControllerProps,
+  listarTipoRecursoValidation
+} from "../schemas/listaTipoRecurso"
+import {
   salvarRecursoControllerProps,
   salvarRecursoValidation
 } from "../schemas/salvarRecurso"
@@ -88,6 +92,26 @@ export default class RecursoController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.recursoService.salvarRecurso(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listaTipo(
+    params: listarTipoRecursoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await listarTipoRecursoValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.recursoService.listaTipo(validation.data)
     } catch (error: any) {
       return {
         success: false,

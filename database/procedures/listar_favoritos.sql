@@ -17,6 +17,7 @@ BEGIN
         be.titulo,
         be.`data`,
         be.numero,
+        be.boletim_tipo_id,
         (SELECT 
 			true 
 		FROM 

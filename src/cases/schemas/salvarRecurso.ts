@@ -1,22 +1,22 @@
 import { z } from "zod"
 export const salvarRecursoValidation = z.object({
-  id: z.number().optional(),
-  recurso_tipo_id: z.number(),
+  id: z.number({ message: "id" }).optional(),
+  recurso_tipo_id: z.number({ message: "recurso_tipo_id" }),
   nome: z
-    .string()
+    .string({ message: "nome" })
     .min(2, { message: "Nome deve ter no mínimo 2 caracteres" })
     .max(150, { message: "Nome deve ter ao máximo 150 caracteres" }),
-  tag: z.string().length(5),
+  tag: z.string().max(50),
   icone: z
-    .string()
+    .string({ message: "icone" })
     .min(2, { message: "Icone deve ter no mínimo 2 caracteres" })
     .max(30, { message: "Icone deve ter ao máximo 30 caracteres" }),
   url: z
-    .string()
+    .string({ message: "url" })
     .min(2, { message: "Url deve ter no mínimo 2 caracteres" })
     .max(200, { message: "Url deve ter ao máximo 200 caracteres" }),
-  ativo: z.boolean(),
-  idusuario: z.number()
+  ativo: z.boolean({ message: "ativo" }),
+  idusuario: z.number({ message: "idusuario id" })
 })
 
 export type salvarRecursoControllerProps = z.input<

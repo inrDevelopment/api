@@ -37,11 +37,11 @@ recurso.post(
           recurso_tipo_id: req.body.recurso_tipo_id,
           ativo: req.body.ativo,
           tag: req.body.tag,
-          idusuario: req.usuario.id
+          idusuario: +req.usuario.id
         })
       )
     },
-    configuracao: { acao: "create", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "create", nivel: 1, recurso: "recurso" }
   })
 )
 
@@ -52,6 +52,21 @@ recurso.get(
       res
         .status(200)
         .json(await recursoController.selecionarRecurso({ id: +req.params.id }))
+    },
+    configuracao: { acao: "read", nivel: 0, recurso: "recurso" }
+  })
+)
+
+recurso.get(
+  "/tipo",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await recursoController.listaTipo({
+          limite: req.query.limite ? +req.query.limite : 10,
+          pagina: req.query.pagina ? +req.query.pagina : 0
+        })
+      )
     },
     configuracao: { acao: "read", nivel: 0, recurso: "recurso" }
   })

@@ -71,6 +71,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
       favorito: string
     }[]
@@ -81,6 +82,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
         favorito: string
       }>(
@@ -110,6 +112,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
       favorito: string
     }[]
@@ -120,6 +123,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
         favorito: string
       }>(
@@ -419,6 +423,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
     }[]
   > {
@@ -428,6 +433,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
       }>(
         "listar_favoritos",
