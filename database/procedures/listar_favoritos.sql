@@ -17,6 +17,7 @@ BEGIN
         be.titulo,
         be.`data`,
         be.numero,
+        be.boletim_tipo_id,
         (SELECT 
 			true 
 		FROM 
@@ -24,6 +25,7 @@ BEGIN
 		WHERE 
 			bl.boletim_id = bf.boletim_id
 		AND bl.usuario_id = idUsuario
+        LIMIT 1
 		) AS 'lido'
     FROM 
         boletim_favorito as bf

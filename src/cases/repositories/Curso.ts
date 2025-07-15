@@ -5,7 +5,7 @@ export default class CursoRepository extends Repository {
     cursoid: number
   }): Promise<{ idcurso: number; titulo: string; texto: string } | null> {
     try {
-      return this.procedure<{ idcurso: number; titulo: string; texto: string }>(
+      return this.call<{ idcurso: number; titulo: string; texto: string }>(
         "get_curso_by_id",
         params.cursoid
       )

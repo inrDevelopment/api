@@ -1,10 +1,9 @@
 import express from "express"
-import leitorController from "../cases/entry/leitor"
 import { userController } from "../cases/entry/user"
 import { process } from "../lib/protection"
-const userRoute = express.Router()
+const user = express.Router()
 
-userRoute.post(
+user.post(
   "/autenticacao/site",
   process({
     handle: async (req, res) => {
@@ -23,7 +22,7 @@ userRoute.post(
   })
 )
 
-userRoute.post(
+user.post(
   "/autenticacao/painel",
   process({
     handle: async (req, res) => {
@@ -43,12 +42,12 @@ userRoute.post(
   })
 )
 
-userRoute.post(
+user.post(
   "/autenticacao/app",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await leitorController.login({
+        await userController.appAuth({
           login: req.body.login,
           senha: req.body.senha,
           uuid: req.body.uuid
@@ -63,7 +62,7 @@ userRoute.post(
   })
 )
 
-userRoute.get(
+user.get(
   "/recuperacao-acesso/email/painel",
   process({
     handle: async (req, res) => {
@@ -81,7 +80,7 @@ userRoute.get(
   })
 )
 
-userRoute.get(
+user.get(
   "/recuperacao-acesso/email/site",
   process({
     handle: async (req, res) => {
@@ -99,7 +98,7 @@ userRoute.get(
   })
 )
 
-userRoute.get(
+user.get(
   "/recuperacao-acesso/cel/painel",
   process({
     handle: async (req, res) => {
@@ -117,7 +116,7 @@ userRoute.get(
   })
 )
 
-userRoute.get(
+user.get(
   "/recuperacao-acesso/cel/site",
   process({
     handle: async (req, res) => {
@@ -135,7 +134,7 @@ userRoute.get(
   })
 )
 
-userRoute.post(
+user.post(
   "/recuperacao-acesso/finalizar/painel",
   process({
     handle: async (req, res) => {
@@ -154,7 +153,7 @@ userRoute.post(
   })
 )
 
-userRoute.post(
+user.post(
   "/recuperacao-acesso/finalizar/site",
   process({
     handle: async (req, res) => {
@@ -173,4 +172,4 @@ userRoute.post(
   })
 )
 
-export default userRoute
+export default user

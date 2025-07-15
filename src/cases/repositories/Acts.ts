@@ -74,7 +74,7 @@ export default class ActsRepository extends Repository {
     texto: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         secao: string
         especie: string
         numero: string

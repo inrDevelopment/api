@@ -9,7 +9,7 @@ export default class BoletimRepository extends Repository {
     criado_id: number
   }): Promise<{ boletim_id: number } | null> {
     try {
-      return this.procedure<{ boletim_id: number }>(
+      return this.call<{ boletim_id: number }>(
         "novo_boletim",
         `'${params.titulo}'`,
         params.numero ?? "NULL",
@@ -28,7 +28,7 @@ export default class BoletimRepository extends Repository {
     idusuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "update_data_be",
         params.idboletim,
         this.formatDate(params.dataBoletim),
@@ -46,7 +46,7 @@ export default class BoletimRepository extends Repository {
     idusuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "update_data_title_be",
         params.idboletim,
         params.title,
@@ -71,6 +71,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
       favorito: string
     }[]
@@ -81,6 +82,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
         favorito: string
       }>(
@@ -110,6 +112,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
       favorito: string
     }[]
@@ -120,6 +123,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
         favorito: string
       }>(
@@ -144,7 +148,7 @@ export default class BoletimRepository extends Repository {
     count: number
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         count: number
       }>(
         "listar_boletim_count",
@@ -163,7 +167,7 @@ export default class BoletimRepository extends Repository {
     idusuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return await this.updateprocedure(
+      return await this.commom(
         "marca_leitura",
         params.idboletim,
         params.idusuario
@@ -178,7 +182,7 @@ export default class BoletimRepository extends Repository {
     idusuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return await this.updateprocedure(
+      return await this.commom(
         "remove_leitura",
         params.idboletim,
         params.idusuario
@@ -192,7 +196,7 @@ export default class BoletimRepository extends Repository {
     idboletim: number
   }): Promise<{ id: number; boletim_tipo_id: number } | null> {
     try {
-      return await this.procedure<{ id: number; boletim_tipo_id: number }>(
+      return await this.call<{ id: number; boletim_tipo_id: number }>(
         "can_update_be",
         params.idboletim
       )
@@ -206,7 +210,7 @@ export default class BoletimRepository extends Repository {
     idusuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure("delete_boletim", params.id, params.idusuario)
+      return this.commom("delete_boletim", params.id, params.idusuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -236,7 +240,7 @@ export default class BoletimRepository extends Repository {
     nome_publicado: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
         titulo: string
         numero: string
@@ -297,11 +301,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
-        "aprovar_boletim",
-        params.idBoletim,
-        params.idUsuario
-      )
+      return this.commom("aprovar_boletim", params.idBoletim, params.idUsuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -312,11 +312,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
-        "publicar_boletim",
-        params.idBoletim,
-        params.idUsuario
-      )
+      return this.commom("publicar_boletim", params.idBoletim, params.idUsuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -327,11 +323,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
-        "marcar_favorito",
-        params.idBoletim,
-        params.idUsuario
-      )
+      return this.commom("marcar_favorito", params.idBoletim, params.idUsuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -342,26 +334,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
-        "remover_favorito",
-        params.idBoletim,
-        params.idUsuario
-      )
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
-  async registerMobile(params: {
-    uuid: string
-    userToken: string
-  }): Promise<{ affectedRows: number }> {
-    try {
-      return this.updateprocedure(
-        "subscribe_mobile_chanell",
-        params.uuid,
-        params.userToken
-      )
+      return this.commom("remover_favorito", params.idBoletim, params.idUsuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -377,7 +350,7 @@ export default class BoletimRepository extends Repository {
     ordem: number
   }): Promise<{ id: number } | null> {
     try {
-      return this.procedure<{ id: number }>(
+      return this.call<{ id: number }>(
         "novo_item_boletim",
         params.conteudoTipoId,
         params.boletimId,
@@ -397,7 +370,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_marcacao_leitura",
         params.idBoletim,
         params.idUsuario
@@ -412,7 +385,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_favorito",
         params.idBoletim,
         params.idUsuario
@@ -427,7 +400,7 @@ export default class BoletimRepository extends Repository {
     idUsuario: number
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_leitura",
         params.idBoletim,
         params.idUsuario
@@ -450,6 +423,7 @@ export default class BoletimRepository extends Repository {
       titulo: string
       data: Date
       numero: number
+      boletim_tipo_id: number
       lido: string
     }[]
   > {
@@ -459,6 +433,7 @@ export default class BoletimRepository extends Repository {
         titulo: string
         data: Date
         numero: number
+        boletim_tipo_id: number
         lido: string
       }>(
         "listar_favoritos",
@@ -484,7 +459,7 @@ export default class BoletimRepository extends Repository {
     count: number
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         count: number
       }>(
         "listar_favoritos_count",
@@ -506,7 +481,7 @@ export default class BoletimRepository extends Repository {
     numero: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
         titulo: string
         data: string
@@ -523,7 +498,7 @@ export default class BoletimRepository extends Repository {
     conteudoTipoId: number
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "validar_item_boletim",
         params.idItem,
         params.idBoletim,
@@ -541,7 +516,7 @@ export default class BoletimRepository extends Repository {
     identificador: number
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "validar_edicao_boletim_item",
         params.idItem,
         params.conteudoTipoId,
@@ -564,7 +539,7 @@ export default class BoletimRepository extends Repository {
     ordem: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "editar_item_boletim",
         params.id,
         params.conteudoTipoId,
@@ -584,7 +559,7 @@ export default class BoletimRepository extends Repository {
     idBoletimItem: number
   }): Promise<{ affectedRows: number } | null> {
     try {
-      return this.deleteprocedure("excluir_boletim_item", params.idBoletimItem)
+      return this.commom("excluir_boletim_item", params.idBoletimItem)
     } catch (error: any) {
       throw new Error(error.mensagem)
     }
@@ -598,7 +573,7 @@ export default class BoletimRepository extends Repository {
     vizualizacao: number
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
         titulo: string
         numero: string
@@ -639,10 +614,53 @@ export default class BoletimRepository extends Repository {
     quantidade: number
   }): Promise<{ affectedRows: number }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "atualiza_leitura",
         params.idBoletim,
         params.quantidade
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async verificaToken(params: {
+    uuid: string
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.call<{ count: number }>(
+        "verifica_registro",
+        `'${params.uuid}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async registraCanalApp(params: {
+    uuid: string
+    token: string
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return this.commom(
+        "registra_canal_app",
+        `'${params.uuid}'`,
+        `'${params.token}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async atualizaCanalApp(params: {
+    uuid: string
+    token: string
+  }): Promise<{ affectedRows: number }> {
+    try {
+      return await this.commom(
+        "atualiza_canal_app",
+        `'${params.uuid}'`,
+        `'${params.token}'`
       )
     } catch (error: any) {
       throw new Error(error.message)

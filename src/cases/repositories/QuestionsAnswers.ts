@@ -36,7 +36,7 @@ export default class QuestionsAnswersRepository extends Repository {
     datacad: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         id: number
         titulo: string
         pergunta: string

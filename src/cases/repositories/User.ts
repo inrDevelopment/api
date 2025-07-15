@@ -5,7 +5,7 @@ export default class UserRepository extends Repository {
     login: string
   }): Promise<{ idusuario: number; idstatus_cliente: number } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idusuario: number
         idstatus_cliente: number
       }>("get_salt", `'${params.login}'`)
@@ -27,7 +27,7 @@ export default class UserRepository extends Repository {
     email_antigo: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idcliente: number
         idstatus_cliente: number
         idusuario: number
@@ -57,7 +57,7 @@ export default class UserRepository extends Repository {
     email_antigo: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idcliente: number
         idstatus_cliente: number
         idusuario: number
@@ -76,7 +76,7 @@ export default class UserRepository extends Repository {
 
   async getUserName(params: { id: number }): Promise<{ nome: string } | null> {
     try {
-      return this.procedure<{ nome: string }>("get_nome_usuario", params.id)
+      return this.call<{ nome: string }>("get_nome_usuario", params.id)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -86,7 +86,7 @@ export default class UserRepository extends Repository {
     loginusuario: string
   }): Promise<{ idusuario: number; datacad: string } | null> {
     try {
-      return this.procedure<{ idusuario: number; datacad: string }>(
+      return this.call<{ idusuario: number; datacad: string }>(
         "get_user_panel_login",
         `'${params.loginusuario}'`
       )
@@ -109,7 +109,7 @@ export default class UserRepository extends Repository {
     data_ultimo_acesso: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         idusuario: number
         idgrupo: number
         nome: string
@@ -135,7 +135,6 @@ export default class UserRepository extends Repository {
       icone: string
       tag: string
       url: string
-      atributos: string
     }[]
   > {
     try {
@@ -145,7 +144,6 @@ export default class UserRepository extends Repository {
         icone: string
         tag: string
         url: string
-        atributos: string
       }>("todos_recursos")
     } catch (error: any) {
       throw new Error(error.message)
@@ -159,7 +157,7 @@ export default class UserRepository extends Repository {
       icone: string
       tag: string
       url: string
-      atributos: string
+      keycode: string
     }[]
   > {
     try {
@@ -169,8 +167,23 @@ export default class UserRepository extends Repository {
         icone: string
         tag: string
         url: string
-        atributos: string
+        keycode: string
       }>("get_usuario_recursos", params.idusuario)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async vinculaUsuario(params: {
+    uuid: string
+    idusuario: number
+  }): Promise<void> {
+    try {
+      return await this.quiet(
+        "vincula_usuairo",
+        `'${params.uuid}'`,
+        params.idusuario
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }

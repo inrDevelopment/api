@@ -4,9 +4,8 @@ DROP PROCEDURE IF EXISTS criar_recurso;
 CREATE PROCEDURE criar_recurso (
     IN recursoNome VARCHAR(150),
     IN recursoIcone VARCHAR(30),
-    IN recursoTag VARCHAR(5),
+    IN recursoTag VARCHAR(50),
     IN recursoUrl VARCHAR(200),
-    IN recursoAtributos VARCHAR(6),
     IN recursoAtivo BOOL,
     IN recursoTipoId INT,
     IN criadoId INT
@@ -18,7 +17,6 @@ BEGIN
             icone, 
             tag, 
             url, 
-            atributos, 
             ativo, 
             recurso_tipo_id, 
             criado_id,
@@ -29,7 +27,6 @@ BEGIN
             recursoIcone, 
             recursoTag, 
             recursoUrl, 
-            recursoAtributos, 
             recursoAtivo, 
             recursoTipoId,
             criadoId,
@@ -37,5 +34,5 @@ BEGIN
             'N'
         );
 
-        SELECT LAST_INSERT_ID() AS recursoid;
+        SELECT LAST_INSERT_ID() AS id;
 END;

@@ -1,15 +1,15 @@
 import express from "express"
-import { jurisprudenceController } from "../cases/entry/jurisprudence"
+import { questionsAnswersController } from "../cases/entry/questionAnswers"
 import { process } from "../lib/protection"
 
-const jurisprudenceRoute = express.Router()
+const questionsAnswers = express.Router()
 
-jurisprudenceRoute.get(
+questionsAnswers.get(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await jurisprudenceController.jurisprudenceContent({
+        await questionsAnswersController.questionsAnswersContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
@@ -17,18 +17,18 @@ jurisprudenceRoute.get(
     },
     configuracao: {
       nivel: 0,
-      recurso: "jurisprudencia",
-      acao: "read"
+      acao: "read",
+      recurso: "question"
     }
   })
 )
 
-jurisprudenceRoute.get(
+questionsAnswers.get(
   "/:id",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await jurisprudenceController.getJurisprudenceById({
+        await questionsAnswersController.getQuestionsAnswersById({
           id: +req.params.id,
           client: req.usuario.idcliente
         })
@@ -36,10 +36,10 @@ jurisprudenceRoute.get(
     },
     configuracao: {
       nivel: 0,
-      recurso: "jurisprudencia",
-      acao: "read"
+      acao: "read",
+      recurso: "question"
     }
   })
 )
 
-export default jurisprudenceRoute
+export default questionsAnswers

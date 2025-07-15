@@ -8,20 +8,18 @@ CREATE PROCEDURE editar_recurso (
     recursoIcone VARCHAR(30),
     recursoTag VARCHAR(5),
     recursoUrl VARCHAR(200),
-    recursoAtributos VARCHAR(6),
-    recursoAtivo BOOL,
     recursoTipoId INT,
+    recursoAtivo BOOL,
     alteradoId INT
 )
 BEGIN
     UPDATE recurso SET
         nome = recursoNome,
-        tag = recursoTag,
         icone = recursoIcone,
+        tag = recursoTag,
         url = recursoUrl,
-        ativo = recursoAtivo,
-        atributos = recursoAtributos,
         recurso_tipo_id = recursoTipoId,
+        ativo = recursoAtivo,
         alterado_id = alteradoId,
         alterado_em = NOW()
     WHERE id = recursoId;

@@ -2,23 +2,21 @@ import { Repository } from "../core/Repository"
 
 export default class RecursoRepository extends Repository {
   async criar(params: {
+    recurso_tipo_id: number
     nome: string
+    tag: string
     icone: string
     url: string
-    tag: string
-    recurso_tipo_id: number
     ativo: boolean
-    atributos: string
     idusuario: number
-  }): Promise<{ recursoid: number } | null> {
+  }): Promise<{ id: number } | null> {
     try {
-      return this.procedure<{ recursoid: number }>(
+      return this.call<{ id: number }>(
         "criar_recurso",
-        params.nome,
-        params.icone,
-        params.tag,
-        params.url,
-        params.atributos,
+        `'${params.nome}'`,
+        `'${params.icone}'`,
+        `'${params.tag}'`,
+        `'${params.url}'`,
         params.ativo,
         params.recurso_tipo_id,
         params.idusuario
@@ -30,28 +28,26 @@ export default class RecursoRepository extends Repository {
 
   async editar(params: {
     id: number
+    recurso_tipo_id: number
     nome: string
+    tag: string
     icone: string
     url: string
-    tag: string
-    recurso_tipo_id: number
     ativo: boolean
-    atributos: string
     idusuario: number
   }): Promise<{
     affectedRows: number
   }> {
     try {
-      return this.updateprocedure(
+      return this.commom(
         "editar_recurso",
         params.id,
-        params.nome,
-        params.icone,
-        params.tag,
-        params.url,
-        params.atributos,
-        params.ativo,
+        `'${params.nome}'`,
+        `'${params.icone}'`,
+        `'${params.tag}'`,
+        `'${params.url}'`,
         params.recurso_tipo_id,
+        params.ativo,
         params.idusuario
       )
     } catch (error: any) {
@@ -61,14 +57,13 @@ export default class RecursoRepository extends Repository {
 
   async selecionar(params: { id: number }): Promise<{
     id: number
-    nome: string
-    icone: string
-    url: string
-    tag: string
     recurso_tipo_id: number
     recurso_tipo_nome: string
+    nome: string
+    tag: string
+    icone: string
+    url: string
     ativo: boolean
-    atributos: string
     criadoid: number
     criadonome: string
     criadoem: string
@@ -77,16 +72,15 @@ export default class RecursoRepository extends Repository {
     editadoem: string
   } | null> {
     try {
-      return this.procedure<{
+      return this.call<{
         id: number
-        nome: string
-        icone: string
-        url: string
-        tag: string
         recurso_tipo_id: number
         recurso_tipo_nome: string
+        nome: string
+        tag: string
+        icone: string
+        url: string
         ativo: boolean
-        atributos: string
         criadoid: number
         criadonome: string
         criadoem: string
@@ -103,7 +97,7 @@ export default class RecursoRepository extends Repository {
     affectedRows: number
   }> {
     try {
-      return this.deleteprocedure("delete_recurso", params.id, params.idusuario)
+      return this.commom("delete_recurso", params.id, params.idusuario)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -151,8 +145,8 @@ export default class RecursoRepository extends Repository {
     ativo: boolean
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
-        "count_lista_recurso",
+      return this.call<{ count: number }>(
+        "count_listar_recursos",
         params.nome,
         params.url,
         params.tag,
@@ -168,9 +162,9 @@ export default class RecursoRepository extends Repository {
     nome: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_criar_nome",
-        params.nome
+        `'${params.nome}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -182,10 +176,10 @@ export default class RecursoRepository extends Repository {
     nome: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_nome",
         params.id,
-        params.nome
+        `'${params.nome}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -196,7 +190,10 @@ export default class RecursoRepository extends Repository {
     tag: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>("verifica_criar_tag", params.tag)
+      return this.call<{ count: number }>(
+        "verifica_criar_tag",
+        `'${params.tag}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -207,10 +204,10 @@ export default class RecursoRepository extends Repository {
     tag: string
   }): Promise<{ count: number } | null> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_tag",
         params.id,
-        params.tag
+        `'${params.tag}'`
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -221,7 +218,10 @@ export default class RecursoRepository extends Repository {
     url: string
   }): Promise<{ count: number } | any> {
     try {
-      return this.procedure<{ count: number }>("verifica_criar_url", params.url)
+      return this.call<{ count: number }>(
+        "verifica_criar_url",
+        `'${params.url}'`
+      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -232,11 +232,34 @@ export default class RecursoRepository extends Repository {
     url: string
   }): Promise<{ count: number } | any> {
     try {
-      return this.procedure<{ count: number }>(
+      return this.call<{ count: number }>(
         "verifica_editar_url",
         params.id,
-        params.url
+        `'${params.url}'`
       )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoRecursoList(params: {
+    pagina: number
+    limite: number
+  }): Promise<{ id: number; nome: string; tag: string }[]> {
+    try {
+      return this.many<{ id: number; nome: string; tag: string }>(
+        "lista_tipo_recurso",
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoRecursoListCount(): Promise<{ count: number } | null> {
+    try {
+      return this.call<{ count: number }>("count_lista_tipo_recurso")
     } catch (error: any) {
       throw new Error(error.message)
     }

@@ -35,7 +35,7 @@ export default class NewsRepository extends Repository {
     datacad: string
   } | null> {
     try {
-      return await this.procedure<{
+      return await this.call<{
         idnoticia: number
         titulo: string
         chamada: string

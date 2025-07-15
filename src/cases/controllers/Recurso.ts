@@ -1,14 +1,6 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
-  criarRecursoControllerProps,
-  criarRecursoValidation
-} from "../schemas/criarRecurso"
-import {
-  editarRecursoControllerProps,
-  editarRecursoValidation
-} from "../schemas/editarRecurso"
-import {
   excluirRecursoControllerProps,
   excluirRecursoValidation
 } from "../schemas/excluirRecurso"
@@ -16,6 +8,14 @@ import {
   listarRecursoControllerProps,
   listarRecursoValidation
 } from "../schemas/listarRecurso"
+import {
+  listarTipoRecursoControllerProps,
+  listarTipoRecursoValidation
+} from "../schemas/listaTipoRecurso"
+import {
+  salvarRecursoControllerProps,
+  salvarRecursoValidation
+} from "../schemas/salvarRecurso"
 import {
   selecionarRecursoControllerProps,
   selecionarRecursoValidation
@@ -25,42 +25,6 @@ import RecursoService from "../services/Recurso"
 
 export default class RecursoController {
   constructor(private recursoService: RecursoService) {}
-
-  async criarRecurso(
-    params: criarRecursoControllerProps
-  ): Promise<defaultResponse> {
-    try {
-      const validation = await criarRecursoValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.recursoService.criarRecurso(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async editarRecurso(
-    params: editarRecursoControllerProps
-  ): Promise<defaultResponse> {
-    try {
-      const validation = await editarRecursoValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.recursoService.editarRecurso(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
 
   async listarRecurso(
     params: listarRecursoControllerProps
@@ -110,6 +74,44 @@ export default class RecursoController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.recursoService.excluirRecurso(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async salvarRecurso(
+    params: salvarRecursoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await salvarRecursoValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.recursoService.salvarRecurso(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listaTipo(
+    params: listarTipoRecursoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await listarTipoRecursoValidation.safeParseAsync(
+        params
+      )
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.recursoService.listaTipo(validation.data)
     } catch (error: any) {
       return {
         success: false,

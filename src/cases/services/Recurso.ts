@@ -2,10 +2,10 @@
 import { defaultResponse } from "../core/defaultResponse"
 import RecursoRepository from "../repositories/Recurso"
 import UserRepository from "../repositories/User"
-import { criarRecursoServiceProps } from "../schemas/criarRecurso"
-import { editarRecursoServiceProps } from "../schemas/editarRecurso"
 import { excluirRecursoServiceProps } from "../schemas/excluirRecurso"
 import { listarRecursoServiceProps } from "../schemas/listarRecurso"
+import { listarTipoRecursoServiceProps } from "../schemas/listaTipoRecurso"
+import { salvarRecursoServiceProps } from "../schemas/salvarRecurso"
 import { selecionarRecursoServiceProps } from "../schemas/selecionarRecurso"
 //#endregion imports
 
@@ -14,135 +14,6 @@ export default class RecursoService {
     private recursoRepository: RecursoRepository,
     private userRepository: UserRepository
   ) {}
-
-  async editarRecurso(
-    params: editarRecursoServiceProps
-  ): Promise<defaultResponse> {
-    try {
-      const existNome = await this.recursoRepository.verificaEditarNome({
-        nome: params.nome,
-        id: params.id
-      })
-      if (!existNome) throw new Error("Erro ao verificar contéudo.")
-      if (existNome.count >= 1)
-        throw new Error("Ja existe um recurso com esse nome.")
-
-      const existTag = await this.recursoRepository.verificaEditarTag({
-        tag: params.tag,
-        id: params.id
-      })
-      if (!existTag) throw new Error("Erro ao verificar contéudo.")
-      if (existTag.count >= 1)
-        throw new Error("Ja existe um recurso com essa tag.")
-
-      const existUrl = await this.recursoRepository.verificaEditarUrl({
-        url: params.url,
-        id: params.id
-      })
-      if (!existUrl) throw new Error("Erro ao verificar contéudo.")
-      if (existUrl.count >= 1)
-        throw new Error("Ja existe um recurso com esse url.")
-
-      const recurso = await this.recursoRepository.editar({
-        ativo: params.ativo,
-        atributos: params.atributos,
-        icone: params.icone,
-        id: params.id,
-        idusuario: params.idusuario,
-        nome: params.nome,
-        recurso_tipo_id: params.recurso_tipo_id,
-        tag: params.tag,
-        url: params.url
-      })
-
-      if (recurso.affectedRows <= 0) throw new Error("Nada foi alterado.")
-
-      const nomeUsuario = await this.userRepository.getUserName({
-        id: params.idusuario
-      })
-
-      if (!nomeUsuario)
-        throw new Error("Erro ao identificar usuário responsável pela edição.")
-
-      return {
-        success: true,
-        data: {
-          editadoid: params.idusuario,
-          editadonome: nomeUsuario.nome,
-          editadoem: new Date()
-        },
-        message: "Recurso alterado com sucesso."
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async criarRecurso(
-    params: criarRecursoServiceProps
-  ): Promise<defaultResponse> {
-    try {
-      const existNome = await this.recursoRepository.verificaCriarNome({
-        nome: params.nome
-      })
-      if (!existNome) throw new Error("Erro ao verificar contéudo.")
-      if (existNome.count >= 1)
-        throw new Error("Ja existe um recurso com esse nome.")
-
-      const existTag = await this.recursoRepository.verificaCriarTag({
-        tag: params.tag
-      })
-      if (!existTag) throw new Error("Erro ao verificar contéudo.")
-      if (existTag.count >= 1)
-        throw new Error("Ja existe um recurso com essa tag.")
-
-      const existUrl = await this.recursoRepository.verificaCriarUrl({
-        url: params.url
-      })
-      if (!existUrl) throw new Error("Erro ao verificar contéudo.")
-      if (existUrl.count >= 1)
-        throw new Error("Ja existe um recurso com esse url.")
-
-      const novoRecurso = await this.recursoRepository.criar({
-        ativo: params.ativo,
-        atributos: params.atributos,
-        icone: params.icone,
-        idusuario: params.idusuario,
-        nome: params.nome,
-        recurso_tipo_id: params.recurso_tipo_id,
-        tag: params.tag,
-        url: params.url
-      })
-
-      if (!novoRecurso) throw new Error("Erro ao criar o recurso.")
-
-      const nomeUsuario = await this.userRepository.getUserName({
-        id: params.idusuario
-      })
-
-      if (!nomeUsuario)
-        throw new Error("Erro ao identificar usuário responsável pela criação.")
-
-      return {
-        success: true,
-        data: {
-          recursoid: novoRecurso.recursoid,
-          criadoid: params.idusuario,
-          criadonome: nomeUsuario.nome,
-          criadoem: new Date()
-        },
-        message: "Recurso criado com sucesso."
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
 
   async listarRecurso(
     params: listarRecursoServiceProps
@@ -171,6 +42,29 @@ export default class RecursoService {
       return {
         success: true,
         data: { list, count: count.count }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  async listaTipo(
+    params: listarTipoRecursoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const list = await this.recursoRepository.tipoRecursoList({
+        limite: params.limite,
+        pagina: params.pagina
+      })
+
+      const count = await this.recursoRepository.tipoRecursoListCount()
+
+      return {
+        success: true,
+        data: { list, count }
       }
     } catch (error: any) {
       return {
@@ -223,6 +117,140 @@ export default class RecursoService {
         success: false,
         message: error.message
       }
+    }
+  }
+
+  async salvarRecurso(
+    params: salvarRecursoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      if (!params.id) {
+        const existNome = await this.recursoRepository.verificaCriarNome({
+          nome: params.nome
+        })
+
+        if (!existNome) throw new Error("Erro ao verificar contéudo.")
+        if (existNome.count >= 1)
+          throw new Error("Ja existe um recurso com esse nome.")
+
+        const existTag = await this.recursoRepository.verificaCriarTag({
+          tag: params.tag
+        })
+        if (!existTag) throw new Error("Erro ao verificar contéudo.")
+        if (existTag.count >= 1)
+          throw new Error("Ja existe um recurso com essa tag.")
+
+        const existUrl = await this.recursoRepository.verificaCriarUrl({
+          url: params.url
+        })
+        if (!existUrl) throw new Error("Erro ao verificar contéudo.")
+        if (existUrl.count >= 1)
+          throw new Error("Ja existe um recurso com esse url.")
+
+        const novoRecurso = await this.recursoRepository.criar({
+          recurso_tipo_id: params.recurso_tipo_id,
+          nome: params.nome,
+          tag: params.tag,
+          icone: params.icone,
+          url: params.url,
+          ativo: params.ativo,
+          idusuario: params.idusuario
+        })
+
+        if (!novoRecurso) throw new Error("Erro ao criar o recurso.")
+
+        const nomeUsuario = await this.userRepository.getUserName({
+          id: params.idusuario
+        })
+
+        if (!nomeUsuario)
+          throw new Error(
+            "Erro ao identificar usuário responsável pela criação."
+          )
+
+        console.log(novoRecurso)
+
+        return {
+          success: true,
+          data: {
+            id: novoRecurso.id,
+            criadonome: nomeUsuario.nome,
+            criadoem: new Date(),
+            editadonome: null,
+            editadoem: null
+          },
+          message: "Recurso criado com sucesso."
+        }
+      } else {
+        const existNome = await this.recursoRepository.verificaEditarNome({
+          nome: params.nome,
+          id: params.id
+        })
+        if (!existNome) throw new Error("Erro ao verificar contéudo.")
+        if (existNome.count >= 1)
+          throw new Error("Ja existe outro recurso com esse nome.")
+
+        const existTag = await this.recursoRepository.verificaEditarTag({
+          tag: params.tag,
+          id: params.id
+        })
+        if (!existTag) throw new Error("Erro ao verificar contéudo.")
+        if (existTag.count >= 1)
+          throw new Error("Ja existe outro recurso com essa tag.")
+
+        const existUrl = await this.recursoRepository.verificaEditarUrl({
+          url: params.url,
+          id: params.id
+        })
+        if (!existUrl) throw new Error("Erro ao verificar contéudo.")
+        if (existUrl.count >= 1)
+          throw new Error("Ja existe outro recurso com esse url.")
+
+        const recurso = await this.recursoRepository.editar({
+          ativo: params.ativo,
+          icone: params.icone,
+          id: params.id,
+          idusuario: params.idusuario,
+          nome: params.nome,
+          recurso_tipo_id: params.recurso_tipo_id,
+          tag: params.tag,
+          url: params.url
+        })
+
+        if (recurso.affectedRows <= 0) throw new Error("Nada foi alterado.")
+
+        const nomeUsuario = await this.userRepository.getUserName({
+          id: params.idusuario
+        })
+
+        if (!nomeUsuario)
+          throw new Error(
+            "Erro ao identificar usuário responsável pela edição."
+          )
+
+        const recursoDetalhes = await this.recursoRepository.selecionar({
+          id: params.id
+        })
+
+        if (!recursoDetalhes)
+          throw new Error(
+            "Erro ao identificar usuário responsável pela edição."
+          )
+
+        return {
+          success: true,
+          data: {
+            id: recursoDetalhes.id,
+            criadonome: recursoDetalhes.criadonome,
+            criadoem: recursoDetalhes.criadoem,
+            editadonome: recursoDetalhes.editadonome,
+            editadoem: recursoDetalhes.editadoem
+          },
+          message: "Recurso editado com sucesso."
+        }
+      }
+    } catch (error: any) {
+      return { success: false, message: error.message }
     }
   }
 }

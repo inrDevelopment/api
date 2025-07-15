@@ -1,15 +1,14 @@
 import express from "express"
-import { questionsAnswersController } from "../cases/entry/questionAnswers"
+import { opinionController } from "../cases/entry/opnion"
 import { process } from "../lib/protection"
+const opinion = express.Router()
 
-const questionsAnswersRoute = express.Router()
-
-questionsAnswersRoute.get(
+opinion.get(
   "/",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await questionsAnswersController.questionsAnswersContent({
+        await opinionController.opinionContent({
           limit: req.query.limit ? +req.query.limit : 12,
           page: req.query.page ? +req.query.page : 0
         })
@@ -18,17 +17,17 @@ questionsAnswersRoute.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "question"
+      recurso: "opniao"
     }
   })
 )
 
-questionsAnswersRoute.get(
+opinion.get(
   "/:id",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await questionsAnswersController.getQuestionsAnswersById({
+        await opinionController.getOpinionById({
           id: +req.params.id,
           client: req.usuario.idcliente
         })
@@ -37,9 +36,9 @@ questionsAnswersRoute.get(
     configuracao: {
       nivel: 0,
       acao: "read",
-      recurso: "question"
+      recurso: "opniao"
     }
   })
 )
 
-export default questionsAnswersRoute
+export default opinion

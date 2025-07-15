@@ -15,7 +15,8 @@ BEGIN
 		be.id,
 		be.titulo,
 		be.`data`,
-		be.numero
+		be.numero,
+		be.boletim_tipo_id
 	FROM
 		boletim as be
 	WHERE 

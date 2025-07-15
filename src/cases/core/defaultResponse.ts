@@ -1,5 +1,5 @@
-export type defaultResponse = {
+export type defaultResponse<T = any> = {
   success: boolean
-  data?: any
+  data?: T
   message?: string
 }

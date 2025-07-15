@@ -4,7 +4,9 @@ import jwt, { sign } from "jsonwebtoken"
 import md5 from "md5"
 import application from "../../config/application"
 import { defaultResponse } from "../core/defaultResponse"
+import BoletimRepository from "../repositories/Boletim"
 import type UserRepository from "../repositories/User"
+import { appAuthServiceProps } from "../schemas/appAuth"
 import { confirmaRecuperacaoServiceProps } from "../schemas/confirmaRecuperacao"
 import { painelAuthServiceProps } from "../schemas/painelAuth"
 import { recuperacaoCelServiceProps } from "../schemas/recuperacaoCel"
@@ -13,7 +15,10 @@ import type { siteAuthServiceProps } from "../schemas/siteAuth"
 //#endregion Imports
 
 export default class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private boletimRepository: BoletimRepository
+  ) {}
 
   //#region site
   async siteAuth(params: siteAuthServiceProps): Promise<defaultResponse> {
@@ -119,7 +124,83 @@ export default class UserService {
       }
     }
   }
-  //#endregion Imports
+  //#endregion site
+
+  //#region app
+  async appAuth(params: appAuthServiceProps): Promise<defaultResponse> {
+    try {
+      const salt = await this.userRepository.getSalt({
+        login: params.login
+      })
+
+      if (!salt)
+        throw new Error("Não existe nenhum usuário cadastrado com esses dados.")
+
+      if (salt.idstatus_cliente > 2)
+        throw new Error(
+          "Seu acesso encontra-se desativado. Entre em contato conosco para reativar."
+        )
+
+      const hash = createHash("sha1")
+      const fullHash = createHash("sha1")
+
+      hash.update(params.senha)
+      fullHash.update(`${hash.digest("hex")}${salt.idusuario}`)
+
+      const contentToSearch = fullHash.digest("hex")
+      let userConfirmed = null
+
+      userConfirmed = await this.userRepository.getConfirmation({
+        email: params.login,
+        senha: contentToSearch
+      })
+
+      if (!userConfirmed) {
+        userConfirmed = await this.userRepository.getOldConfirmation({
+          email: params.login,
+          senha: contentToSearch
+        })
+      }
+
+      if (!userConfirmed) throw new Error("A senha informada está incorreta.")
+
+      const verificacao = await this.boletimRepository.verificaToken({
+        uuid: params.uuid
+      })
+
+      if (verificacao && verificacao.count > 0) {
+        await this.userRepository.vinculaUsuario({
+          uuid: params.uuid,
+          idusuario: userConfirmed.idusuario
+        })
+      }
+
+      const token = sign(
+        JSON.stringify({
+          idcliente: userConfirmed.idcliente,
+          idusuario: userConfirmed.idusuario,
+          idgrupo_site: userConfirmed.idgrupo_site,
+          admin: userConfirmed.admin,
+          autorizacao_trabalhista: userConfirmed.autorizacao_trabalhista
+        }),
+        application.key
+      )
+
+      return {
+        success: true,
+        data: {
+          nome: userConfirmed.nome,
+          credential: token
+        }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+  //#endregion app
 
   //#region painel
   async painelAuth(params: painelAuthServiceProps): Promise<defaultResponse> {
@@ -150,47 +231,55 @@ export default class UserService {
           "Não existe nenhum usuário cadastrado com esse login e senha."
         )
 
-      let content: {
-        tipo: string
-        nome: string
-        icone: string
-        tag: string
-        url: string
-        atributos: string
-      }[] = []
-
-      if (userSecurity.idgrupo === 7) {
-        content = await this.userRepository.getallrecursos()
-      } else {
-        content = await this.userRepository.getusuariorecursos({
-          idusuario: userSecurity.idusuario
-        })
-      }
-
       let credential: Record<string, string> = {}
       let settings: Record<
         string,
         { nome: string; icone: string; url: string }[]
       > = {}
 
-      for (let i = 0; i < content.length; i++) {
-        credential[content[i].tipo as keyof typeof credential] =
-          content[i].atributos
+      credential.idusuario = `${userSalt.idusuario}`
 
-        if (!settings[content[i].tipo as keyof typeof credential])
-          settings[content[i].tipo as keyof typeof credential] = []
+      if (userSecurity.idgrupo === 7) {
+        const allContent = await this.userRepository.getallrecursos()
 
-        settings[content[i].tipo as keyof typeof credential].push({
-          icone: content[i].icone,
-          nome: content[i].nome,
-          url: content[i].url
+        for (let i = 0; i < allContent.length; i++) {
+          credential[allContent[i].tag as keyof typeof credential] = "crudap"
+
+          if (!settings[allContent[i].tipo as keyof typeof settings]) {
+            settings[allContent[i].tipo as keyof typeof settings] = []
+          }
+
+          settings[allContent[i].tipo as keyof typeof settings].push({
+            icone: allContent[i].icone,
+            nome: allContent[i].nome,
+            url: allContent[i].url
+          })
+        }
+      } else {
+        const userContent = await this.userRepository.getusuariorecursos({
+          idusuario: userSecurity.idusuario
         })
+
+        for (let i = 0; i < userContent.length; i++) {
+          credential[userContent[i].tag as keyof typeof credential] =
+            userContent[i].keycode
+
+          if (!settings[userContent[i].tipo as keyof typeof settings]) {
+            settings[userContent[i].tipo as keyof typeof settings] = []
+          }
+
+          settings[userContent[i].tipo as keyof typeof settings].push({
+            icone: userContent[i].icone,
+            nome: userContent[i].nome,
+            url: userContent[i].url
+          })
+        }
       }
 
       const token = jwt.sign(
         JSON.stringify(credential),
         application.key,
-        params.keep ? { expiresIn: undefined } : { expiresIn: "8h" }
+        params.keep ? {} : { expiresIn: "8h" }
       )
 
       return {
