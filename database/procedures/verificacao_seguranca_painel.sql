@@ -14,7 +14,9 @@ BEGIN
         a.datalog, 
         u.nivel_consultor, 
         g.consultoria,
-        DATE_FORMAT(a.datalog, '%d/%m/%Y às %H:%i') AS 'data_ultimo_acesso'
+        u.super,
+        DATE_FORMAT(a.datalog, '%d/%m/%Y às %H:%i') AS 'data_ultimo_acesso',
+        u.foto
     FROM 
         usuario u, 
         acesso a, 

@@ -1,83 +1,42 @@
 import { Repository } from "../core/Repository"
 
 export default class ConfiguracoesRepository extends Repository {
-  async hasBoletimblock(): Promise<{ valor: string } | null> {
+  async getConfigurationObject(): Promise<{ valor: string } | null> {
     try {
-      return await this.call<{ valor: string }>("has_be_block")
+      return this.call<{ valor: string }>("get_configuracao_object")
     } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
+      throw new Error(error.message)
     }
   }
 
-  async updateBlock(params: { value: "S" | "N" }): Promise<void> {
+  async getBeNumero(): Promise<{ valor: string } | null> {
     try {
-      await this.quiet("editar_be_block", `'${params.value}'`)
+      return this.call<{ valor: string }>("get_be_numero")
     } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
+      throw new Error(error.message)
     }
   }
 
-  async numeroBoletim(): Promise<{ valor: number } | null> {
+  async getClNumero(): Promise<{ valor: string } | null> {
     try {
-      return await this.call<{ valor: number }>("get_be_numero")
+      return this.call<{ valor: string }>("get_classificador_numero")
     } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
+      throw new Error(error.message)
     }
   }
 
-  async numeroClassificador(): Promise<{ valor: number } | null> {
+  async updateConfigurationObject(valor: {
+    E: "S" | "N"
+    O: "S" | "N"
+    C: "S" | "N"
+  }): Promise<{ affectedRows: number }> {
     try {
-      return await this.call<{ valor: number }>("get_classificador_numero")
-    } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
-    }
-  }
-
-  async numeroIeptb(): Promise<{ valor: number } | null> {
-    try {
-      return await this.call<{ valor: number }>("get_ieptb_numero")
-    } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
-    }
-  }
-
-  async urlPrefixo(): Promise<{ valor: number } | null> {
-    try {
-      return await this.call<{ valor: number }>("get_url_prefixo")
-    } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
-    }
-  }
-
-  async updateBoletimValue(value: number): Promise<{ updated: number } | null> {
-    try {
-      return await this.call<{ updated: number }>(
-        "editar_boletim_numero",
-        value
+      return this.commom(
+        "update_configuration_object",
+        `'${JSON.stringify(valor)}'`
       )
     } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
-    }
-  }
-
-  async updateClassificadorValue(
-    value: number
-  ): Promise<{ updated: number } | null> {
-    try {
-      return await this.call<{ updated: number }>(
-        "editar_classificador_numero",
-        value
-      )
-    } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
-    }
-  }
-
-  async updateIeptbValue(value: number): Promise<{ updated: number } | null> {
-    try {
-      return await this.call<{ updated: number }>("editar_ieptb_numero", value)
-    } catch (error: any) {
-      throw new Error(`configuracoes -:${error.message}`)
+      throw new Error(error.message)
     }
   }
 }

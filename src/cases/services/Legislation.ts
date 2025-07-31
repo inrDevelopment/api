@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import LegislationRepository from "../repositories/Legislation"
@@ -25,7 +26,7 @@ export default class LegislationService {
           id: response[i].id,
           label: "Legislação",
           tipo: "legislation",
-          titulo: `${response[i].titulo} – ${response[i].resumo}`,
+          titulo: fixText(`${response[i].titulo} – ${response[i].resumo}`),
           datacad: response[i].datacad
         })
       }

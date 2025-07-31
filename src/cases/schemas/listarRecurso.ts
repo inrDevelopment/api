@@ -1,19 +1,12 @@
 import { z } from "zod"
 export const listarRecursoValidation = z.object({
-  recurso_tipo_id: z.number(),
-  nome: z
-    .string()
+  recurso_tipo_id: z.number({ message: "recurso" }),
+  search: z
+    .string({ message: "search" })
     .max(150, { message: "Nome deve ter ao máximo 150 caracteres" }),
-  tag: z.string().length(5),
-  icone: z
-    .string()
-    .max(30, { message: "Icone deve ter ao máximo 30 caracteres" }),
-  url: z
-    .string()
-    .max(200, { message: "Url deve ter ao máximo 200 caracteres" }),
-  ativo: z.boolean(),
-  limite: z.number(),
-  pagina: z.number()
+  ativo: z.boolean({ message: "ativo" }),
+  limite: z.number({ message: "limite" }),
+  pagina: z.number({ message: "pagina" })
 })
 
 export type listarRecursoControllerProps = z.input<

@@ -1,8 +1,10 @@
 import mysql, { RowDataPacket } from "mysql2/promise"
+import application from "../../config/application"
 import configuracao from "../../config/database"
 
-if (!global.database) {
-  global.database = mysql.createPool({
+const database =
+  global.database ??
+  mysql.createPool({
     host: configuracao.host,
     user: configuracao.user,
     database: configuracao.database,
@@ -15,9 +17,10 @@ if (!global.database) {
     enableKeepAlive: true,
     keepAliveInitialDelay: 0
   })
-}
 
-database = global.database
+if (application.env === "dev") {
+  global.database = database
+}
 
 export default database
 

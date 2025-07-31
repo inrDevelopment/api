@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import NewsRepository from "../repositories/News"
 import { getNewsByIdServiceProps } from "../schemas/getNewsById"
@@ -18,7 +19,7 @@ export default class NewsService {
           id: response[i].idnoticia,
           tipo: "news",
           label: "Notícia",
-          titulo: response[i].titulo,
+          titulo: fixText(response[i].titulo),
           fonte: response[i].fonte,
           datacad: response[i].datacad
         })

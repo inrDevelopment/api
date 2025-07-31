@@ -2,8 +2,8 @@
 DROP PROCEDURE IF EXISTS novo_item_boletim;
 
 CREATE PROCEDURE novo_item_boletim (
-    tipo_id INT,
     boletim_id INT,
+    tipo_id INT,
     ident INT,
     titulo_item TEXT,
     conteudo_item TEXT,
@@ -19,6 +19,7 @@ BEGIN
             titulo,
             conteudo,
             url,
+            click,
             ordem
         ) VALUES (
             tipo_id,
@@ -27,6 +28,7 @@ BEGIN
             titulo_item,
             conteudo_item,
             url_item,
+            0,
             ordem_item
         );
 

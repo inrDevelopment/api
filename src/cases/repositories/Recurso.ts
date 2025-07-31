@@ -104,9 +104,7 @@ export default class RecursoRepository extends Repository {
   }
 
   async lista(params: {
-    nome: string
-    url: string
-    tag: string
+    search: string
     recurso_tipo_id: number
     ativo: boolean
     limite: number
@@ -125,10 +123,9 @@ export default class RecursoRepository extends Repository {
     try {
       return this.many(
         "listar_recursos",
-        params.nome,
-        params.recurso_tipo_id,
-        params.tag,
-        params.ativo,
+        `${!params.search ? "NULL" : `${params.search}`}`,
+        !params.recurso_tipo_id ? "NULL" : params.recurso_tipo_id,
+        !params.ativo ? "NULL" : params.ativo,
         params.limite,
         params.pagina * params.limite
       )
@@ -138,20 +135,16 @@ export default class RecursoRepository extends Repository {
   }
 
   async count(params: {
-    nome: string
-    url: string
-    tag: string
+    search: string
     recurso_tipo_id: number
     ativo: boolean
   }): Promise<{ count: number } | null> {
     try {
       return this.call<{ count: number }>(
-        "count_listar_recursos",
-        params.nome,
-        params.url,
-        params.tag,
-        params.recurso_tipo_id,
-        params.ativo
+        "count_lista_recurso",
+        `${!params.search ? "NULL" : `${params.search}`}`,
+        !params.recurso_tipo_id ? "NULL" : params.recurso_tipo_id,
+        !params.ativo ? "NULL" : params.ativo
       )
     } catch (error: any) {
       throw new Error(error.message)

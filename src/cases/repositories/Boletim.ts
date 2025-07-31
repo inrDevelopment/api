@@ -1,9 +1,10 @@
 import { Repository } from "../core/Repository"
+import { transactional } from "../core/transaction"
 
 export default class BoletimRepository extends Repository {
   async novo(params: {
     titulo: string
-    numero?: number
+    numero: number
     tipo: number
     data: Date
     criado_id: number
@@ -14,8 +15,31 @@ export default class BoletimRepository extends Repository {
         `'${params.titulo}'`,
         params.numero ?? "NULL",
         params.tipo,
-        `'${this.formatDate(params.data)}'`,
+        this.formatDate(params.data),
         params.criado_id
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoBoletimLista(): Promise<{ id: number; nome: number }[]> {
+    try {
+      return await this.many<{ id: number; nome: number }>(
+        "get_boletim_tipo_list"
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoConteudoLista(params: {
+    idtipoboletim: number
+  }): Promise<{ id: number; nome: number }[]> {
+    try {
+      return await this.many<{ id: number; nome: number }>(
+        "get_boletim_conteudo_tipo_list",
+        params.idtipoboletim
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -219,50 +243,56 @@ export default class BoletimRepository extends Repository {
   async selecionarBoletim(params: { idBoletim: number }): Promise<{
     id: number
     titulo: string
-    numero: string
+    numero: number
+    boletim_tipo_id: number
+    boletim_tipo_nome: string
     data: string
-    ativo: boolean
+    ativo: number
     favorito: number
     vizualizacao: number
-    criado_em: string
+    observacao: string
     criado_id: number
-    nome_criado: string
-    alterado_em: string
+    criado_em: Date
+    criado_nome: string
     alterado_id: number
-    nome_alterado: string
-    aprovado: string
-    aprovado_em: string
+    alterado_em: Date
+    alterado_nome: string
     aprovado_id: number
-    nome_aprovado: string
-    publicado: string
-    publicado_em: string
+    aprovado_em: Date
+    aprovado_nome: string
+    aprovado: string
     publicado_id: number
-    nome_publicado: string
+    publicado_em: Date
+    publicado_nome: string
+    publicado: string
   } | null> {
     try {
       return this.call<{
         id: number
         titulo: string
-        numero: string
+        numero: number
+        boletim_tipo_id: number
+        boletim_tipo_nome: string
         data: string
-        ativo: boolean
+        ativo: number
         favorito: number
         vizualizacao: number
-        criado_em: string
+        observacao: string
         criado_id: number
-        nome_criado: string
-        alterado_em: string
+        criado_em: Date
+        criado_nome: string
         alterado_id: number
-        nome_alterado: string
-        aprovado: string
-        aprovado_em: string
+        alterado_em: Date
+        alterado_nome: string
         aprovado_id: number
-        nome_aprovado: string
-        publicado: string
-        publicado_em: string
+        aprovado_em: Date
+        aprovado_nome: string
+        aprovado: string
         publicado_id: number
-        nome_publicado: string
-      }>("select_boletim", params.idBoletim)
+        publicado_em: Date
+        publicado_nome: string
+        publicado: string
+      }>("get_boletim_id", params.idBoletim)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -340,23 +370,29 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  async novoItemBoletim(params: {
-    conteudoTipoId: number
-    boletimId: number
-    identificador: number
-    titulo: string
-    conteudo: string | null
-    url: string
-    ordem: number
-  }): Promise<{ id: number } | null> {
+  novoItemBoletim: transactional<
+    {
+      conteudoTipoId: number
+      boletimId: number
+      identificador: number
+      titulo: string
+      conteudo: string | null
+      url: string
+      ordem: number
+    },
+    { id: number }
+  > = async (params, conn): Promise<{ id: number }> => {
     try {
-      return this.call<{ id: number }>(
+      return this.transactionalCall(
+        conn,
         "novo_item_boletim",
-        params.conteudoTipoId,
         params.boletimId,
+        params.conteudoTipoId,
         params.identificador,
         `'${params.titulo}'`,
-        `${params.conteudo ?? "NULL"}`,
+        `${
+          !params.conteudo || params.conteudo === "" ? "NULL" : params.conteudo
+        }`,
         `'${params.url}'`,
         params.ordem
       )
@@ -661,6 +697,62 @@ export default class BoletimRepository extends Repository {
         "atualiza_canal_app",
         `'${params.uuid}'`,
         `'${params.token}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  excluirItemsBoletim: transactional<
+    { idBoletim: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    return this.transactionalCommom(
+      conn,
+      "excluir_items_boletim",
+      params.idBoletim
+    )
+  }
+
+  async getBoletimItems(params: { idBoletim: number }): Promise<
+    {
+      id: number
+      identificador: number
+      conteudo_tipo_id: number
+      conteudo_tipo: string
+      titulo: string
+      url: string
+      conteudo: string
+      ordem: number
+    }[]
+  > {
+    try {
+      return await this.many<{
+        id: number
+        identificador: number
+        conteudo_tipo_id: number
+        conteudo_tipo: string
+        titulo: string
+        url: string
+        conteudo: string
+        ordem: number
+      }>("get_boletim_conteudo", params.idBoletim)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  updateObservacaoBoletim: transactional<
+    { idBoletim: number; observacao: string; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "update_boletim_observacao",
+        params.idBoletim,
+        `'${params.observacao}'`,
+        params.idUsuario
       )
     } catch (error: any) {
       throw new Error(error.message)

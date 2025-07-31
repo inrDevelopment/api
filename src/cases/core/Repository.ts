@@ -1,10 +1,12 @@
-import type { RowDataPacket } from "mysql2"
+import { PoolConnection, RowDataPacket } from "mysql2"
 import database from "../../lib/database"
 
 export class Repository {
   protected async call<T>(name: string, ...values: any[]): Promise<T | null> {
     try {
       const conn = await database.getConnection()
+
+      console.log(`CALLING ${name}(${values})`)
 
       const [QueryResult] = await conn.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
@@ -16,9 +18,28 @@ export class Repository {
     }
   }
 
+  protected async transactionalCall<T = any>(
+    conn: PoolConnection,
+    name: string,
+    ...values: any[]
+  ): Promise<T> {
+    try {
+      console.log(`CALLING ${name}(${values})`)
+
+      const result: any = await conn.execute<RowDataPacket[]>(
+        `CALL ${name}(${values})`
+      )
+
+      return result[0][0] as T
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   protected async many<T>(name: string, ...values: any[]): Promise<T[]> {
     try {
       const conn = await database.getConnection()
+      console.log(`CALLING ${name}(${values})`)
       const [QueryResult] = await conn.execute<RowDataPacket[]>(
         `CALL ${name}(${values})`
       )
@@ -31,14 +52,54 @@ export class Repository {
     }
   }
 
+  protected async transactionalMany<T>(
+    conn: PoolConnection,
+    name: string,
+    ...values: any[]
+  ): Promise<T[]> {
+    try {
+      console.log(`CALLING ${name}(${values})`)
+
+      const result: any = await conn.execute<RowDataPacket[]>(
+        `CALL ${name}(${values})`
+      )
+
+      if (!result[0]) return []
+
+      return result[0] as T[]
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   protected async quiet(name: string, ...values: any[]): Promise<void> {
     try {
       const conn = await database.getConnection()
+      console.log(`CALLING ${name}(${values})`)
       const [QueryResult] = await conn.execute<any>(`CALL ${name}(${values})`)
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
 
       if (QueryResult.affectedRows <= 0)
+        throw new Error("Nenhuma alteração foi realizada.")
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  protected async transactionalQuiet(
+    conn: PoolConnection,
+    name: string,
+    ...values: any[]
+  ): Promise<void> {
+    try {
+      console.log(`CALLING ${name}(${values})`)
+
+      const result: any = await conn.execute<any>(`CALL ${name}(${values})`)
+
+      if (!result) throw new Error("Erro ao verificar alterações.")
+
+      if (result.affectedRows <= 0)
         throw new Error("Nenhuma alteração foi realizada.")
     } catch (error: any) {
       throw new Error(error.message)
@@ -51,11 +112,32 @@ export class Repository {
   ): Promise<{ affectedRows: number }> {
     try {
       const conn = await database.getConnection()
+      console.log(`CALLING ${name}(${values})`)
       const [QueryResult] = await conn.execute<any>(`CALL ${name}(${values})`)
 
       if (!QueryResult) throw new Error("Erro ao verificar alterações.")
 
       return { affectedRows: QueryResult.affectedRows }
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  protected async transactionalCommom(
+    conn: PoolConnection,
+    name: string,
+    ...values: any[]
+  ): Promise<{ affectedRows: number }> {
+    try {
+      console.log(`CALLING ${name}(${values})`)
+
+      const result: any = await conn.execute<RowDataPacket[]>(
+        `CALL ${name}(${values})`
+      )
+
+      if (!result) throw new Error("Erro ao verificar alterações.")
+
+      return { affectedRows: result[0].affectedRows }
     } catch (error: any) {
       throw new Error(error.message)
     }

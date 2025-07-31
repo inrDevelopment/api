@@ -238,8 +238,10 @@ export default class UserService {
       > = {}
 
       credential.idusuario = `${userSalt.idusuario}`
+      credential.nome = `${userSecurity.nome}`
+      credential.super = `${userSecurity.super}`
 
-      if (userSecurity.idgrupo === 7) {
+      if (userSecurity.super === "S") {
         const allContent = await this.userRepository.getallrecursos()
 
         for (let i = 0; i < allContent.length; i++) {
@@ -276,10 +278,12 @@ export default class UserService {
         }
       }
 
+      const content = { key: JSON.stringify(credential) }
+
       const token = jwt.sign(
-        JSON.stringify(credential),
+        content,
         application.key,
-        params.keep ? {} : { expiresIn: "8h" }
+        params.keep ? { expiresIn: "30d" } : { expiresIn: "8h" }
       )
 
       return {
@@ -292,7 +296,8 @@ export default class UserService {
           consultoria: userSecurity.consultoria,
           data_ultimo_acesso: userSecurity.data_ultimo_acesso,
           credencial: token,
-          configuracoes: settings
+          configuracoes: settings,
+          foto: userSecurity.foto
         }
       }
     } catch (error: any) {
@@ -347,5 +352,5 @@ export default class UserService {
       }
     }
   }
-  //#endregion Imports
+  //#endregion painel
 }
