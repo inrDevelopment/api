@@ -370,37 +370,6 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  novoItemBoletim: transactional<
-    {
-      conteudoTipoId: number
-      boletimId: number
-      identificador: number
-      titulo: string
-      conteudo: string | null
-      url: string
-      ordem: number
-    },
-    { id: number }
-  > = async (params, conn): Promise<{ id: number }> => {
-    try {
-      return this.transactionalCall(
-        conn,
-        "novo_item_boletim",
-        params.boletimId,
-        params.conteudoTipoId,
-        params.identificador,
-        `'${params.titulo}'`,
-        `${
-          !params.conteudo || params.conteudo === "" ? "NULL" : params.conteudo
-        }`,
-        `'${params.url}'`,
-        params.ordem
-      )
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
   async verificaMarcacaoLeitura(params: {
     idBoletim: number
     idUsuario: number
@@ -703,17 +672,6 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  excluirItemsBoletim: transactional<
-    { idBoletim: number },
-    { affectedRows: number }
-  > = async (params, conn) => {
-    return this.transactionalCommom(
-      conn,
-      "excluir_items_boletim",
-      params.idBoletim
-    )
-  }
-
   async getBoletimItems(params: { idBoletim: number }): Promise<
     {
       id: number
@@ -742,6 +700,17 @@ export default class BoletimRepository extends Repository {
     }
   }
 
+  excluirItemsBoletim: transactional<
+    { idBoletim: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    return this.transactionalCommom(
+      conn,
+      "excluir_items_boletim",
+      params.idBoletim
+    )
+  }
+
   updateObservacaoBoletim: transactional<
     { idBoletim: number; observacao: string; idUsuario: number },
     { affectedRows: number }
@@ -752,6 +721,69 @@ export default class BoletimRepository extends Repository {
         "update_boletim_observacao",
         params.idBoletim,
         `'${params.observacao}'`,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  novoItemBoletim: transactional<
+    {
+      conteudoTipoId: number
+      boletimId: number
+      identificador: number
+      titulo: string
+      conteudo: string | null
+      url: string
+      ordem: number
+    },
+    { id: number }
+  > = async (params, conn): Promise<{ id: number }> => {
+    try {
+      return this.transactionalCall(
+        conn,
+        "novo_item_boletim",
+        params.boletimId,
+        params.conteudoTipoId,
+        params.identificador,
+        `'${params.titulo}'`,
+        `${
+          !params.conteudo || params.conteudo === "" ? "NULL" : params.conteudo
+        }`,
+        `'${params.url}'`,
+        params.ordem
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  aprovar: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "aprovar_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  publicar: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "publicar_boletim",
+        params.idBoletim,
         params.idUsuario
       )
     } catch (error: any) {

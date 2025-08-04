@@ -4,10 +4,12 @@ import { defaultResponse } from "../core/defaultResponse"
 import { Transaction } from "../core/transaction"
 import BoletimRepository from "../repositories/Boletim"
 import ConfiguracoesRepository from "../repositories/Configuracoes"
+import { aprovarServiceProps } from "../schemas/aprovarBoletim"
 import { boletimNovoServiceProps } from "../schemas/boletimNovo"
 import { getBoletimByIdServiceProps } from "../schemas/getBoletimById"
 import { getTipoConteudoServiceProps } from "../schemas/getById"
 import { getConteudoServiceProps } from "../schemas/getConteudo"
+import { publicarServiceProps } from "../schemas/publicarBoletim"
 import { saveBoletimConteudoServiceProps } from "../schemas/saveBoletimConteudo"
 import { salvarBoletimObservacaoServiceProps } from "../schemas/saveBoletimObservacao"
 //#endregion imports
@@ -211,6 +213,23 @@ export default class BoletimService {
     }
   }
 
+  public async getConteudo(
+    params: getConteudoServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const list = await this.boletimRepository.getBoletimItems({
+        idBoletim: params.idBoletim
+      })
+
+      return { success: true, data: list }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
   @Transaction()
   public async saveConteudo(
     params: saveBoletimConteudoServiceProps,
@@ -260,23 +279,6 @@ export default class BoletimService {
     }
   }
 
-  public async getConteudo(
-    params: getConteudoServiceProps
-  ): Promise<defaultResponse> {
-    try {
-      const list = await this.boletimRepository.getBoletimItems({
-        idBoletim: params.idBoletim
-      })
-
-      return { success: true, data: list }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
   @Transaction()
   public async saveObservacao(
     params: salvarBoletimObservacaoServiceProps,
@@ -310,6 +312,98 @@ export default class BoletimService {
           success: false,
           message: "Nenhuma alteração foi realizada."
         }
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  @Transaction()
+  public async aprovar(
+    params: aprovarServiceProps,
+    conn?: PoolConnection
+  ): Promise<defaultResponse> {
+    try {
+      if (!conn) throw new Error("Sem conexão ativa com o banco de dados.")
+
+      const boletim = await this.boletimRepository.selecionarBoletim({
+        idBoletim: params.idBoletim
+      })
+
+      if (!boletim) throw new Error("Erro ao verificar o boletim")
+      if (boletim.publicado === "S")
+        throw new Error(
+          "O boletim ja foi publicado. Não é permitido aprova-lo."
+        )
+
+      const aprovarResult = await this.boletimRepository.aprovar(
+        {
+          idBoletim: params.idBoletim,
+          idUsuario: params.idUsuario
+        },
+        conn
+      )
+
+      if (aprovarResult.affectedRows <= 0) throw new Error("Nada foi alterado.")
+
+      return {
+        success: true,
+        data: {
+          aprovado: "S",
+          aprovadoEm: new Date(),
+          aprovadoPor: params.nomeUsuario
+        },
+        message: "Boletim aprovado com sucesso."
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  @Transaction()
+  public async publicar(
+    params: publicarServiceProps,
+    conn?: PoolConnection
+  ): Promise<defaultResponse> {
+    try {
+      if (!conn) throw new Error("Sem conexão ativa com o banco de dados.")
+
+      const boletim = await this.boletimRepository.selecionarBoletim({
+        idBoletim: params.idBoletim
+      })
+
+      if (!boletim) throw new Error("Erro ao verificar o boletim")
+      if (boletim.publicado === "S")
+        throw new Error(
+          "O boletim ja foi publicado. Não é permitido publica-lo."
+        )
+
+      const publicarResult = await this.boletimRepository.publicar(
+        {
+          idBoletim: params.idBoletim,
+          idUsuario: params.idUsuario
+        },
+        conn
+      )
+
+      if (publicarResult.affectedRows <= 0) {
+        throw new Error("Nada foi alterado.")
+      }
+
+      return {
+        success: true,
+        data: {
+          publicado: "S",
+          publicadoEm: new Date(),
+          publicadoPor: params.nomeUsuario
+        },
+        message: "Boletim publicado com sucesso."
       }
     } catch (error: any) {
       return {

@@ -134,4 +134,44 @@ boletimRoute.put(
   })
 )
 
+boletimRoute.post(
+  "/:idBoletim(\\d+)/aprovar",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.aprovar({
+          idBoletim: +req.params.idBoletim,
+          idUsuario: +req.usuario.id,
+          nomeUsuario: req.usuario.nome
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "approve"
+    }
+  })
+)
+
+boletimRoute.post(
+  "/:idBoletim(\\d+)/publicar",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.publicar({
+          idBoletim: +req.params.idBoletim,
+          idUsuario: +req.usuario.id,
+          nomeUsuario: req.usuario.nome
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "publish"
+    }
+  })
+)
+
 export default boletimRoute

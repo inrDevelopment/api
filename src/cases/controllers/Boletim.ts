@@ -1,6 +1,10 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
+  aprovarControllerProps,
+  aprovarValidation
+} from "../schemas/aprovarBoletim"
+import {
   boletimNovoControllerProps,
   boletimNovoValidation
 } from "../schemas/boletimNovo"
@@ -16,6 +20,10 @@ import {
   getConteudoControllerProps,
   getConteudoValidation
 } from "../schemas/getConteudo"
+import {
+  publicarControllerProps,
+  publicarValidation
+} from "../schemas/publicarBoletim"
 import {
   saveBoletimConteudoControllerProps,
   saveBoletimConteudoValidation
@@ -145,6 +153,42 @@ export default class BoletimController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.boletimService.saveObservacao(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async aprovar(
+    params: aprovarControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await aprovarValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.aprovar(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async publicar(
+    params: publicarControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await publicarValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.publicar(validation.data)
     } catch (error: any) {
       return {
         success: false,

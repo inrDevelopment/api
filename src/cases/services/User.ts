@@ -209,8 +209,9 @@ export default class UserService {
         loginusuario: params.login
       })
 
-      if (!userSalt)
+      if (!userSalt) {
         throw new Error("Nenhum usuário encontrado com esse login.")
+      }
 
       let preparedPassword = ""
 
@@ -283,7 +284,7 @@ export default class UserService {
       const token = jwt.sign(
         content,
         application.key,
-        params.keep ? { expiresIn: "30d" } : { expiresIn: "8h" }
+        params.keep ? { expiresIn: "60d" } : { expiresIn: "8h" }
       )
 
       return {
