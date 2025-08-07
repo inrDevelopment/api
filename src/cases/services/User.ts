@@ -279,9 +279,8 @@ export default class UserService {
         }
       }
 
-      const content = { key: JSON.stringify(credential) }
       const expires = params.keep ? { expiresIn: "60d" } : { expiresIn: "8h" }
-      const token = jwt.sign(content, application.key, expires)
+      const token = jwt.sign(credential, application.key, expires)
 
       return {
         success: true,

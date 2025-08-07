@@ -10,8 +10,8 @@ curso.get(
     handle: async (req, res) => {
       res.status(200).json(
         await cursoController.home({
-          limit: req.query.limit ? +req.query.limit : 12,
-          page: req.query.page ? +req.query.page : 0
+          limit: req.query.limite ? +req.query.limite : 12,
+          page: req.query.pagina ? +req.query.pagina : 0
         })
       )
     },

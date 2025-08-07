@@ -1,6 +1,6 @@
 //#region Imports
 import { Request, Response } from "express"
-import { verify } from "jsonwebtoken"
+import { JsonWebTokenError, verify } from "jsonwebtoken"
 import { Meta, params, Usuario } from ".."
 import { defaultResponse } from "../../../cases/core/defaultResponse"
 import application from "../../../config/application"
@@ -9,6 +9,7 @@ import application from "../../../config/application"
 class UnauthorizedError extends Error {
   constructor(msg: string) {
     super(msg)
+    this.name = "Não Autorizado."
   }
 }
 
@@ -53,9 +54,8 @@ export default function process(
 
           const credential = req.headers["credential"].toString()
           const paramsConstructor: any = verify(credential, application.key)
-          const key: any = paramsConstructor.key
 
-          req.usuario = new Usuario(JSON.parse(key))
+          req.usuario = new Usuario(paramsConstructor)
 
           if (req.usuario.isSuper) {
             return await params.handle(req, res)
@@ -74,6 +74,11 @@ export default function process(
       }
     } catch (error: any) {
       if (error instanceof UnauthorizedError) {
+        res.status(400).json({
+          success: false,
+          message: error.message
+        })
+      } else if (error instanceof JsonWebTokenError) {
         res.status(400).json({
           success: false,
           message: error.message

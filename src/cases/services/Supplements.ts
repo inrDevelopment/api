@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import SupplementsRepository from "../repositories/Supplements"
 import TemasRepository from "../repositories/Temas"
@@ -55,7 +56,7 @@ export default class SupplementsService {
           label: "Suplementos da Consultoria INR",
           tipo: "supplements",
           idtema: response[i].idtema,
-          titulo: response[i].titulo,
+          titulo: fixText(response[i].titulo),
           datacad: response[i].datacad_fmt
         })
       }
