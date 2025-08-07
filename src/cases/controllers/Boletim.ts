@@ -9,6 +9,10 @@ import {
   boletimNovoValidation
 } from "../schemas/boletimNovo"
 import {
+  commomDeleteControllerProps,
+  commomDeleteValidation
+} from "../schemas/commomDelete"
+import {
   getBoletimByIdControllerProps,
   getBoletimByIdValidation
 } from "../schemas/getBoletimById"
@@ -20,6 +24,10 @@ import {
   getConteudoControllerProps,
   getConteudoValidation
 } from "../schemas/getConteudo"
+import {
+  listarBoletimControllerProps,
+  listarBoletimValidation
+} from "../schemas/listarBoletim"
 import {
   publicarControllerProps,
   publicarValidation
@@ -189,6 +197,42 @@ export default class BoletimController {
         throw new Error(validation.error.issues[0].message)
 
       return await this.boletimService.publicar(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async excluir(
+    params: commomDeleteControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await commomDeleteValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.excluir(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async listar(
+    params: listarBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await listarBoletimValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.listar(validation.data)
     } catch (error: any) {
       return {
         success: false,

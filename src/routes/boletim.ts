@@ -174,4 +174,45 @@ boletimRoute.post(
   })
 )
 
+boletimRoute.delete(
+  "/:idBoletim(\\d+)/excluir",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.excluir({
+          id: +req.params.idBoletim,
+          idusuario: +req.usuario.id
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "delete"
+    }
+  })
+)
+
+boletimRoute.post(
+  "/",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.listar({
+          numero: req.body.numero,
+          data: req.body.data,
+          boletimTipo: req.body.boletimTipo,
+          pagina: req.body.pagina,
+          limite: req.body.limite
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "create"
+    }
+  })
+)
+
 export default boletimRoute

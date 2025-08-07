@@ -229,17 +229,6 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  async deleteBoletim(params: {
-    id: number
-    idusuario: number
-  }): Promise<{ affectedRows: number }> {
-    try {
-      return this.commom("delete_boletim", params.id, params.idusuario)
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
   async selecionarBoletim(params: { idBoletim: number }): Promise<{
     id: number
     titulo: string
@@ -785,6 +774,74 @@ export default class BoletimRepository extends Repository {
         "publicar_boletim",
         params.idBoletim,
         params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  excluirBoletim: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "delete_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  public async listarBoletimPainel(params: {
+    pagina: number
+    limite: number
+    data?: string | null | undefined
+    numero?: string | null | undefined
+    boletimTipo?: number | null | undefined
+  }): Promise<
+    { id: number; titulo: string; numero: number; tipo: string; data: string }[]
+  > {
+    try {
+      console.log(params.numero)
+
+      return await this.many<{
+        id: number
+        titulo: string
+        numero: number
+        tipo: string
+        data: string
+      }>(
+        "listar_boletim_painel",
+        `${params.numero ? params.numero : "NULL"}`,
+        `${params.boletimTipo ? params.boletimTipo : "NULL"}`,
+        `${params.data ? this.zeroDate(params.data) : "NULL"}`,
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  public async listarBoletimPainelCount(params: {
+    data?: string | null | undefined
+    numero?: string | null | undefined
+    boletimTipo?: number | null | undefined
+  }): Promise<{
+    count: number
+  } | null> {
+    try {
+      return await this.call<{
+        count: number
+      }>(
+        "listar_boletim_painel_count",
+        `${params.numero ? params.numero : "NULL"}`,
+        `${params.boletimTipo ? params.boletimTipo : "NULL"}`,
+        `${params.data ? this.zeroDate(params.data) : "NULL"}`
       )
     } catch (error: any) {
       throw new Error(error.message)

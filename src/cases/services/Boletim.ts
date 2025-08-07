@@ -6,9 +6,11 @@ import BoletimRepository from "../repositories/Boletim"
 import ConfiguracoesRepository from "../repositories/Configuracoes"
 import { aprovarServiceProps } from "../schemas/aprovarBoletim"
 import { boletimNovoServiceProps } from "../schemas/boletimNovo"
+import { commomDeleteServiceProps } from "../schemas/commomDelete"
 import { getBoletimByIdServiceProps } from "../schemas/getBoletimById"
 import { getTipoConteudoServiceProps } from "../schemas/getById"
 import { getConteudoServiceProps } from "../schemas/getConteudo"
+import { listarBoletimServiceProps } from "../schemas/listarBoletim"
 import { publicarServiceProps } from "../schemas/publicarBoletim"
 import { saveBoletimConteudoServiceProps } from "../schemas/saveBoletimConteudo"
 import { salvarBoletimObservacaoServiceProps } from "../schemas/saveBoletimObservacao"
@@ -59,6 +61,7 @@ export default class BoletimService {
           }
 
           const numRes = await this.configuracoesRepository.getBeNumero()
+
           if (!numRes) throw new Error("Erro ao obter número para o boletim.")
 
           numero = +numRes.valor
@@ -379,10 +382,71 @@ export default class BoletimService {
       })
 
       if (!boletim) throw new Error("Erro ao verificar o boletim")
+
       if (boletim.publicado === "S")
         throw new Error(
           "O boletim ja foi publicado. Não é permitido publica-lo."
         )
+
+      if (boletim.aprovado === "N")
+        throw new Error(
+          "O boletim ainda não foi aprovado. Aprove-o antes de publica-lo."
+        )
+
+      const cfgText =
+        await this.configuracoesRepository.getConfigurationObject()
+      if (!cfgText) throw new Error("Erro ao criar o boletim.")
+
+      let cfgObject = JSON.parse(cfgText.valor)
+
+      switch (boletim.boletim_tipo_id) {
+        case 1: {
+          const novoNumero: number = +boletim.numero + 1
+
+          const beo = await this.configuracoesRepository.updateBEvalue(
+            { novoNumeroBE: novoNumero },
+            conn
+          )
+
+          if (beo.affectedRows <= 0)
+            throw new Error("Erro ao configurar publicação.")
+
+          cfgObject.O = "N"
+
+          break
+        }
+        case 2: {
+          const novoNumero: number = +boletim.numero + 1
+
+          const bee = await this.configuracoesRepository.updateBEvalue(
+            { novoNumeroBE: novoNumero },
+            conn
+          )
+
+          if (bee.affectedRows <= 0)
+            throw new Error("Erro ao configurar publicação.")
+
+          cfgObject.E = "N"
+
+          break
+        }
+        case 3: {
+          const novoNumero: number = +boletim.numero + 1
+          const bec = await this.configuracoesRepository.updateCLvalue(
+            { novoNumeroClassificador: novoNumero },
+            conn
+          )
+
+          if (bec.affectedRows <= 0)
+            throw new Error("Erro ao configurar publicação.")
+
+          cfgObject.C = "N"
+
+          break
+        }
+      }
+
+      await this.configuracoesRepository.updateConfigurationObject(cfgObject)
 
       const publicarResult = await this.boletimRepository.publicar(
         {
@@ -404,6 +468,72 @@ export default class BoletimService {
           publicadoPor: params.nomeUsuario
         },
         message: "Boletim publicado com sucesso."
+      }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  @Transaction()
+  public async excluir(
+    params: commomDeleteServiceProps,
+    conn?: PoolConnection
+  ): Promise<defaultResponse> {
+    try {
+      if (!conn) throw new Error("Sem conexão ativa com o banco de dados.")
+
+      const boletim = await this.boletimRepository.selecionarBoletim({
+        idBoletim: params.id
+      })
+
+      if (!boletim) throw new Error("Erro ao verificar o boletim")
+
+      if (boletim.publicado === "S")
+        throw new Error("Boletim já publica. Não pode ser excluido.")
+
+      const deleteResponse = await this.boletimRepository.excluirBoletim(
+        { idBoletim: params.id, idUsuario: params.idusuario },
+        conn
+      )
+
+      if (deleteResponse.affectedRows <= 0)
+        throw new Error("Nada foi alterado.")
+
+      return {
+        success: true,
+        message: "Boletim excluido com sucesso."
+      }
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  public async listar(
+    params: listarBoletimServiceProps
+  ): Promise<defaultResponse> {
+    try {
+      const list = await this.boletimRepository.listarBoletimPainel({
+        numero: params.numero,
+        boletimTipo: params.boletimTipo,
+        data: params.data,
+        pagina: params.pagina,
+        limite: params.limite
+      })
+
+      const count = await this.boletimRepository.listarBoletimPainelCount({
+        numero: params.numero,
+        boletimTipo: params.boletimTipo,
+        data: params.data
+      })
+      return {
+        success: true,
+        data: {
+          list,
+          count: count?.count
+        }
       }
     } catch (error: any) {
       return {
