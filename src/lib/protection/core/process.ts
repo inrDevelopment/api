@@ -38,10 +38,10 @@ export default function process(
           return await params.handle(req, res)
         }
         case 1: {
-          if (!req.headers["credential"])
+          if (!req.headers["credencial"])
             throw new UnauthorizedError("Não autorizado")
 
-          const credential = req.headers["credential"].toString()
+          const credential = req.headers["credencial"].toString()
           const paramsConstructor: any = verify(credential, application.key)
 
           req.usuario = new Usuario(paramsConstructor)
@@ -49,10 +49,10 @@ export default function process(
           return await params.handle(req, res)
         }
         case 2: {
-          if (!req.headers["credential"])
+          if (!req.headers["credencial"])
             throw new UnauthorizedError("Não autorizado.")
 
-          const credential = req.headers["credential"].toString()
+          const credential = req.headers["credencial"].toString()
           const paramsConstructor: any = verify(credential, application.key)
 
           req.usuario = new Usuario(paramsConstructor)

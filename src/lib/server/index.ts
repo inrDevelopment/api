@@ -6,6 +6,11 @@ import application from "../../config/application"
 import swaggerDocs from "../../documentation"
 import router from "../../router"
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://api.publicacoesinr.com.br"
+]
+
 export default class Server {
   private app: Application
 
@@ -16,7 +21,16 @@ export default class Server {
   start(): void {
     try {
       this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-      this.app.use(cors())
+      this.app.use(
+        cors({
+          origin: (origin, callback) => {
+            if (!origin) return callback(null, true)
+            if (allowedOrigins.includes(origin)) return callback(null, true)
+            return callback(new Error("Origem não permitida pelo CORS"))
+          },
+          credentials: true
+        })
+      )
       this.app.use(bodyParser.json())
       this.app.use(bodyParser.urlencoded({ extended: true }))
       this.app.use("/", router)
