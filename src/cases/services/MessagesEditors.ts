@@ -1,8 +1,10 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import MessagesEditorRepository from "../repositories/MessagesEditor"
-import { messagesEditorsByIdServiceProps } from "../schemas/MessagesEditorsById"
-import { messagesEditorsHomeServiceProps } from "../schemas/MessagesEditorsHome"
+import { messagesEditorsByIdServiceProps } from "../schemas/messagesEditorsById"
+import { messagesEditorsHomeServiceProps } from "../schemas/messagesEditorsHome"
+
 //#endregion imports
 
 export default class MessagesEditorsService {
@@ -23,7 +25,7 @@ export default class MessagesEditorsService {
           id: response[i].id,
           label: "Mensagens dos Editores",
           tipo: "messages-editors",
-          titulo: response[i].titulo,
+          titulo: fixText(response[i].titulo),
           datacad: response[i].datacad
         })
       }

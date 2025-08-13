@@ -2,7 +2,9 @@
 import express from "express"
 import boletim from "./routes/boletim"
 import classifier from "./routes/classifier"
+import curso from "./routes/curso"
 import description from "./routes/description"
+import historia from "./routes/historia"
 import home from "./routes/home"
 import jurisprudence from "./routes/jurisprudence"
 import legislation from "./routes/legislation"
@@ -34,5 +36,7 @@ router.use("/suplemento", supplements)
 router.use("/boletim", boletim)
 router.use("/leitor", leitor)
 router.use("/recurso", recurso)
+router.use("/curso", curso)
+router.use("/historia", historia)
 
 export default router

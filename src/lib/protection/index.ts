@@ -33,6 +33,7 @@ interface IUsuario {
   idusuario: number
   nome: string
   email: string
+  super: "S" | "N"
   credencial?: Record<string, string>
   idcliente?: number
   idgrupo_site?: number
@@ -54,8 +55,8 @@ class Usuario {
   public readonly id: number
   public readonly nome: string
   public readonly email: string
-  private readonly _super: boolean
-  private readonly _credencial?: Record<string, string>
+  private readonly super: "S" | "N"
+  public readonly _credencial?: Record<string, string>
   private readonly _idcliente?: number
   private readonly _idgrupo?: number
   private readonly _idgrupo_site?: number
@@ -66,24 +67,22 @@ class Usuario {
     this.id = this.params.idusuario
     this.nome = this.params.nome
     this.email = this.params.email
+    this.super = this.params.super
     this._credencial = this.params.credencial
     this._idcliente = this.params.idcliente
     this._idgrupo_site = this.params.idgrupo_site
     this._idgrupo = this.params.idgrupo
     this._admin = this.params.admin
     this._autorizacao_trabalhista = this.params.autorizacao_trabalhista
-
-    if (this.params.idgrupo && this.params.idgrupo === 7) this._super = true
-    else this._super = false
   }
 
   get isSuper(): boolean {
-    return this._super
+    return this.super === "S"
   }
 
   public isAllowed(params: segurancaParams): boolean {
     if (!this._credencial) return false
-    if (!(params.recurso in this._credencial)) return false
+    if (!this._credencial[params.recurso]) return false
     return this._credencial[params.recurso].indexOf(params.acao[0]) >= 0
   }
 

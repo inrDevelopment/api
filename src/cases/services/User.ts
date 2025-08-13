@@ -209,8 +209,9 @@ export default class UserService {
         loginusuario: params.login
       })
 
-      if (!userSalt)
+      if (!userSalt) {
         throw new Error("Nenhum usuário encontrado com esse login.")
+      }
 
       let preparedPassword = ""
 
@@ -238,8 +239,10 @@ export default class UserService {
       > = {}
 
       credential.idusuario = `${userSalt.idusuario}`
+      credential.nome = `${userSecurity.nome}`
+      credential.super = `${userSecurity.super}`
 
-      if (userSecurity.idgrupo === 7) {
+      if (userSecurity.super === "S") {
         const allContent = await this.userRepository.getallrecursos()
 
         for (let i = 0; i < allContent.length; i++) {
@@ -276,11 +279,8 @@ export default class UserService {
         }
       }
 
-      const token = jwt.sign(
-        JSON.stringify(credential),
-        application.key,
-        params.keep ? {} : { expiresIn: "8h" }
-      )
+      const expires = params.keep ? { expiresIn: "60d" } : { expiresIn: "8h" }
+      const token = jwt.sign(credential, application.key, expires)
 
       return {
         success: true,
@@ -292,7 +292,8 @@ export default class UserService {
           consultoria: userSecurity.consultoria,
           data_ultimo_acesso: userSecurity.data_ultimo_acesso,
           credencial: token,
-          configuracoes: settings
+          configuracoes: settings,
+          foto: userSecurity.foto
         }
       }
     } catch (error: any) {
@@ -347,5 +348,5 @@ export default class UserService {
       }
     }
   }
-  //#endregion Imports
+  //#endregion painel
 }

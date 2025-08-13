@@ -21,7 +21,7 @@ BEGIN
     ON 
         bct.id = bc.conteudo_tipo_id
     WHERE 
-        bc.boletim_id = 1
+        bc.boletim_id = idboletim
     ORDER BY 
         bc.conteudo_tipo_id ASC, 
         bc.ordem ASC;

@@ -2,9 +2,8 @@
 DROP PROCEDURE IF EXISTS listar_recursos;
 
 CREATE PROCEDURE listar_recursos (
-  nomeRecurso VARCHAR(150),
+  searchText VARCHAR(150),
   tipoRecurso INT,
-  tagRecurso CHAR(5),
   ativoRecurso BOOLEAN,
   limite INT,
   pagina INT
@@ -19,25 +18,30 @@ BEGIN
         rt.nome as 'recurso_tipo_nome',
         r.ativo
     FROM 
-        recurso r 
+        recurso r
     INNER JOIN 
         recurso_tipo rt 
     ON 
         rt.id = r.recurso_tipo_id
     WHERE 
-        (nomeRecurso IS NULL OR r.nome LIKE CONCAT(nomeRecurso, '%'))
+        r.recurso_tipo_id = tipoRecurso
     AND 
-        (tipoRecurso IS NULL OR r.recurso_tipo_id = tipoRecurso)
+        r.ativo = ativoRecurso
     AND
-        (tagRecurso IS NULL OR r.tag LIKE CONCAT(tagRecurso, '%'))
-    AND 
-        (ativoRecurso IS NULL OR r.ativo = ativoRecurso)        
-    AND 
-        r.exc = 'N'
-    AND 
         r.excluido_em IS NULL
-    AND 
+    AND
         r.excluido_id IS NULL
+    AND
+        r.exc = "N"
+    AND (
+        searchText IS NULL 
+        OR 
+            r.nome LIKE CONCAT(searchText, '%')
+        OR 
+            r.url LIKE CONCAT(searchText, '%')
+        OR
+            r.tag LIKE CONCAT(searchText, '%')
+    )
     ORDER BY 
         r.nome ASC,
         r.criado_em DESC

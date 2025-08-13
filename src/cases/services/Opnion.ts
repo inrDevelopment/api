@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import AuthorsRepository from "../repositories/Authors"
 import ClientProductRepository from "../repositories/ClientProduct"
@@ -31,9 +32,9 @@ export default class OpinionService {
           id: response[i].id,
           label: "Opnião",
           tipo: "opinion",
-          titulo: `${response[i].titulo} – ${autores
-            .map(i => i.nome)
-            .join(", ")}`,
+          titulo: fixText(
+            `${response[i].titulo} – ${autores.map(i => i.nome).join(", ")}`
+          ),
           resumo: response[i].resumo,
           data_registro: response[i].data_registro,
           datacad: response[i].datacad,

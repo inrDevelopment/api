@@ -20,19 +20,15 @@ export default class RecursoService {
   ): Promise<defaultResponse> {
     try {
       const list = await this.recursoRepository.lista({
-        nome: params.nome,
-        tag: params.tag,
-        url: params.url,
+        search: params.search,
         ativo: params.ativo,
         recurso_tipo_id: params.recurso_tipo_id,
         limite: params.limite,
-        pagina: params.pagina * params.limite
+        pagina: params.pagina
       })
 
       const count = await this.recursoRepository.count({
-        nome: params.nome,
-        tag: params.tag,
-        url: params.url,
+        search: params.search,
         ativo: params.ativo,
         recurso_tipo_id: params.recurso_tipo_id
       })
@@ -186,6 +182,7 @@ export default class RecursoService {
           nome: params.nome,
           id: params.id
         })
+
         if (!existNome) throw new Error("Erro ao verificar contéudo.")
         if (existNome.count >= 1)
           throw new Error("Ja existe outro recurso com esse nome.")
@@ -244,7 +241,7 @@ export default class RecursoService {
             criadonome: recursoDetalhes.criadonome,
             criadoem: recursoDetalhes.criadoem,
             editadonome: recursoDetalhes.editadonome,
-            editadoem: recursoDetalhes.editadoem
+            editadoem: new Date()
           },
           message: "Recurso editado com sucesso."
         }

@@ -106,7 +106,9 @@ export default class UserRepository extends Repository {
     datalog: string
     nivel_consultor: number
     consultoria: string
+    super: string
     data_ultimo_acesso: string
+    foto: string
   } | null> {
     try {
       return this.call<{
@@ -117,7 +119,9 @@ export default class UserRepository extends Repository {
         datalog: string
         nivel_consultor: number
         consultoria: string
+        super: string
         data_ultimo_acesso: string
+        foto: string
       }>(
         "verificacao_seguranca_painel",
         `'${params.login}'`,

@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import PareceresRepository from "../repositories/Pareceres"
@@ -27,7 +28,7 @@ export default class PareceresService {
           tipo: "pareceres",
           numero_processo: response[i].numero_processo,
           ano_processo: response[i].ano_processo,
-          titulo: response[i].ementa,
+          titulo: fixText(response[i].ementa),
           datacad: response[i].datacad
         })
       }

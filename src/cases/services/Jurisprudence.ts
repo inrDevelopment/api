@@ -1,4 +1,6 @@
 //#region imports
+import { decode } from "html-entities"
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import JurisprudenceRepository from "../repositories/Jurisprudence"
@@ -27,7 +29,7 @@ export default class JurisprudenceService {
           id: response[i].id,
           label: "Jurisprudência",
           tipo: "jurisprudence",
-          titulo: response[i].titulo,
+          titulo: fixText(response[i].titulo),
           ementa: response[i].ementa,
           img: response[i].img,
           datacad: response[i].datacad
@@ -36,7 +38,7 @@ export default class JurisprudenceService {
 
       return {
         success: true,
-        data: response
+        data: transporter
       }
     } catch (error: any) {
       return {
@@ -74,7 +76,7 @@ export default class JurisprudenceService {
           id: response.id,
           label: "Jurisprudência",
           tipo: "jurisprudence",
-          titulo: response.titulo,
+          titulo: decode(response.titulo.replace(/<\/?p>/g, "")),
           ementa: response.ementa,
           resumo: response.resumo,
           ato: response.ato,

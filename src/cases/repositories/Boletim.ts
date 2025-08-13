@@ -1,9 +1,10 @@
 import { Repository } from "../core/Repository"
+import { transactional } from "../core/transaction"
 
 export default class BoletimRepository extends Repository {
   async novo(params: {
     titulo: string
-    numero?: number
+    numero: number
     tipo: number
     data: Date
     criado_id: number
@@ -14,8 +15,31 @@ export default class BoletimRepository extends Repository {
         `'${params.titulo}'`,
         params.numero ?? "NULL",
         params.tipo,
-        `'${this.formatDate(params.data)}'`,
+        this.formatDate(params.data),
         params.criado_id
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoBoletimLista(): Promise<{ id: number; nome: number }[]> {
+    try {
+      return await this.many<{ id: number; nome: number }>(
+        "get_boletim_tipo_list"
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async tipoConteudoLista(params: {
+    idtipoboletim: number
+  }): Promise<{ id: number; nome: number }[]> {
+    try {
+      return await this.many<{ id: number; nome: number }>(
+        "get_boletim_conteudo_tipo_list",
+        params.idtipoboletim
       )
     } catch (error: any) {
       throw new Error(error.message)
@@ -205,64 +229,59 @@ export default class BoletimRepository extends Repository {
     }
   }
 
-  async deleteBoletim(params: {
-    id: number
-    idusuario: number
-  }): Promise<{ affectedRows: number }> {
-    try {
-      return this.commom("delete_boletim", params.id, params.idusuario)
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
   async selecionarBoletim(params: { idBoletim: number }): Promise<{
     id: number
     titulo: string
-    numero: string
+    numero: number
+    boletim_tipo_id: number
+    boletim_tipo_nome: string
     data: string
-    ativo: boolean
+    ativo: number
     favorito: number
     vizualizacao: number
-    criado_em: string
+    observacao: string
     criado_id: number
-    nome_criado: string
-    alterado_em: string
+    criado_em: Date
+    criado_nome: string
     alterado_id: number
-    nome_alterado: string
-    aprovado: string
-    aprovado_em: string
+    alterado_em: Date
+    alterado_nome: string
     aprovado_id: number
-    nome_aprovado: string
-    publicado: string
-    publicado_em: string
+    aprovado_em: Date
+    aprovado_nome: string
+    aprovado: string
     publicado_id: number
-    nome_publicado: string
+    publicado_em: Date
+    publicado_nome: string
+    publicado: string
   } | null> {
     try {
       return this.call<{
         id: number
         titulo: string
-        numero: string
+        numero: number
+        boletim_tipo_id: number
+        boletim_tipo_nome: string
         data: string
-        ativo: boolean
+        ativo: number
         favorito: number
         vizualizacao: number
-        criado_em: string
+        observacao: string
         criado_id: number
-        nome_criado: string
-        alterado_em: string
+        criado_em: Date
+        criado_nome: string
         alterado_id: number
-        nome_alterado: string
-        aprovado: string
-        aprovado_em: string
+        alterado_em: Date
+        alterado_nome: string
         aprovado_id: number
-        nome_aprovado: string
-        publicado: string
-        publicado_em: string
+        aprovado_em: Date
+        aprovado_nome: string
+        aprovado: string
         publicado_id: number
-        nome_publicado: string
-      }>("select_boletim", params.idBoletim)
+        publicado_em: Date
+        publicado_nome: string
+        publicado: string
+      }>("get_boletim_id", params.idBoletim)
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -335,31 +354,6 @@ export default class BoletimRepository extends Repository {
   }): Promise<{ affectedRows: number }> {
     try {
       return this.commom("remover_favorito", params.idBoletim, params.idUsuario)
-    } catch (error: any) {
-      throw new Error(error.message)
-    }
-  }
-
-  async novoItemBoletim(params: {
-    conteudoTipoId: number
-    boletimId: number
-    identificador: number
-    titulo: string
-    conteudo: string | null
-    url: string
-    ordem: number
-  }): Promise<{ id: number } | null> {
-    try {
-      return this.call<{ id: number }>(
-        "novo_item_boletim",
-        params.conteudoTipoId,
-        params.boletimId,
-        params.identificador,
-        `'${params.titulo}'`,
-        `${params.conteudo ?? "NULL"}`,
-        `'${params.url}'`,
-        params.ordem
-      )
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -661,6 +655,193 @@ export default class BoletimRepository extends Repository {
         "atualiza_canal_app",
         `'${params.uuid}'`,
         `'${params.token}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  async getBoletimItems(params: { idBoletim: number }): Promise<
+    {
+      id: number
+      identificador: number
+      conteudo_tipo_id: number
+      conteudo_tipo: string
+      titulo: string
+      url: string
+      conteudo: string
+      ordem: number
+    }[]
+  > {
+    try {
+      return await this.many<{
+        id: number
+        identificador: number
+        conteudo_tipo_id: number
+        conteudo_tipo: string
+        titulo: string
+        url: string
+        conteudo: string
+        ordem: number
+      }>("get_boletim_conteudo", params.idBoletim)
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  excluirItemsBoletim: transactional<
+    { idBoletim: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    return this.transactionalCommom(
+      conn,
+      "excluir_items_boletim",
+      params.idBoletim
+    )
+  }
+
+  updateObservacaoBoletim: transactional<
+    { idBoletim: number; observacao: string; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "update_boletim_observacao",
+        params.idBoletim,
+        `'${params.observacao}'`,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  novoItemBoletim: transactional<
+    {
+      conteudoTipoId: number
+      boletimId: number
+      identificador: number
+      titulo: string
+      conteudo: string | null
+      url: string
+      ordem: number
+    },
+    { id: number }
+  > = async (params, conn): Promise<{ id: number }> => {
+    try {
+      return this.transactionalCall(
+        conn,
+        "novo_item_boletim",
+        params.boletimId,
+        params.conteudoTipoId,
+        params.identificador,
+        `'${params.titulo}'`,
+        `${
+          !params.conteudo || params.conteudo === "" ? "NULL" : params.conteudo
+        }`,
+        `'${params.url}'`,
+        params.ordem
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  aprovar: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "aprovar_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  publicar: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "publicar_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  excluirBoletim: transactional<
+    { idBoletim: number; idUsuario: number },
+    { affectedRows: number }
+  > = async (params, conn) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "delete_boletim",
+        params.idBoletim,
+        params.idUsuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  public async listarBoletimPainel(params: {
+    pagina: number
+    limite: number
+    data?: string | null | undefined
+    numero?: string | null | undefined
+    boletimTipo?: number | null | undefined
+  }): Promise<
+    { id: number; titulo: string; numero: number; tipo: string; data: string }[]
+  > {
+    try {
+      console.log(params.numero)
+
+      return await this.many<{
+        id: number
+        titulo: string
+        numero: number
+        tipo: string
+        data: string
+      }>(
+        "listar_boletim_painel",
+        `${params.numero ? params.numero : "NULL"}`,
+        `${params.boletimTipo ? params.boletimTipo : "NULL"}`,
+        `${params.data ? this.zeroDate(params.data) : "NULL"}`,
+        params.limite,
+        params.pagina * params.limite
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+  public async listarBoletimPainelCount(params: {
+    data?: string | null | undefined
+    numero?: string | null | undefined
+    boletimTipo?: number | null | undefined
+  }): Promise<{
+    count: number
+  } | null> {
+    try {
+      return await this.call<{
+        count: number
+      }>(
+        "listar_boletim_painel_count",
+        `${params.numero ? params.numero : "NULL"}`,
+        `${params.boletimTipo ? params.boletimTipo : "NULL"}`,
+        `${params.data ? this.zeroDate(params.data) : "NULL"}`
       )
     } catch (error: any) {
       throw new Error(error.message)

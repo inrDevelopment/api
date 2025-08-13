@@ -15,24 +15,23 @@ BEGIN
         r.recurso_tipo_id,
         rt.nome as 'recurso_tipo_nome',
         r.ativo,
-        r.atributos,
         r.criado_id as 'criadoid',
         us.nome as 'criadonome',
         r.criado_em as 'criadoem',
         r.alterado_id as 'editadoid',
         usi.nome as 'editadonome',
-        r.excluido_em as 'editadoem'
+        r.alterado_em as 'editadoem'
     FROM 
         recurso r
     INNER JOIN 
         recurso_tipo rt 
     ON 
         rt.id = r.recurso_tipo_id
-    INNER JOIN 
+    LEFT JOIN 
         usuario us 
     ON 
         us.idusuario = r.criado_id
-    INNER JOIN
+    LEFT JOIN
         usuario usi 
     ON 
         usi.idusuario = r.alterado_id

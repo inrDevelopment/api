@@ -9,37 +9,125 @@ boletimRoute.post(
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await boletimController.novoBoletim({
-          titulo: req.body.titulo,
+        await boletimController.start({
           boletim_tipo_id: req.body.boletim_tipo_id,
           data: req.body.data,
-          idusuario: req.usuario.id
+          idusuario: +req.usuario.id
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "boletim",
       acao: "create"
     }
   })
 )
 
-boletimRoute.put(
-  "/:id/update",
+boletimRoute.get(
+  "/tipo",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(await boletimController.tipo())
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "read"
+    }
+  })
+)
+
+boletimRoute.get(
+  "/conteudo/tipo",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await boletimController.editarBoletim({
-          id: +req.params.id,
-          titulo: req.body.titulo,
-          data: req.body.data,
-          idusuario: req.usuario.id
+        await boletimController.conteudoTipo({
+          idtipoboletim: req.query.idtipoboletim ? +req.query.idtipoboletim : 0
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
+      recurso: "boletim",
+      acao: "read"
+    }
+  })
+)
+
+boletimRoute.get(
+  "/:id(\\d+)",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.select({
+          idBoletim: +req.params.id
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "read"
+    }
+  })
+)
+
+boletimRoute.put(
+  "/:idBoletim(\\d+)/conteudo",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.saveConteudo({
+          idBoletim: +req.params.idBoletim,
+          conteudo: req.body.conteudo,
+          idusuario: +req.usuario.id,
+          nomeusuario: req.usuario.nome
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "read"
+    }
+  })
+)
+
+boletimRoute.get(
+  "/:idBoletim(\\d+)/conteudo",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.getConteudo({
+          idBoletim: +req.params.idBoletim
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "read"
+    }
+  })
+)
+
+boletimRoute.put(
+  "/:idBoletim(\\d+)/observacao",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.saveObservacao({
+          idBoletim: +req.params.idBoletim,
+          observacao: req.body.observacao,
+          idusuario: +req.usuario.id,
+          nomeusuario: req.usuario.nome
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
       recurso: "boletim",
       acao: "update"
     }
@@ -47,62 +135,82 @@ boletimRoute.put(
 )
 
 boletimRoute.post(
-  "/item",
+  "/:idBoletim(\\d+)/aprovar",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await boletimController.adicionarItemBoletim({
-          id: req.body.id,
-          idBoletim: +req.body.idBoletim,
-          boletimConteudoTipoId: req.body.boletimConteudoTipoId,
-          ordem: req.body.ordem
+        await boletimController.aprovar({
+          idBoletim: +req.params.idBoletim,
+          idUsuario: +req.usuario.id,
+          nomeUsuario: req.usuario.nome
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "boletim",
-      acao: "create"
+      acao: "approve"
     }
   })
 )
 
-boletimRoute.put(
-  "/item/:id/update",
+boletimRoute.post(
+  "/:idBoletim(\\d+)/publicar",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await boletimController.editarItemBoletim({
-          id: +req.params.id,
-          conteudoTipoId: req.body.boletimConteudoTipoId,
-          boletimId: req.body.idBoletim,
-          identificador: req.body.identificador,
-          ordem: req.body.ordem
+        await boletimController.publicar({
+          idBoletim: +req.params.idBoletim,
+          idUsuario: +req.usuario.id,
+          nomeUsuario: req.usuario.nome
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "boletim",
-      acao: "update"
+      acao: "publish"
     }
   })
 )
 
 boletimRoute.delete(
-  "/item/:id/delete",
+  "/:idBoletim(\\d+)/excluir",
   process({
     handle: async (req, res) => {
       res.status(200).json(
-        await boletimController.excluirItemBoletim({
-          id: +req.params.id
+        await boletimController.excluir({
+          id: +req.params.idBoletim,
+          idusuario: +req.usuario.id
         })
       )
     },
     configuracao: {
-      nivel: 0,
+      nivel: 2,
       recurso: "boletim",
       acao: "delete"
+    }
+  })
+)
+
+boletimRoute.post(
+  "/",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await boletimController.listar({
+          numero: req.body.numero,
+          data: req.body.data,
+          boletimTipo: req.body.boletimTipo,
+          pagina: req.body.pagina,
+          limite: req.body.limite
+        })
+      )
+    },
+    configuracao: {
+      nivel: 2,
+      recurso: "boletim",
+      acao: "create"
     }
   })
 )

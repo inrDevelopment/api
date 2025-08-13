@@ -1,48 +1,52 @@
 //#region Imports
 import { defaultResponse } from "../core/defaultResponse"
 import {
-  adicionarItemBoletimControllerProps,
-  adicionarItemBoletimValidation
-} from "../schemas/adicionarItemBoletim"
-import {
-  boletimAprovarControllerProps,
-  boletimAprovarValidation
-} from "../schemas/boletimAprovar"
-import {
-  boletimExcluirControllerProps,
-  boletimExcluirValidation
-} from "../schemas/boletimExcluir"
+  aprovarControllerProps,
+  aprovarValidation
+} from "../schemas/aprovarBoletim"
 import {
   boletimNovoControllerProps,
   boletimNovoValidation
 } from "../schemas/boletimNovo"
 import {
-  boletimPublicarControllerProps,
-  boletimPublicarValidation
-} from "../schemas/boletimPublicar"
+  commomDeleteControllerProps,
+  commomDeleteValidation
+} from "../schemas/commomDelete"
 import {
-  boletimSelecionarControllerProps,
-  boletimSelecionarValidation
-} from "../schemas/boletimSelecionar"
+  getBoletimByIdControllerProps,
+  getBoletimByIdValidation
+} from "../schemas/getBoletimById"
 import {
-  editarBoletimControllerProps,
-  editarBoletimValidation
-} from "../schemas/editarBoletim"
+  getTipoConteudoControllerProps,
+  getTipoConteudoValidation
+} from "../schemas/getById"
 import {
-  editarItemBoletimControllerProps,
-  editarItemBoletimValidation
-} from "../schemas/editarItemBoletim"
+  getConteudoControllerProps,
+  getConteudoValidation
+} from "../schemas/getConteudo"
 import {
-  excluirItemBoletimControllerProps,
-  excluirItemBoletimValidation
-} from "../schemas/excluirItemBoletim"
+  listarBoletimControllerProps,
+  listarBoletimValidation
+} from "../schemas/listarBoletim"
+import {
+  publicarControllerProps,
+  publicarValidation
+} from "../schemas/publicarBoletim"
+import {
+  saveBoletimConteudoControllerProps,
+  saveBoletimConteudoValidation
+} from "../schemas/saveBoletimConteudo"
+import {
+  salvarBoletimObservacaoControllerProps,
+  salvarBoletimObservacaoValidation
+} from "../schemas/saveBoletimObservacao"
 import BoletimService from "../services/Boletim"
 //#endregion Imports
 
 export default class BoletimController {
   constructor(private boletimService: BoletimService) {}
 
-  async novoBoletim(
+  public async start(
     params: boletimNovoControllerProps
   ): Promise<defaultResponse> {
     try {
@@ -51,7 +55,7 @@ export default class BoletimController {
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.novoBoletim(validation.data)
+      return await this.boletimService.start(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -60,16 +64,27 @@ export default class BoletimController {
     }
   }
 
-  async editarBoletim(
-    params: editarBoletimControllerProps
+  public async tipo(): Promise<defaultResponse> {
+    try {
+      return await this.boletimService.tipo()
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async conteudoTipo(
+    params: getTipoConteudoControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await editarBoletimValidation.safeParseAsync(params)
+      const validation = await getTipoConteudoValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.editarBoletim(validation.data)
+      return await this.boletimService.conteudoTipo(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -78,18 +93,36 @@ export default class BoletimController {
     }
   }
 
-  async selecionarBoletim(
-    params: boletimSelecionarControllerProps
+  public async select(
+    params: getBoletimByIdControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await boletimSelecionarValidation.safeParseAsync(
+      const validation = await getBoletimByIdValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.select(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async saveConteudo(
+    params: saveBoletimConteudoControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await saveBoletimConteudoValidation.safeParseAsync(
         params
       )
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.selecionarBoletim(validation.data)
+      return await this.boletimService.saveConteudo(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -98,16 +131,16 @@ export default class BoletimController {
     }
   }
 
-  async excluirBoletim(
-    params: boletimExcluirControllerProps
+  public async getConteudo(
+    params: getConteudoControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await boletimExcluirValidation.safeParseAsync(params)
+      const validation = await getConteudoValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.excluirBoletim(validation.data)
+      return await this.boletimService.getConteudo(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -116,72 +149,18 @@ export default class BoletimController {
     }
   }
 
-  async listaBoletim(params: any): Promise<defaultResponse> {
-    try {
-      // const validation = await listarBoletimValidation.safeParseAsync(params)
-
-      // if (!validation.success)
-      //   throw new Error(validation.error.issues[0].message)
-
-      // return await this.boletimService.listaBoletim(validation.data)
-
-      return { success: true }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async aprovarBoletim(
-    params: boletimAprovarControllerProps
+  public async saveObservacao(
+    params: salvarBoletimObservacaoControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await boletimAprovarValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.boletimService.aprovarBoletim(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async publicarBoletim(
-    params: boletimPublicarControllerProps
-  ): Promise<defaultResponse> {
-    try {
-      const validation = await boletimPublicarValidation.safeParseAsync(params)
-
-      if (!validation.success)
-        throw new Error(validation.error.issues[0].message)
-
-      return await this.boletimService.publicarBoletim(validation.data)
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.message
-      }
-    }
-  }
-
-  async adicionarItemBoletim(
-    params: adicionarItemBoletimControllerProps
-  ): Promise<defaultResponse> {
-    try {
-      const validation = await adicionarItemBoletimValidation.safeParseAsync(
+      const validation = await salvarBoletimObservacaoValidation.safeParseAsync(
         params
       )
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.adicionarItemBoletim(validation.data)
+      return await this.boletimService.saveObservacao(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -190,18 +169,16 @@ export default class BoletimController {
     }
   }
 
-  async editarItemBoletim(
-    params: editarItemBoletimControllerProps
+  public async aprovar(
+    params: aprovarControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await editarItemBoletimValidation.safeParseAsync(
-        params
-      )
+      const validation = await aprovarValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.editarBoletimItem(validation.data)
+      return await this.boletimService.aprovar(validation.data)
     } catch (error: any) {
       return {
         success: false,
@@ -210,18 +187,52 @@ export default class BoletimController {
     }
   }
 
-  async excluirItemBoletim(
-    params: excluirItemBoletimControllerProps
+  public async publicar(
+    params: publicarControllerProps
   ): Promise<defaultResponse> {
     try {
-      const validation = await excluirItemBoletimValidation.safeParseAsync(
-        params
-      )
+      const validation = await publicarValidation.safeParseAsync(params)
 
       if (!validation.success)
         throw new Error(validation.error.issues[0].message)
 
-      return await this.boletimService.excluirItemBoletim(validation.data)
+      return await this.boletimService.publicar(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async excluir(
+    params: commomDeleteControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await commomDeleteValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.excluir(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
+  public async listar(
+    params: listarBoletimControllerProps
+  ): Promise<defaultResponse> {
+    try {
+      const validation = await listarBoletimValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.boletimService.listar(validation.data)
     } catch (error: any) {
       return {
         success: false,

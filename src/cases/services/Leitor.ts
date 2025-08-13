@@ -1,7 +1,6 @@
 //#region imports
 import { defaultResponse } from "../core/defaultResponse"
 import BoletimRepository from "../repositories/Boletim"
-import UserRepository from "../repositories/User"
 import { favoriteThisServiceProps } from "../schemas/favoriteThis"
 import { getBoletimLeituraPrivadoServiceProps } from "../schemas/getBoletimLeituraPrivado"
 import { getBoletimLeituraPublicoServiceProps } from "../schemas/getBoletimLeituraPublico"
@@ -16,10 +15,7 @@ import { unfavoriteThisServiceProps } from "../schemas/unfavoriteThis"
 //#endregion imports
 
 export default class LeitorService {
-  constructor(
-    private boletimRepository: BoletimRepository,
-    private userRepository: UserRepository
-  ) {}
+  constructor(private boletimRepository: BoletimRepository) {}
 
   async listarBoletinsPrivado(
     params: listarBoletimPrivadoServiceProps

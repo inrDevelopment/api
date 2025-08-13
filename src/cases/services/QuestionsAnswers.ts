@@ -1,4 +1,5 @@
 //#region imports
+import fixText from "../../lib/decodeHtmltext"
 import { defaultResponse } from "../core/defaultResponse"
 import ClientProductRepository from "../repositories/ClientProduct"
 import QuestionsAnswersRepository from "../repositories/QuestionsAnswers"
@@ -25,7 +26,7 @@ export default class QuestionsAnswersService {
           id: response[i].id,
           label: "Perguntas e Respostas",
           tipo: "questions-answers",
-          titulo: response[i].titulo,
+          titulo: fixText(response[i].titulo),
           numero_pergunta: response[i].numero_pergunta,
           datacad: response[i].datacad
         })

@@ -10,10 +10,7 @@ recurso.post(
       res.status(200).json(
         await recursoController.listarRecurso({
           recurso_tipo_id: req.body.recurso_tipo_id,
-          nome: req.body.nome,
-          tag: req.body.tag,
-          icone: req.body.icone,
-          url: req.body.url,
+          search: req.body.search,
           ativo: req.body.ativo,
           limite: req.body.limite,
           pagina: req.body.pagina
@@ -79,11 +76,11 @@ recurso.delete(
       res.status(200).json(
         await recursoController.excluirRecurso({
           id: +req.params.id,
-          idusuario: req.usuario.id
+          idusuario: +req.usuario.id
         })
       )
     },
-    configuracao: { acao: "delete", nivel: 0, recurso: "recurso" }
+    configuracao: { acao: "delete", nivel: 1, recurso: "recurso" }
   })
 )
 
