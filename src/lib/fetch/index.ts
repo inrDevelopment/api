@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
-import { defaultResponse } from "../protection"
+type defaultResponse<T = any> = {
+  success: boolean
+  data?: T
+  message?: string
+}
 
 const instance = axios.create()
 

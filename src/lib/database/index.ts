@@ -18,9 +18,7 @@ const database =
     keepAliveInitialDelay: 0
   })
 
-if (application.env === "dev") {
-  global.database = database
-}
+if (application.env === "dev") global.database = database
 
 export default database
 

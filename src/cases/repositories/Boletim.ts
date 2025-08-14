@@ -796,6 +796,21 @@ export default class BoletimRepository extends Repository {
     }
   }
 
+  removeAprovacao: transactional<{ idBoletim: number }> = async (
+    params,
+    conn
+  ) => {
+    try {
+      return await this.transactionalCommom(
+        conn,
+        "remove_aprovacao",
+        params.idBoletim
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   public async listarBoletimPainel(params: {
     pagina: number
     limite: number
