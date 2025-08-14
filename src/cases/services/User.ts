@@ -291,7 +291,7 @@ export default class UserService {
           nivel_consultor: userSecurity.nivel_consultor,
           consultoria: userSecurity.consultoria,
           data_ultimo_acesso: userSecurity.data_ultimo_acesso,
-          credencial: token,
+          credential: token,
           configuracoes: settings,
           foto: userSecurity.foto
         }
