@@ -8,7 +8,7 @@ import router from "../../router"
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://api.publicacoesinr.com.br"
+  "https://painel.publicacoesinr.com.br"
 ]
 
 export default class Server {
