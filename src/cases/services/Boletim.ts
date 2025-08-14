@@ -270,6 +270,13 @@ export default class BoletimService {
       }
     }
 
+    await this.boletimRepository.removeAprovacao(
+      {
+        idBoletim: params.idBoletim
+      },
+      conn
+    )
+
     return {
       success: true,
       data: {
@@ -305,7 +312,10 @@ export default class BoletimService {
           data: {
             edicao: {
               editadopor: params.nomeusuario,
-              editadoem: new Date()
+              editadoem: new Date(),
+              aprovado: "N",
+              aprovadoEm: new Date(),
+              aprovadoPor: params.nomeusuario
             }
           },
           message: "observação salva com sucesso."
@@ -337,6 +347,7 @@ export default class BoletimService {
       })
 
       if (!boletim) throw new Error("Erro ao verificar o boletim")
+
       if (boletim.publicado === "S")
         throw new Error(
           "O boletim ja foi publicado. Não é permitido aprova-lo."
@@ -395,6 +406,7 @@ export default class BoletimService {
 
       const cfgText =
         await this.configuracoesRepository.getConfigurationObject()
+
       if (!cfgText) throw new Error("Erro ao criar o boletim.")
 
       let cfgObject = JSON.parse(cfgText.valor)
@@ -415,6 +427,7 @@ export default class BoletimService {
 
           break
         }
+
         case 2: {
           const novoNumero: number = +boletim.numero + 1
 
@@ -430,6 +443,7 @@ export default class BoletimService {
 
           break
         }
+
         case 3: {
           const novoNumero: number = +boletim.numero + 1
           const bec = await this.configuracoesRepository.updateCLvalue(

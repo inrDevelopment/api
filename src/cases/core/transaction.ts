@@ -1,4 +1,5 @@
 import { PoolConnection } from "mysql2/typings/mysql/lib/PoolConnection"
+import database from "../../lib/database"
 
 export function Transaction() {
   return function (
@@ -17,6 +18,7 @@ export function Transaction() {
         const result = await originalMethod.call(this, ...args, conn)
 
         await conn.commit()
+
         return result
       } catch (err) {
         await conn.rollback()

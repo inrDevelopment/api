@@ -12,7 +12,10 @@ BEGIN
     SET 
         observacao = observacao,
         alterado_id = alteradoId,
-        alterado_em = NOW() 
+        alterado_em = NOW(),
+        aprovado = "N",
+        aprovado_em = NULL,
+        aprovado_id = NULL 
     WHERE 
         id = idBoletim;
 END;
