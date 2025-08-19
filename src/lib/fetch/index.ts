@@ -5,6 +5,13 @@ type defaultResponse<T = any> = {
   message?: string
 }
 
+export class NoDataError extends Error {
+  constructor(message?: string) {
+    super(message)
+    this.name = "No data on Response"
+  }
+}
+
 const instance = axios.create()
 
 const get = async <T = any>(

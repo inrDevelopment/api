@@ -4,17 +4,23 @@ import * as jobs from "../../jobs"
 
 const queues = Object.values(jobs).map(job => ({
   bull: new Queue(job.key, {
-    connection
+    connection: {
+      host: connection.host,
+      port: +connection.port,
+      username: connection.username,
+      password: connection.password
+    }
   }),
   name: job.key,
-  handle: job.handle
+  handle: job.handle,
+  options: job.options
 }))
 
 export default {
   queues,
   add<T = any>(name: string, data: T) {
     const q = this.queues.find(queue => queue.name === name)
-    if (q) q.bull.add(q.name, data)
+    if (q) q.bull.add(q.name, data, q.options)
   },
   process() {
     return this.queues.forEach(queue => {
@@ -23,7 +29,14 @@ export default {
         async (job: any) => {
           queue.handle(job.data)
         },
-        { connection }
+        {
+          connection: {
+            host: connection.host,
+            port: +connection.port,
+            username: connection.username,
+            password: connection.password
+          }
+        }
       )
 
       worker.on("completed", job => {
@@ -41,7 +54,9 @@ export default {
       })
 
       worker.on("active", (job, prev) => {
-        console.log(`Job ${job} is now active; previous status was ${prev}`)
+        console.log(
+          `Job "${job.name}" está ativo; status anterior era: "${prev}"`
+        )
       })
     })
   }
