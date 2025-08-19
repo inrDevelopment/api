@@ -1,4 +1,4 @@
-import { PoolConnection, RowDataPacket } from "mysql2"
+import { PoolConnection, RowDataPacket } from "mysql2/promise"
 import database from "../../lib/database"
 
 export class Repository {

@@ -1,4 +1,4 @@
-import { PoolConnection } from "mysql2/typings/mysql/lib/PoolConnection"
+import { PoolConnection } from "mysql2/promise"
 import database from "../../lib/database"
 
 export function Transaction() {

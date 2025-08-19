@@ -1,8 +1,10 @@
 //#region imports
-import { PoolConnection } from "mysql2"
+import { PoolConnection } from "mysql2/promise"
 import { defaultResponse } from "../core/defaultResponse"
+import PublishMobile from "../core/PublishMobile"
 import { Transaction } from "../core/transaction"
 import BoletimRepository from "../repositories/Boletim"
+import CanalRepository from "../repositories/Canal"
 import ConfiguracoesRepository from "../repositories/Configuracoes"
 import { aprovarServiceProps } from "../schemas/aprovarBoletim"
 import { boletimNovoServiceProps } from "../schemas/boletimNovo"
@@ -19,7 +21,8 @@ import { salvarBoletimObservacaoServiceProps } from "../schemas/saveBoletimObser
 export default class BoletimService {
   constructor(
     private boletimRepository: BoletimRepository,
-    private configuracoesRepository: ConfiguracoesRepository
+    private configuracoesRepository: ConfiguracoesRepository,
+    private canalRepository: CanalRepository
   ) {}
 
   public async start(
@@ -470,9 +473,12 @@ export default class BoletimService {
         conn
       )
 
-      if (publicarResult.affectedRows <= 0) {
+      if (publicarResult.affectedRows <= 0)
         throw new Error("Nada foi alterado.")
-      }
+
+      const publishMobile = new PublishMobile(this.canalRepository)
+
+      publishMobile.process()
 
       return {
         success: true,

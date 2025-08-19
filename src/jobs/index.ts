@@ -1,1 +1,1 @@
-export { default as defaultjob } from "./defaultjob"
+export { default as notificacaoNovoItemMobile } from "./notificacaoNovoItemMobile"

@@ -1,3 +1,6 @@
+import { createBullBoard } from "@bull-board/api"
+import { BullMQAdapter } from "@bull-board/api/bullMQAdapter"
+import { ExpressAdapter } from "@bull-board/express"
 import bodyParser from "body-parser"
 import cors from "cors"
 import express, { Application } from "express"
@@ -5,6 +8,7 @@ import swaggerUi from "swagger-ui-express"
 import application from "../../config/application"
 import swaggerDocs from "../../documentation"
 import router from "../../router"
+import Queue from "../Queue"
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -20,6 +24,13 @@ export default class Server {
 
   start(): void {
     try {
+      const serverAdapter = new ExpressAdapter()
+      serverAdapter.setBasePath("/queues")
+      createBullBoard({
+        queues: Queue.queues.map(queue => new BullMQAdapter(queue.bull)),
+        serverAdapter: serverAdapter
+      })
+      this.app.use("/queues", serverAdapter.getRouter())
       this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
       this.app.use(
         cors({
