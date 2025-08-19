@@ -11,7 +11,7 @@
     "queue:start:ts": "tsx src/queue.ts",
     "queue:dev": "tsx watch src/queue.ts",
     "dev": "concurrently \"npm run api:dev\" \"npm run queue:dev\"",
-    "start": "concurrently \"api:start\" \"npm run queue:start\"",
+    "start": "concurrently \"npm run api:start\" \"npm run queue:start\"",
     "build": "tsup src"
   },
   "keywords": [],
