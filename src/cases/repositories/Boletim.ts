@@ -157,7 +157,7 @@ export default class BoletimRepository extends Repository {
         this.zeroDate(params.data_boletim),
         this.finalDate(params.data_boletim),
         params.limite,
-        params.pagina * params.limite
+        params.limite * params.pagina
       )
     } catch (error: any) {
       throw new Error(error.message)
