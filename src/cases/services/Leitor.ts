@@ -62,7 +62,7 @@ export default class LeitorService {
         tipo_id: params.boletim_tipo_id,
         data_boletim: params.data ?? "NULL",
         limite: params.limite,
-        pagina: params.pagina * params.limite
+        pagina: params.pagina
       })
 
       const res = await this.boletimRepository.listarBoletimCount({
