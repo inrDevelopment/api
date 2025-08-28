@@ -37,6 +37,8 @@ export default {
         }
       })
 
+      console.log(response)
+
       if (!response.data.data) throw new NoDataError("Response sem data")
       if (response.data.data.status === "ok") {
         console.log("Enviada")
