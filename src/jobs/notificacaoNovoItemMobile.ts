@@ -37,7 +37,7 @@ export default {
         }
       })
 
-      console.log(response)
+      console.log(response.data)
 
       if (!response.data.data) throw new NoDataError("Response sem data")
       if (response.data.data.status === "ok") {
