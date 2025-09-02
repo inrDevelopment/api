@@ -81,7 +81,8 @@ export default class BoletimService {
             )
           }
 
-          const numRes = await this.configuracoesRepository.getClNumero()
+          const numRes = await this.configuracoesRepository.getBeNumero()
+
           if (!numRes)
             throw new Error("Erro ao obter número para o classificador.")
 
@@ -449,8 +450,8 @@ export default class BoletimService {
 
         case 3: {
           const novoNumero: number = +boletim.numero + 1
-          const bec = await this.configuracoesRepository.updateCLvalue(
-            { novoNumeroClassificador: novoNumero },
+          const bec = await this.configuracoesRepository.updateBEvalue(
+            { novoNumeroBE: novoNumero },
             conn
           )
 

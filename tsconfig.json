@@ -11,7 +11,8 @@
     "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/@types/*"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src"]
 }
