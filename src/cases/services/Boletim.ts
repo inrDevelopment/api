@@ -53,7 +53,9 @@ export default class BoletimService {
 
           cfgObject.O = "S"
 
-          titulo = `Boletim Eletrônico INR nº ${numero}, de ${params.data.toLocaleDateString()}`
+          titulo = `Boletim Eletrônico INR nº ${numero}, de ${params.data.toLocaleDateString(
+            "pt-BR"
+          )}`
           break
         }
         case 2: {
@@ -71,7 +73,9 @@ export default class BoletimService {
 
           cfgObject.E = "S"
 
-          titulo = `Edição Extraordinária - Boletim Eletrônico INR nº ${numero}, de ${params.data.toLocaleDateString()}`
+          titulo = `Edição Extraordinária - Boletim Eletrônico INR nº ${numero}, de ${params.data.toLocaleDateString(
+            "pt-BR"
+          )}`
           break
         }
         case 3: {
@@ -90,7 +94,9 @@ export default class BoletimService {
 
           cfgObject.C = "S"
 
-          titulo = `Classificadores - SP/PR/RS - Boletim Eletrônico INR nº ${numero}, ${params.data.toLocaleDateString()}`
+          titulo = `Classificadores - SP/PR/RS - Boletim Eletrônico INR nº ${numero}, ${params.data.toLocaleDateString(
+            "pt-BR"
+          )}`
 
           break
         }
