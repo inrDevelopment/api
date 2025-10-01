@@ -192,4 +192,19 @@ export default class UserRepository extends Repository {
       throw new Error(error.message)
     }
   }
+
+  async vinculaUsuarioDesktop(params: {
+    uuid: string
+    idusuario: number
+  }): Promise<void> {
+    try {
+      return await this.quiet(
+        "vincula_usuario_desktop",
+        `'${params.uuid}'`,
+        params.idusuario
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
 }

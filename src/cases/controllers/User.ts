@@ -77,6 +77,22 @@ export default class UserController {
     }
   }
 
+  async desktopAuth(params: appAuthControllerProps): Promise<defaultResponse> {
+    try {
+      const validation = await appAuthValidation.safeParseAsync(params)
+
+      if (!validation.success)
+        throw new Error(validation.error.issues[0].message)
+
+      return await this.userService.desktopAuth(validation.data)
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.message
+      }
+    }
+  }
+
   async recuperacaoEmailSite(
     params: recuperacaoMailControllerProps
   ): Promise<defaultResponse> {

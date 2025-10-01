@@ -631,6 +631,19 @@ export default class BoletimRepository extends Repository {
     }
   }
 
+  async verificaTokenDesktop(params: {
+    uuid: string
+  }): Promise<{ count: number } | null> {
+    try {
+      return this.call<{ count: number }>(
+        "verifica_registro_desktop",
+        `'${params.uuid}'`
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
   async registraCanalApp(params: {
     uuid: string
     token: string
