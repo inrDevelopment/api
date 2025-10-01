@@ -62,6 +62,26 @@ user.post(
   })
 )
 
+user.post(
+  "/autenticacao/desktop",
+  process({
+    handle: async (req, res) => {
+      res.status(200).json(
+        await userController.desktopAuth({
+          login: req.body.login,
+          senha: req.body.senha,
+          uuid: req.body.uuid
+        })
+      )
+    },
+    configuracao: {
+      nivel: 0,
+      acao: "read",
+      recurso: "usuario"
+    }
+  })
+)
+
 user.get(
   "/recuperacao-acesso/email/painel",
   process({
