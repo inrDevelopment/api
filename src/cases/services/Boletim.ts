@@ -526,6 +526,39 @@ export default class BoletimService {
         conn
       )
 
+      const cfgText =
+        await this.configuracoesRepository.getConfigurationObject()
+
+      if (!cfgText) throw new Error("Erro ao criar o boletim.")
+
+      let cfgObject: {
+        E: "S" | "N"
+        O: "S" | "N"
+        C: "S" | "N"
+        P: "S" | "N"
+        U: "S" | "N"
+      } = JSON.parse(cfgText.valor)
+
+      switch (boletim.boletim_tipo_id) {
+        case 1:
+          cfgObject.O = "N"
+          break
+        case 2:
+          cfgObject.E = "N"
+          break
+        case 3:
+          cfgObject.C = "N"
+          break
+        case 4:
+          cfgObject.P = "N"
+          break
+        case 5:
+          cfgObject.U = "N"
+          break
+      }
+
+      await this.configuracoesRepository.updateConfigurationObject(cfgObject)
+
       if (deleteResponse.affectedRows <= 0)
         throw new Error("Nada foi alterado.")
 
